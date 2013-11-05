@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+	<string name="label_username">Username</string>
+	<string name="label_password">Password</string>
+	<string name="label_system">System</string>
+	<string name="label_inet_connected">Online</string>
+	<string name="label_inet_noconnected">Offline</string>
+	<string name="label_login_wait">Connecting, please wait</string>
+	<string name="label_search_marketplace">Search filter</string>
+	<string name="label_vendor_marketplace">Vendor</string>
+	<string name="label_version_marketplace">Version</string>
+	<string name="label_widget_map_distance">Distance</string>
+	<string name="label_widget_map_time">Time</string>
+	<string name="label_widget_map_step">Step</string>
+	<string name="button_slider_aworkspace">Marketplace</string>
+	<string name="button_slider_rworkspace">Rename</string>
+	<string name="button_slider_eworkspace">Remove</string>
+	<string name="button_slider_oworkspace">Organize</string>
+	<string name="alert_label_description">Description</string>
+	<string name="alert_label_ordermarket">Marketplace sort by</string>
+	<string name="alert_button_cancel">Cancel</string>
+	<string name="alert_button_accept">Accept</string>
+	<string name="alert_button_popularity">Popularity</string>
+	<string name="alert_button_creation">Creation date</string>
+	<string name="alert_button_name">Name</string>
+	<string name="alert_button_vendor">Vendor</string>
+	<string name="alert_button_author">Author</string>
+	<string name="alert_button_addMashup">Add new Workspace</string>
+	<string name="alert_button_deleteTab">Delete visible tab</string>
+	<string name="error_login_username">The username can not be empty</string>
+	<string name="error_login_password">The password can not be empty</string>
+	<string name="error_market_empty">Mashup not found in the local marketplace\n\nInstall the desired one from the desktop version Wirecloud</string>
+	<string name="error_market_filter">No results found with the filter inserted\n\nRemove the filter and enter a new one if you wish</string>
+	<string name="error_connection_inet">Check the internet connection</string>
+	<string name="error_connection_login_android">There was an error getting data from your account\n\nPlease try again later or contact the administrator</string>
+	<string name="error_connection_login_ios">There was an error getting data\nfrom your account\n\nPlease try again later or\ncontact the administrator</string>
+	<string name="error_connection_getMashup_ios">There was an error getting data or try use mashup indicated\n\nPlease try again later or contact the administrator</string>
+	<string name="error_connection_getMashup_android">There was an error getting data or try use mashup indicated\n\nPlease try again later or contact the administrator</string>
+</resources>

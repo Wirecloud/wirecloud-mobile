@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+	<string name="label_username">Nombre de usuario</string>
+	<string name="label_password">Contraseña</string>
+	<string name="label_system">Sistema</string>
+	<string name="label_inet_connected">Conectado</string>
+	<string name="label_inet_noconnected">Desconectado</string>
+	<string name="label_login_wait">Conectando, espere por favor</string>
+	<string name="label_search_marketplace">Filtro de búsqueda</string>
+	<string name="label_vendor_marketplace">Vendedor</string>
+	<string name="label_version_marketplace">Versión</string>
+	<string name="label_widget_map_distance">Distancia</string>
+	<string name="label_widget_map_time">Tiempo</string>
+	<string name="label_widget_map_step">Indicación</string>
+	<string name="button_slider_aworkspace">Marketplace</string>
+	<string name="button_slider_rworkspace">Renombrar</string>
+	<string name="button_slider_eworkspace">Eliminar</string>
+	<string name="button_slider_oworkspace">Organizar</string>
+	<string name="alert_label_description">Descripción</string>
+	<string name="alert_label_ordermarket">Ordenar marketplace por</string>
+	<string name="alert_button_cancel">Cancelar</string>
+	<string name="alert_button_accept">Aceptar</string>
+	<string name="alert_button_popularity">Popularidad</string>
+	<string name="alert_button_creation">Fecha de creación</string>
+	<string name="alert_button_name">Nombre</string>
+	<string name="alert_button_vendor">Vendedor</string>
+	<string name="alert_button_author">Autor</string>
+	<string name="alert_button_addMashup">Añadir Mashup</string>
+	<string name="alert_button_deleteTab">Borrar pestaña actual</string>
+	<string name="error_login_username">El usuario no puede estar vacío</string>
+	<string name="error_login_password">La contraseña no puede estar vacía</string>
+	<string name="error_market_empty">No se han encontrado Mashup en el marketplace local\n\nInstale el que desee desde la versión escritorio de Wirecloud</string>
+	<string name="error_market_filter">No se han encontrado resultados con el filtro introducido\n\nElimine el filtro e introduzca uno nuevo si lo desea</string>
+	<string name="error_connection_inet">Verifique la conexión a internet</string>
+	<string name="error_connection_login_android">Se ha producido un error al obtener los datos de su cuenta\n\nInténtelo más tarde o contacte con el administrador</string>
+	<string name="error_connection_login_ios">Se ha producido un error al obtener los datos de su cuenta\n\nInténtelo más tarde o\ncontacte con el administrador</string>
+	<string name="error_connection_getMarketplace_android">Se ha producido un error al obtener el marketplace local de su cuenta\n\n Inténtelo más tarde\no contacte con el administrador</string>
+	<string name="error_connection_getMarketplace_ios">Se ha producido un error al obtener el marketplace local de su cuenta\n\n Inténtelo más tarde\no contacte con el administrador</string>
+	<string name="error_connection_getMashup_android">Se ha producido un error al obtener o intentar\nutilizar el mashup indicado. Inténtelo más tarde\no contacte con el administrador</string>
+	<string name="error_connection_getMashup_ios">Se ha producido un error al obtener o intentar\nutilizar el mashup indicado. Inténtelo más tarde\no contacte con el administrador</string>
+</resources>

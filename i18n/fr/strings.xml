@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+	<string name="label_username">Nom d'utilisateur</string>
+	<string name="label_password">Mot de passe</string>
+	<string name="label_system">Système</string>
+	<string name="label_inet_connected">En ligne</string>
+	<string name="label_inet_noconnected">Déconnecté</string>
+	<string name="label_login_wait">Branche, s'il vous plaît attendre</string>
+	<string name="label_search_marketplace">Filtre de recherche</string>
+	<string name="label_vendor_marketplace">Vendeur</string>
+	<string name="label_version_marketplace">Version</string>
+	<string name="label_widget_map_distance">Distance</string>
+	<string name="label_widget_map_time">Heure</string>
+	<string name="label_widget_map_step">Indication</string>
+	<string name="button_slider_aworkspace">Marketplace</string>
+	<string name="button_slider_rworkspace">Renommer</string>
+	<string name="button_slider_eworkspace">Supprimer</string>
+	<string name="button_slider_oworkspace">Organiser</string>
+	<string name="alert_label_description">Description</string>
+	<string name="alert_label_ordermarket">Marketplace trier par</string>
+	<string name="alert_button_cancel">Annuler</string>
+	<string name="alert_button_accept">Accepter</string>
+	<string name="alert_button_popularity">Popularité</string>
+	<string name="alert_button_creation">Date de création</string>
+	<string name="alert_button_name">Nom</string>
+	<string name="alert_button_vendor">Vendeur</string>
+	<string name="alert_button_author">Auteur</string>
+	<string name="alert_button_addMashup">Ajouter nouvel espace de travail</string>
+	<string name="alert_button_deleteTab">Supprimer onglet visible</string>
+	<string name="error_login_username">Le nom d'utilisateur ne peut pas être vide</string>
+	<string name="error_login_password">Le mot de passe ne peut être vide</string>
+	<string name="error_market_empty">Mashup ne trouve pas dans le marché local\n\nInstallez celui désiré à partir de la version Wirecloud bureau</string>
+	<string name="error_market_filter">Aucun résultat trouvé avec le filtre inséré\n\nRetirez le filtre et entrer un nouveau si vous le souhaitez</string>
+	<string name="error_connection_inet">Vérifiez la connexion internet</string>
+	<string name="error_connection_login_android">Il y avait une erreur d'obtenir les données de votre compte\n\nS'il vous plaît réessayer plus tard ou contacter l'administrateur</string>
+	<string name="error_connection_login_ios">Il y avait une erreur d'obtenir les données de votre compte\n\nS'il vous plaît réessayer plus tard\nou contacter l'administrateur</string>
+	<string name="error_connection_getMashup_android">Il y avait une erreur d'obtenir les données ou essayez\nutilisation mashup indiqué. S'il vous plaît réessayer\nplus tard ou contacter l'administrateur</string>
+	<string name="error_connection_getMashup_ios">Il y avait une erreur d'obtenir les données ou essayez\nutilisation mashup indiqué. S'il vous plaît réessayer\nplus tard ou contacter l'administrateur</string>
+</resources>
