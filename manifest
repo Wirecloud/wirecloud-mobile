@@ -1,9 +1,9 @@
-#appname:wirecloud-mobile
-#appid:com.COM
+#appname:wirecloud4tablet
+#appid:com.COM.wirecloud4tablet
 #type:ipad
 #guid:909c4089-4747-4446-8eeb-d1c204e4392e
 #version:1.0
-#publisher:Alejandro
-#url:http://
+#publisher:Alejandro F.Carrera
+#url:https://github.com/centeropenmiddleware/wirecloud4tablet
 #image:appicon.png
-#desc:not specified
+#desc:Wirecloud implementation for Tablets
