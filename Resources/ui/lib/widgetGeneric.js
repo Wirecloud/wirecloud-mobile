@@ -11,7 +11,9 @@ function widgetGeneric(dim, parameters, idWidget) {
 		_widgetMapClass = null;
 	}
 	else{
-		var _routeHTML = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'widgets/'+parameters.uri+'/index.html');
+		var _routeHTML = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'widgets/'+parameters.uri+'/TIWebView');
+		_routeHTML = _routeHTML.read().toString();
+		_routeHTML = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'widgets/'+parameters.uri+'/'+_routeHTML);
 		var _textHTML = _routeHTML.read().toString();
 		if(_textHTML.search('mashupPlatform.js') < 0){
 			var _fileMashupPlatform = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'widgets/'+parameters.uri+'/mashupPlatform.js');
