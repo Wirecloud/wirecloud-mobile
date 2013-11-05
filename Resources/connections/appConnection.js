@@ -297,7 +297,7 @@
 				if (_error.value == true) {
 					if (Ti.Network.online) _error.id = "error_inet";
 					for(var j in _resources) {
-						_resources[j].cancel();
+						_resources[j].abort();
 						delete _resources[j];
 					}
 				}
@@ -313,7 +313,7 @@
 			var url = _mainUrl + 'showcase/media/' + uri + '/config.xml';
 			var client = Ti.Network.createHTTPClient({
 				onload : function(e) {
-					Ti.API.info("Result config.xml of " + uri + ": Success");
+					Ti.API.info("Result [get xml] of " + uri + ": Success");
 					callback({
 						'id' : id,
 						'value' : false,
@@ -321,7 +321,7 @@
 					});
 				},
 				onerror : function(e) {
-					Ti.API.info("Result config.xml of " + uri + ": Error");
+					Ti.API.info("Result [get xml] of " + uri + ": Error");
 					callback({
 						'id' : id,
 						'value' : true,
@@ -355,139 +355,86 @@
 		for (var i = 0; i < data.length; i++) {
 			var flag = false;
 			if (i < barrier) flag = true;
-			_resources[i] = downloadResource(data[i], i, flag, function(result) {
+			_resources[i] = downloadResources(data[i], i, flag, function(result) {
 				_error.value = result.value;
 				if (_error.value == true && Ti.Network.online) {
 					_error.uri = "error_inet";
-					for(var j in _resources) delete _resources[j];
+					for(var j in _resources) {
+						_resources[j].abort();
+						delete _resources[j];
+					}
 				}
 				else {
-					if(result.flag == false) _error.files[result.files.id] = result.files.value;
+					if(result.flag == false) _error.files[result.uri] = JSON.stringify(result.files);
 					delete _resources[result.id];
 				}
 				if (Object.keys(_resources).length === 0) callback_function(_error);
 			});
 		} 
 		
-		/** @title: downloadWidgetsResource (Function)
-		 *  @param: widgets uri, id and callback_function
+		/** @title: downloadResources (Function)
+		 *  @param: widgets uri, id, type [operator|widget] and callback_function
 		 *  @usage: download index.html and files */
-		function downloadWidgetsResources(uri, id, callback) {
-			var urlResource = _mainUrl + 'showcase/media/' + uri + '/index.html';
+		function downloadResources(uri, id, flag, callback) {
+			var urlResource = _mainUrl + 'api/resource/' + uri + '/description?include_wgt_files=true';
 			var client = Ti.Network.createHTTPClient({
 				onload : function(e) {
-					var _extension = '/index.html';
+					var _type = (flag) ? 'widgets/' : 'operators/';
+					var _files = JSON.parse(this.responseText);
+					_files = _files.wgt_files;
 					var _path = uri.split('/');
 					var _pathUse = '';
 					for (var k in _path) {
 						_pathUse = _pathUse + _path[k];
-						if (!Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'widgets/' + _pathUse).exists())
-							Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'widgets/' + _pathUse).createDirectory();
+						if (!Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, _type + _pathUse).exists())
+							Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, _type + _pathUse).createDirectory();
 						_pathUse = _pathUse + '/';
+					}
+					if(flag){
+						var _extension = JSON.parse(this.responseText);
+						_extension = _extension.code_url;
+						_extension = _extension.substr(_extension.lastIndexOf('/')+1, _extension.length-1);
+				    	Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'widgets/' + uri + '/TIWebView').write(_extension, false);
+						_extension = null;
 					}
 					_path = null;
 					_pathUse = null;
-					Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'widgets/' + uri + _extension).write(this.responseText, false);
-					Ti.API.info("Result of " + urlResource + ": Success");
+					Ti.API.info("Result [get files] of " + uri + ": Success");
 					var _error = {};
-					var _files = parseHTMLFile(this.responseText);
 					var _filesResource = {};
 					for (var k in _files) {
-						for (var z = 0; z < _files[k].length; z++) {
-							_filesResource[k + '_' + z] = downloadFile('widgets/', uri, _files[k][z], k + '_' + z, function(result) {
-								_error.value = result.value;
-								if (_error.value == true) {
-									if (Ti.Network.online)
-										_error.uri = "error_inet";
-									else
-										_error.uri = result.uri;
-								}
-								delete _filesResource[result.id];
-								if (Object.keys(_filesResource).length === 0) {
-									callback({
-										'id' : id,
-										'value' : false,
-										'uri' : uri
-									});
-								}
-							});
-						}
-					}
-				},
-				onerror : function(e) {
-					Ti.API.info("Result of " + url + ": Error");
-					callback({
-						'id' : id,
-						'value' : true,
-						'uri' : uri
-					});
-				},
-				_timeout : _tim
-			});
-			client.open("GET", urlResource);
-			client.clearCookies(_mainUrl);
-			if (Ti.App.Properties.getString('cookie_oilsid')) {
-				client.setRequestHeader("Cookie", "oil_sid=" + Ti.App.Properties.getString('cookie_oilsid'));
-			} else {
-				client.setRequestHeader("Cookie", "csrftoken=" + Ti.App.Properties.getString('cookie_csrftoken'));
-				client.setRequestHeader("Cookie", "sessionid=" + Ti.App.Properties.getString('cookie_sessionid'));
-			}
-			client.send();
-			return client;
-		};
-
-		/** @title: downloadOperatorsResources (Function)
-		 *  @param: operators uri, id and callback_function
-		 *  @usage: get operator description and files */
-		function downloadOperatorsResources(uri, id, callback) {
-			var urlResource = _mainUrl + 'api/resource/' + uri + '/description';
-			var client = Ti.Network.createHTTPClient({
-				onload : function(e) {
-					var _error = {};
-					var _path = uri.split('/');
-					var _pathUse = '';
-					for (var k in _path) {
-						_pathUse = _pathUse + _path[k];
-						if (!Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'operators/' + _pathUse).exists())
-							Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'operators/' + _pathUse).createDirectory();
-						_pathUse = _pathUse + '/';
-					}
-					_path = null;
-					_pathUse = null;
-					Ti.API.info("Result of " + urlResource + ": Success");
-					var _filesTemp = JSON.parse(this.responseText).js_files;
-					var _files = new Array();
-					for (var k in _filesTemp) {
-						_files.push(_filesTemp[k].substring(_filesTemp[k].indexOf(uri) + uri.length + 1, _filesTemp[k].length));
-					}
-					_filesTemp = null;
-					var _filesResource = {};
-					for (var k in _files) {
-						_filesResource[k] = downloadFile('operators/', uri, _files[k], k, function(result) {
+						_filesResource[k] = downloadFile(_type, uri, _files[k], k, function(result) {
 							_error.value = result.value;
 							if (_error.value == true) {
-								if (Ti.Network.online)
-									_error.uri = "error_inet";
-								else
-									_error.uri = result.uri;
+								if (Ti.Network.online) _error.uri = "error_inet";
+								else _error.uri = result.uri;
+								for(var j in _filesResource) {
+									_filesResource[j].abort();
+									delete _filesResource[j];
+								}
 							}
-							delete _filesResource[result.id];
+							else delete _filesResource[result.id];
 							if (Object.keys(_filesResource).length === 0) {
-								callback({
-									'id' : id,
-									'files' : {
-										'id' : uri,
-										'value' : _files
-									},
-									'value' : false,
-									'uri' : uri
-								});
+								if(flag || _error.value == true){
+									callback({'id' : id,
+											  'value' : false,
+											  'uri' : uri,
+											  'flag' : flag,
+									});
+								} else { 
+									callback({'id' : id,
+											  'files' : _files,
+										      'value' : false,
+											  'uri' : uri,
+											  'flag' : flag
+									});
+								}
 							}
 						});
 					}
 				},
 				onerror : function(e) {
-					Ti.API.info("Result of " + urlResource + ": Error");
+					Ti.API.info("Result [get files] of " + uri + ": Error");
 					callback({
 						'id' : id,
 						'value' : true,
@@ -507,10 +454,10 @@
 			client.send();
 			return client;
 		};
-
+		
 		/** @title: downloadFile (Function)
-		 *  @param: url and properties file, id and callback_function
-		 *  @usage: download css or js files */
+		 *  @param: url and type [operator|widget], id and callback_function
+		 *  @usage: download any type file from wirecloud instance */
 		function downloadFile(folderType, uri, file, id, callback) {
 			var url = _mainUrl + 'showcase/media/' + uri + '/' + file;
 			var client = Ti.Network.createHTTPClient({
@@ -528,15 +475,15 @@
 					callback({
 						'id' : id,
 						'value' : false,
-						'uri' : ''
+						'uri' : uri + '/' + file
 					});
 				},
 				onerror : function(e) {
-					Ti.API.info("Result of " + uri + ": Error");
+					Ti.API.info("Result of " + url + ": Error");
 					callback({
 						'id' : id,
 						'value' : true,
-						'uri' : uri
+						'uri' : uri + '/' + file
 					});
 				},
 				_timeout : _tim
@@ -551,31 +498,6 @@
 			}
 			client.send();
 			return client;
-		};
-
-		/** @title: parseHTMLFile (Function)
-		 *  @param: string of HTML
-		 *  @usage: get js and css files */
-		function parseHTMLFile(textHTML) {
-			var _textJS = textHTML.toString();
-			var _textCSS = textHTML.toString();
-			var _filesJS = new Array();
-			while (_textJS.match('<script.*js"></script>')) {
-				var _jsRoute = _textJS.match('<script.*js"></script>');
-				_textJS = _textJS.substring(_jsRoute['index'] + _jsRoute[0].toString().length, _textJS.length);
-				_filesJS.push(_jsRoute[0].toString().match('src=".*js"')[0].toString().match('".*.js')[0].toString().split('"')[1]);
-				_jsRoute = null;
-			}
-			_textJS = null;
-			var _filesCSS = new Array();
-			while (_textCSS.match('<link.*/>')) {
-				var _cssRoute = _textCSS.match('<link.*/>');
-				_textCSS = _textCSS.substring(_cssRoute['index'] + _cssRoute[0].toString().length, _textCSS.length);
-				_filesCSS.push(_cssRoute[0].toString().match('href=.*.css')[0].toString().split('"')[1]);
-				_cssRoute = null;
-			}
-			_textCSS = null;
-			return [_filesJS, _filesCSS];
 		};
 
 	};

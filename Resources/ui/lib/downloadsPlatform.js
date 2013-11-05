@@ -148,8 +148,9 @@ function downloadsPlatform(h, listWidgets, listOperators, workspaceName) {
 			var _textHTML = '<!DOCTYPE html>\n<html>\n\t<head>\n';
 			_textHTML = _textHTML + '\t\t<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n';
 			_textHTML = _textHTML + '\t\t<script type="text/javascript" src="mashupPlatform.js"></script>\n';
-			for(var j in operators[i]){
-				_textHTML = _textHTML + '\t\t<script type="text/javascript" src="' + operators[i][j] + '"></script>\n';
+			var _files = JSON.parse(operators[i]);
+			for(var j in _files){
+				if(_files[j].indexOf('.js') != -1) _textHTML = _textHTML + '\t\t<script type="text/javascript" src="' + _files[j] + '"></script>\n';
 			};
 			_textHTML = _textHTML + '\t</head>\n\t<body>\n\t</body>\n</html>';
 			_routeHTML.write(_textHTML, false);
@@ -162,7 +163,7 @@ function downloadsPlatform(h, listWidgets, listOperators, workspaceName) {
 	 *  @usage: clean view by variables */
 	_self.clearObject = function clearObject() {
 		_downloadIcon.removeEventListener('click', _self.downloadHandler);
-		_removeIcon.removeEventListener('click', _self.removeHandler);
+		_removeIcon.removeEventListener('click', _self.downloadLaterHandler);
 		_self.remove(_description);
 		_self.remove(_downloadIcon);
 		_self.remove(_removeIcon);
