@@ -438,11 +438,6 @@ function workspaceManager(parameters) {
 		_currentPage = null;
 	};
 	
-	// TODO REMOVE AFTER DEMO
-	Ti.App.addEventListener('goToRestaurant', function(){
-		_scrollView.scrollToView(1);
-	});
-	
 	return _self;
 	
 }

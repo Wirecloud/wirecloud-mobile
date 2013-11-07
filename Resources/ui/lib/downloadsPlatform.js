@@ -10,16 +10,19 @@ function downloadsPlatform(h, listWidgets, listOperators, workspaceName) {
 		width : Ti.Platform.displayCaps.platformWidth,
 		fontAw : require('ui/fonts/FontAwesome')()
 	});
-
-	var _description = createDescriptionLabel(350, "Ha ocurrido un error al intentar visualizar " + workspaceName + 
-	"\n\n Se ha detectado que faltan widgets/operadores en la cache de Wirecloud4Tablet" + 
-	"\n\n se procederá a la descarga de dichas dependencias \n\n ¿desea continuar\?");
-	_self.add(_description);
 	
 	var _widgetsToDownload = listWidgets;
 	var _operatorsToDownload = listOperators;
+    var _description;
+    var _downloadIcon;
+    var _removeIcon;
+    var _checkURLIcon;
+    var _downWidgetsIcon;
+    var _buildWidgetsIcon;
+    var _footer;
     
 	/** @title: createDescriptionLabel (Function)
+	 *  @param: height and text
 	 *  @usage: create Label for Description View */
 	function createDescriptionLabel(h, textString) {
 		return Ti.UI.createLabel({
@@ -40,6 +43,7 @@ function downloadsPlatform(h, listWidgets, listOperators, workspaceName) {
 	};
 
 	/** @title: createRowLabel (Function)
+	 *  @param: top and text
 	 *  @usage: create Row Label with state */
 	function createRowLabel(t, textString) {
 		return Ti.UI.createLabel({
@@ -60,6 +64,7 @@ function downloadsPlatform(h, listWidgets, listOperators, workspaceName) {
 	};
 
 	/** @title: createOkIcon (Function)
+	 *  @param: top, left, width of layout
 	 *  @usage: create Label with Ok FontAwesome Icon */
 	function createOkIcon(t, l, w) {
 		return Ti.UI.createLabel({
@@ -123,16 +128,6 @@ function downloadsPlatform(h, listWidgets, listOperators, workspaceName) {
 		}));
 		return _view;
 	};
-
-	/** @title: removeVariables (Function)
-	 *  @usage: clean view by variables */
-	function removeVariables() {
-		_downloadIcon.removeEventListener('click', _self.downloadHandler);
-		_removeIcon.removeEventListener('click', _self.downloadLaterHandler);
-		_self.remove(_description);
-		_self.remove(_downloadIcon);
-		_self.remove(_removeIcon);
-	};
 	
 	/** @title: createHTMLOperators (Function)
 	 *  @parameters: list of operators and files js
@@ -159,14 +154,26 @@ function downloadsPlatform(h, listWidgets, listOperators, workspaceName) {
 		}
 	};
 
-	/** @title: removeVariables (Function)
-	 *  @usage: clean view by variables */
+	/** @title: clearObject (Function)
+	 *  @usage: destroy all variables of downloadsPlatform
+	 *  @extras: memory management (null) */
 	_self.clearObject = function clearObject() {
-		_downloadIcon.removeEventListener('click', _self.downloadHandler);
-		_removeIcon.removeEventListener('click', _self.downloadLaterHandler);
+		_widgetsToDownload = null;
+		_operatorsToDownload = null;
 		_self.remove(_description);
-		_self.remove(_downloadIcon);
-		_self.remove(_removeIcon);
+		_description = null;
+		_self.remove(_checkURLIcon);
+		_checkURLIcon = null;
+		_self.remove(_downWidgetsIcon);
+		_downWidgetsIcon = null;
+		_self.remove(_buildWidgetsIcon);
+		_buildWidgetsIcon = null;
+		_footer.removeEventListener('click', _self.funShowWorkspace);
+		_self.remove(_footer);
+		_footer = null;
+		delete _self['downloadLaterHandler'];
+		delete _self['funShowWorkspace'];
+		delete _self['downloadHandler'];
 	};
 	
 	/** @title: downloadLaterHandler (Function)
@@ -175,35 +182,46 @@ function downloadsPlatform(h, listWidgets, listOperators, workspaceName) {
 		
 	};
 	
+	/** @title: funShowWorkspace (Function)
+	 *  @usage: fireEvent showWorkspace (workspaceManager.js) */
+	_self.funShowWorkspace = function funShowWorkspace(){
+		Ti.App.fireEvent('showWorkspace');
+	};
+						
+	/** @title: downloadHandler (Function)
+	 *  @usage: call to download dependencies and verify files */
 	_self.downloadHandler = function downloadHandler() {
 
 		// Clean View
-		removeVariables();
+		_self.remove(_description);
+		_downloadIcon.removeEventListener('click', _self.downloadHandler);
+		_removeIcon.removeEventListener('click', _self.downloadLaterHandler);
+		_self.remove(_downloadIcon);
+		_downloadIcon = null;
+		_self.remove(_removeIcon);
+		_removeIcon = null;
 
 		// Create Layout
-		_description = createDescriptionLabel(200, "Cargando Workspace");
+		_description = createDescriptionLabel(200, L('label_downloader_desc_down'));
 		_self.add(_description);
-		var _checkURL = createRowLabel(_description.top + _description.height, "Comprobación de dependencias alojadas en Wirecloud Desktop");
-		_self.add(_checkURL);
-		var _checkURLIcon = createOkIcon(_checkURL.top, _checkURL.left, _checkURL.width);
+		_self.add(createRowLabel(200, L('label_downloader_row_url')));
+		_checkURLIcon = createOkIcon(200, parseInt(_self.width / 6, 10), 650);
 		_self.add(_checkURLIcon);
-		var _downWidgets = createRowLabel(_checkURL.top + _checkURL.height + 50, "Widgets/operadores descargados en caché");
-		_self.add(_downWidgets);
-		var _downWidgetsIcon = createOkIcon(_downWidgets.top, _downWidgets.left, _downWidgets.width);
+		_self.add(createRowLabel(300, L('label_downloader_row_wid')));
+		_downWidgetsIcon = createOkIcon(300, parseInt(_self.width / 6, 10), 650);
 		_self.add(_downWidgetsIcon);
-		var _buildWidgets = createRowLabel(_downWidgets.top + _downWidgets.height + 50, "Construida cache de recursos asignados al Workspace");
-		_self.add(_buildWidgets);
-		var _buildWidgetsIcon = createOkIcon(_buildWidgets.top, _buildWidgets.left, _buildWidgets.width);
+		_self.add(createRowLabel(400, L('label_downloader_row_wid_build')));
+		_buildWidgetsIcon = createOkIcon(400, parseInt(_self.width / 6, 10), 650);
 		_self.add(_buildWidgetsIcon);
-		var _footer = createDescriptionLabel(100, "Espere por favor ...");
-		_footer.setTop(_buildWidgets.top + _buildWidgets.height + 75);
+		_footer = createDescriptionLabel(100, L('label_downloader_row_wait'));
+		_footer.setTop(525);
 		_self.add(_footer);
 		
 		// Check List Resource from Wirecloud Desktop
 		var _conObject = require('/connections/appConnection');
 		var _conA = _conObject.checkListResource(_widgetsToDownload.concat(_operatorsToDownload), function(checkResult) {
 			if (checkResult.value === true) {
-				_footer.setText("Error debido a la dependencia: "+checkResult.uri);
+				_footer.setText(L('label_downloader_footer_error') + ' ' +checkResult.uri);
 				_footer.setColor("#610000");
 				_checkURLIcon.setColor("#610000");
 			} else {
@@ -211,18 +229,15 @@ function downloadsPlatform(h, listWidgets, listOperators, workspaceName) {
 				_conA = _conObject.downloadListResource(_widgetsToDownload.concat(_operatorsToDownload), _widgetsToDownload.length, 
 				    function(downResult) {
 					if (downResult.value == true) {
-						_footer.setText("Error en la descarga de la dependencia: "+downResult.uri);
+						_footer.setText(L('label_downloader_footer_error_down') + ' ' + downResult.uri);
 						_footer.setColor("#610000");
 						_downWidgetsIcon.setColor("#610000");
 					} else {
 						createHTMLOperators(downResult.files);
 						_downWidgetsIcon.setColor("#006100");
 						_buildWidgetsIcon.setColor("#006100");
-						_footer.setText("Visualizar Workspace");
+						_footer.setText(L('label_downloader_footer_show'));
 						_footer.setTouchEnabled(true);
-						_self.funShowWorkspace = function funShowWorkspace(){
-							Ti.App.fireEvent('showWorkspace');
-						};
 						_footer.addEventListener('click', _self.funShowWorkspace);
 					}
 				});
@@ -231,10 +246,14 @@ function downloadsPlatform(h, listWidgets, listOperators, workspaceName) {
 	
 	};
 	
-	var _downloadIcon = createBigIcon("icon-download-alt", "Descargar dependencias", true);
+	_description = createDescriptionLabel(350, L('label_downloader_desc_main_fl') + ' ' + workspaceName + L('label_downloader_desc_main_ol'));
+	_self.add(_description);
+	
+	_downloadIcon = createBigIcon("icon-download-alt", L('label_downloader_down'), true);
 	_downloadIcon.addEventListener('click', _self.downloadHandler);
 	_self.add(_downloadIcon);
-	var _removeIcon = createBigIcon("icon-remove", "Aplazar", false);
+	
+	_removeIcon = createBigIcon("icon-remove", L('label_downloader_later'), false);
 	_removeIcon.addEventListener('click', _self.downloadLaterHandler);
 	_self.add(_removeIcon);
 	

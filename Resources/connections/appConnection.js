@@ -53,7 +53,6 @@
 		client.open("GET", url);
 		client.setRequestHeader("Content-Type", 'application/json; charset=utf-8');
 		client.clearCookies(_mainUrl);
-		Ti.API.info(Ti.App.Properties.getString('cookie_oilsid'));
 		if (Ti.App.Properties.getString('cookie_oilsid')) {
 			client.setRequestHeader("Cookie", "oil_sid=" + Ti.App.Properties.getString('cookie_oilsid'));
 		} else {
