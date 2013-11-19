@@ -1,3 +1,4 @@
+
 //Application Window Component Constructor
 
 function appWindow() {
@@ -32,45 +33,27 @@ function appWindow() {
 	Ti.App.Properties.removeProperty('cookie_sessionid');
 	
 	// Login Event and creation of MainView
-	_self.onSuccessWirecloud = function onSuccessWirecloud(data){
-		var _conObject = require('/connections/appConnection');
-		var _conA = _conObject.getWirecloud(function(values) {
-			if (values == "Error") {
-				var _stringSearch;
-				if (Ti.Network.online) _stringSearch = (_isApple) ? "error_connection_login_ios" : "error_connection_login_android";
-				else _stringSearch = "error_connection_inet";
-				var _alertError = Ti.UI.createAlertDialog({
-					title: "Wirecloud",
-					message: L(_stringSearch),
-					buttonNames: [L("alert_button_accept")],
-				});
-				_alertError.show();
-				_stringSearch = null;
-				_alertError = null;
-				Ti.App.fireEvent('connectToWirecloudError');
-			} 
-			else {
-				_self.backgroundColor = '#E0F2F7';
+	_self.showMainView = function showMainView(data){
+		_self.backgroundColor = '#E0F2F7';
 				
-				// Remove Login View
-				_loginA.clearObject();
-				_self.remove(_loginA);
-				_loginA = null;
-				_loginObject = null;
+		// Remove Login View
+		_loginA.clearObject();
+		_self.remove(_loginA);
+		_loginA = null;
+		_loginObject = null;
 				
-				// Create and add Main View
-				var _mainObject = require('ui/mainView/mainView');
-				_self.add(_mainObject([data, values]));
-				_mainObject = null;
+		// Create and add Main View
+		var _mainObject = require('ui/mainView/mainView');
+		_self.add(_mainObject(data));
+		_mainObject = null;
 			
-				// Remove Listener
-				Ti.App.removeEventListener('connectToWirecloud', _self.onSuccessWirecloud);
-			}
-		});
-		_conObject = null;
-		_conA = null;
+		// Remove Listener
+		Ti.App.removeEventListener('showMainView', _self.showMainView);
+		delete _self['showMainView'];
+			
 	};
-	Ti.App.addEventListener('connectToWirecloud', _self.onSuccessWirecloud);
+	Ti.App.addEventListener('showMainView', _self.showMainView);
+	
 	return _self;
 }
 

@@ -20,7 +20,6 @@ function loginView() {
 	
 	// Logo View (SVG <-> WebView)
 	var _heightLogo = (_self.width / 2 != 800) ? parseInt((500 * ((_self.width / 2) / 800)),10) : 500;
-	//var _heightLogo = (_self.width / 2 != 800) ? parseInt((800 * ((_self.width / 2) / 800)),10) : 800;
 	_self.add(Ti.UI.createWebView({
 		url : (_isApple) ? Ti.Filesystem.resourcesDirectory + '/ui/loginView/logo_tab.svg' : 'logo_tab.svg',
 		height : _heightLogo,
@@ -75,11 +74,6 @@ function loginView() {
 			}, 250); 
 		}
 	};
-	_self.onErrorWirecloud = function onErrorWirecloud(){
-		_self.remove(_activitySession);
-		_activitySession = null;
-		createForm();
-	};
 	_self.onChangeConnection = function onChangeConnection(){
 		_internetLabel.text = (Ti.Network.online) ? L('label_inet_connected') : L('label_inet_noconnected');
 		_internetLabelIcon.color = (Ti.Network.online) ? "#00FF00" : "#FF0000";
@@ -90,10 +84,7 @@ function loginView() {
 	
 	// Remove Auto Focus (Apple | Android)
 	_self.addEventListener('click', _self.onClickSelf);	
-	
-	// Add Listener for Error in Connection
-	Ti.App.addEventListener('connectToWirecloudError', _self.onErrorWirecloud);
-	
+		
 	// Label Internet Information
 	var _internetLabel = Ti.UI.createLabel({
 		text : (Ti.Network.online) ? L('label_inet_connected') : L('label_inet_noconnected'),
@@ -129,8 +120,10 @@ function loginView() {
 	 *  @usage: check passTextField value
 	 *  @extras: launch HTTPAuth for login in wirecloud server */
 	function checkAuthentication() {
-		if (_userTextField.value.length == 0) alert(L("error_login_username"));
-		else if (_passTextField.value.length == 0) alert(L("error_login_password"));
+		var _userText = _userTextField.value;
+		var _passText = _passTextField.value;
+		if (_userText.length == 0) alert(L("error_login_username"));
+		else if (_passText.length == 0) alert(L("error_login_password"));
 		else {
 			_containerForm.borderWidth = 0;
 			if(_isApple){
@@ -149,12 +142,43 @@ function loginView() {
 				}, 1000);
 			}
 			setTimeout(function() {
-				//Ti.App.Properties.setString('cookie_oilsid',"f7gqkmmw0mtau4gn7nwm97pisviiz1");
-				Ti.App.Properties.setString('cookie_csrftoken',"IKMQIEcBTJjJxql3VIaaUEidS8PLo7lV");
-				Ti.App.Properties.setString('cookie_sessionid',"4dnh5m2gznm6dvijohfwah7483bpx2mr");
-				Ti.App.fireEvent('connectToWirecloud');
+				var _conObject = require('/connections/appConnection');
+				var _logObject = require('/ui/loginView/loginLocal');
+				if(_logObject().checkLoginSaved([_userText, _passText])){
+					Ti.App.fireEvent('showMainView');
+				}
+				else{
+					var _conCredentials = _conObject.checkCredentials([_userText, _passText], function(credentials) {
+						if(values === 'Credential Error') showError('login');
+						else if(values === 'Wirecloud Error') showError('wirecloud');
+						else{
+							Ti.App.Properties.setString('cookie_csrftoken',credentials[2]);
+							Ti.App.Properties.setString('cookie_sessionid',credentials[3]);
+							_logObject().saveCredentials(credentials);
+							Ti.App.fireEvent('showMainView');
+						}
+					});
+				}
 			}, 2000);
 		}
+		
+		function showError(string){
+			var _stringSearch;
+			if (Ti.Network.online) _stringSearch = (_isApple) ? "error_connection_login_ios" : "error_connection_login_android";
+			else _stringSearch = "error_connection_inet";
+			var _alertError = Ti.UI.createAlertDialog({
+				title: "Wirecloud",
+				message: L(_stringSearch),
+				buttonNames: [L("alert_button_accept")],
+			});
+			_alertError.show();
+			_stringSearch = null;
+			_alertError = null;
+			_self.remove(_activitySession);
+			_activitySession = null;
+			createForm();
+		}
+		
 	}
 
 	/** @title: createForm (Function)

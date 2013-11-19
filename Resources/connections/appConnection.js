@@ -5,6 +5,53 @@
 	var _mainUrl = "http://138.100.12.106:8088/";
 	var _tim = 100000;
 
+	/** @title: checkCredentials (Function)
+	 *  @param: [username, password], callback_function
+	 *  @usage: check and get session */
+	function checkCredentials(credentials, callback_function) {
+		var url = _mainUrl + 'login';
+		var response;
+		var client = Ti.Network.createHTTPClient({
+			onload : function(e) {
+				var _cookies = this.getResponseHeader('Set-Cookie');
+				var _csrftoken = _cookies.substr(10, 32);
+				var _sessionid = _cookies.substr(_cookies.indexOf('sessionid')+10, 32);
+				credentials[2] = _csrftoken;
+				client = Ti.Network.createHTTPClient({
+					onload : function(e) {
+						if(this.responseText.indexOf('csrfmiddlewaretoken') == -1){
+							credentials[3] = _sessionid;
+							callback_function(credentials);
+						}
+						else callback_function("Credential Error");
+					},
+					onerror : function(e) {
+						callback_function("Wirecloud Error");
+					},
+					_timeout : _tim
+				});
+				var boundary = '----Wirecloud4TabletBoundary';  
+    			var body =  "--" + boundary + "\r\n" + "Content-Disposition: form-data; name=\"username\"\r\n\r\n" + credentials[0] + "\r\n";
+    			header += "--" + boundary + "\r\n" + "Content-Disposition: form-data; name=\"password\"\r\n\r\n" + credentials[1] + "\r\n";
+    			header += "--" + boundary + "\r\n" + "Content-Disposition: form-data; name=\"csrfmiddlewaretoken\"\r\n\r\n" + credentials[2] + "\r\n";
+    			header += "--" + boundary + "--";    
+				client.open("POST", url);
+				client.setRequestHeader("Content-type", "multipart/form-data; boundary=\"" + boundary + "\"");  
+				client.clearCookies(_mainUrl);
+				client.setRequestHeader("Cookie", "csrftoken=" + _csrftoken);
+				client.setRequestHeader("Cookie", "sessionid=" + _sessionid);				
+				client.send(body);
+			},
+			onerror : function(e) {
+				callback_function("Wirecloud Error");
+			},
+			_timeout : _tim
+		});
+		client.open("GET", url);
+		client.clearCookies(_mainUrl);
+		client.send();
+	};
+	
 	/** @title: getWirecloud (Function)
 	 *  @param: csrftoken, sessionid, callback_function
 	 *  @usage: get Information Wirecloud Account */
@@ -29,7 +76,7 @@
 				});
 			}
 		});
-	}
+	};
 
 	/** @title: getWorkspaces (Function)
 	 *  @param: csrftoken, sessionid, callback_function
@@ -164,7 +211,7 @@
 			client.setRequestHeader("Cookie", "sessionid=" + Ti.App.Properties.getString('cookie_sessionid'));
 		}
 		client.send();
-	}
+	};
 
 	/** @title: getMarketPlaces (Function)
 	 *  @param: csrftoken, sessionid, callback_function
@@ -198,7 +245,7 @@
 			client.setRequestHeader("Cookie", "sessionid=" + Ti.App.Properties.getString('cookie_sessionid'));
 		}
 		client.send();
-	}
+	};
 
 	/** @title: putWorkspaceMashup (Function)
 	 *  @param: csrftoken, sessionid, mashupData, callback_function
@@ -228,7 +275,7 @@
 			client.setRequestHeader("Cookie", "sessionid=" + Ti.App.Properties.getString('cookie_sessionid'));
 		}
 		client.send(JSON.stringify(param));
-	}
+	};
 
 	/** @title: getRouteWidgetMap (Function)
 	 *  @param: pointOrigin, pointDestiny, mode, callback_function
@@ -246,7 +293,7 @@
 		});
 		client.open("GET", url);
 		client.send();
-	}
+	};
 
 	/** @title: makeExternRequest (Function)
 	 *  @param: data (options make request + url), callback_function
@@ -281,7 +328,7 @@
 			client.send(JSON.stringify(opt.parameters));
 		} else
 			client.send();
-	}
+	};
 
 	/** @title: checkListResource (Function)
 	 *  @param: data (widgets and operators uri), callback_function
@@ -340,8 +387,7 @@
 			client.send();
 			return client;
 		};
-	
-	}
+	};
 
 	/** @title: downloadListResource (Function)
 	 *  @param: data (widgets and operators uri), number of widgets, callback_function
@@ -369,15 +415,15 @@
 				}
 				if (Object.keys(_resources).length === 0) callback_function(_error);
 			});
-		} 
+		}
 		
 		/** @title: downloadResources (Function)
 		 *  @param: widgets uri, id, type [operator|widget] and callback_function
 		 *  @usage: download index.html and files */
-		function downloadResources(uri, id, flag, callback) {
-			var urlResource = _mainUrl + 'api/resource/' + uri + '/description?include_wgt_files=true';
-			var client = Ti.Network.createHTTPClient({
-				onload : function(e) {
+		 function downloadResources(uri, id, flag, callback) {
+			 var urlResource = _mainUrl + 'api/resource/' + uri + '/description?include_wgt_files=true';
+			 var client = Ti.Network.createHTTPClient({
+				 onload : function(e) {
 					var _type = (flag) ? 'widgets/' : 'operators/';
 					var _files = JSON.parse(this.responseText);
 					_files = _files.wgt_files;
@@ -414,31 +460,15 @@
 							}
 							else delete _filesResource[result.id];
 							if (Object.keys(_filesResource).length === 0) {
-								if(flag || _error.value == true){
-									callback({'id' : id,
-											  'value' : false,
-											  'uri' : uri,
-											  'flag' : flag,
-									});
-								} else { 
-									callback({'id' : id,
-											  'files' : _files,
-										      'value' : false,
-											  'uri' : uri,
-											  'flag' : flag
-									});
-								}
+								if(flag || _error.value == true) callback({'id' : id, 'value' : 0, 'uri' : uri, 'flag' : flag });
+								else callback({'id' : id, 'files' : _files, 'value' : 0, 'uri' : uri, 'flag' : flag });
 							}
 						});
 					}
 				},
 				onerror : function(e) {
 					Ti.API.info("Result [get files] of " + uri + ": Error");
-					callback({
-						'id' : id,
-						'value' : true,
-						'uri' : uri
-					});
+					callback({'id' : id, 'value' : 1, 'uri' : uri });
 				},
 				_timeout : _tim
 			});
@@ -502,6 +532,7 @@
 	};
 
 	// Wirecloud API Fi-WARE
+	module.exports.checkCredentials = checkCredentials;
 	module.exports.getWirecloud = getWirecloud;
 	module.exports.getWorkspaces = getWorkspaces;
 	module.exports.getResources = getResources;

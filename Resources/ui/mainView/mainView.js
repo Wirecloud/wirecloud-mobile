@@ -5,10 +5,9 @@ function mainView(data) {
 
 	var _isApple = (Ti.Platform.osname == 'ipad');
 	var _isIOS7 = (_isApple && Ti.Platform.version.split('.')[0] === '7') ? true : false;
-	var _dataWirecloud = data[1];
-	var _dataSession = data[0];
-	var _actualWorkspace = JSON.parse(_dataWirecloud[1]).name;
-	var _actualTab = JSON.parse(_dataWirecloud[1]).tabs[0].name;
+	var _dataWirecloud = data;
+	var _actualWorkspace = JSON.parse(_dataWirecloud).name;
+	var _actualTab = JSON.parse(_dataWirecloud).tabs[0].name;
 	var _actualMode = "workspace";
 	var _contentView = null;
 	var _contentViewDisabled = null;
