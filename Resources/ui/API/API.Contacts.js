@@ -177,7 +177,12 @@
 		var _exprISO8601 = "([0-9]{4})(-([0-9]{2})(-([0-9]{2})" +
         "(T([0-9]{2}):([0-9]{2})(:([0-9]{2})(\.([0-9]+))?)?" +
         "(Z|(([-+])([0-9]{2}):([0-9]{2})))?)?)?)?";
-		return birthday.match(new RegExp(_exprISO8601)) != null;
+		if(birthday.match(new RegExp(_exprISO8601)) == null){
+			return false;
+		}
+		else{
+			return new Date(birthday).toDateString != 'Invalid Date';
+		}
 	};
 	
 	/** Private Function to validate Multi Address Object 
@@ -215,5 +220,5 @@
 	};
 	
 	return _self;
-	
+		
 })();
