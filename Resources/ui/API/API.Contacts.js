@@ -1,5 +1,6 @@
 /**
  * Copyright (c) 2014 by Center Open Middleware. All Rights Reserved.
+ * Titanium Appcelerator 3.2.0GA
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
@@ -38,16 +39,16 @@
 			_list.push({
 				'address' : _person.getAddress(),
 				'birthday' : _person.getBirthday(),
-				'dates' : _person.getDate(),
-				'emails' : _person.getEmail(),
+				'date' : _person.getDate(),
+				'email' : _person.getEmail(),
 				'im' : _person.getInstantMessage(),
 				'image' : _person.getImage(),
 				'name' : (_person.getMiddleName == '') ? _person.getFirstName() :
 				         _person.getFirstName() + " " + _person.getMiddleName(),
 				'surname' : _person.getLastName(),
 				'nick' : _person.getNickName(),
-				'notes' : _person.getNote(),
-				'phones' : _person.getPhone(),
+				'note' : _person.getNote(),
+				'phone' : _person.getPhone(),
 				'organization' : _person.getOrganization(),
 				'websites' : _person.getUrl() 
 			});
@@ -59,37 +60,114 @@
 	  *  @param : {Object} parameter 
 	  *  @return: True or False */
 	_self.createContact = function(parameter){
-		if(_validateContact(parameter)){
-			Ti.Contacts.createPerson(parameter);	
-		}
-		else{
-			return false;
-		}
+		parameter = _validateContact(parameter);
+		Ti.Contacts.createPerson(parameter);
 	};
 
 	/** Private Function to validate parameters 
 	  * @param {Object} parameter
       * @return : True or False */
 	var _validateContact = function _validateContact(parameter){
-		if(typeof parameter['address'] != 'Object'){
-			Ti.API.error('[Ti.API.Contact] Key Address should be Object');
-			return false;
-		}
-		else if(typeof parameter['address'] != 'undefined'){
-			if(!_validateMultiAddress(parameter['address'])){
-				return false;
+		
+		if(typeof parameter['address'] != 'undefined'){
+			if(typeof parameter['address'] != 'Object'){
+				parameter['address'] = '[WARN] Key address should be Object';
+			}
+			else{
+				parameter['address'] = _validateMultiAddress(parameter['address']);
 			}
 		}
-		if(_result && typeof parameter['birthday'] != 'String'){
-			Ti.API.error('[Ti.API.Contact] Key Birthday should be String');
-			return false;
-		}
-		else if(typeof parameter['birthday'] != 'undefined'){
-			if(!_validateBirthday(['birthday'])){
-				return false;
+		
+		if(typeof parameter['birthday'] != 'undefined'){
+			if(typeof parameter['birthday'] != 'String'){
+				parameter['birthday'] = '[WARN] Key birthday should be String';
+			}
+			else{
+				if(!_validateSingleDate(parameter['birthday'])){
+					parameter['birthday'] = '[WARN] Key birthday is not valid date or format';
+				}
 			}
 		}
-		return true;
+		
+		if(typeof parameter['date'] != 'undefined'){
+			if(typeof parameter['dates'] != 'Object'){
+				parameter['date'] = '[WARN] Key dates should be Object';
+			}
+			else{
+				parameter['date'] = _validateMultiDate(parameter['dates']);
+			}
+		}
+		
+		if(typeof parameter['email'] != 'undefined'){
+			if(typeof parameter['email'] != 'Object'){
+				parameter['email'] = '[WARN] Key dates should be Object';
+			}
+			else{
+				parameter['email'] = _validateMultiValue(parameter['email']);
+			}
+		}
+		
+		if(typeof parameter['im'] != 'undefined'){
+			if(typeof parameter['im'] != 'Object'){
+				parameter['im'] = '[WARN] Key dates should be Object';
+			}
+			else{
+				parameter['im'] = _validateMultiIM(parameter['im']);
+			}
+		}
+		
+		if(typeof parameter['name'] != 'undefined'){
+			if(typeof parameter['name'] != 'String'){
+				parameter['name'] = '[WARN] Key name should be String';
+			}
+			else{
+				parameter['name'] = _validateName(parameter['name']);
+			}
+		}
+		
+		if(typeof parameter['surname'] != 'undefined'){
+			if(typeof parameter['surname'] != 'String'){
+				parameter['surname'] = '[WARN] Key surname should be String';
+			}
+		}
+		
+		if(typeof parameter['nick'] != 'undefined'){
+			if(typeof parameter['nick'] != 'String'){
+				parameter['nick'] = '[WARN] Key nick should be String';
+			}
+		}
+		
+		if(typeof parameter['note'] != 'undefined'){
+			if(typeof parameter['note'] != 'String'){
+				parameter['note'] = '[WARN] Key note should be String';
+			}
+		}
+		
+		if(typeof parameter['organization'] != 'undefined'){
+			if(typeof parameter['organization'] != 'String'){
+				parameter['organization'] = '[WARN] Key organization should be String';
+			}
+		}
+		
+		if(typeof parameter['phone'] != 'undefined'){
+			if(typeof parameter['phone'] != 'Object'){
+				parameter['phone'] = '[WARN] Key phone should be Object';
+			}
+			else{
+				parameter['phone'] = _validatePhone(parameter['phone']);
+			}
+		}
+		
+		if(typeof parameter['website'] != 'undefined'){
+			if(typeof parameter['website'] != 'Object'){
+				parameter['website'] = '[WARN] Key website should be Object';
+			}
+			else{
+				parameter['website'] = _validateMultiValue(parameter['website']);
+			}
+		}
+		
+		return parameter;
 	};
 	
 	/** Private Function to validate Birthday 
