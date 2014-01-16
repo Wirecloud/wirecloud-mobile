@@ -34,7 +34,7 @@
 		var _people = (parameter) ? Ti.Contacts.getPeopleWithName(parameter) : Ti.Contacts.getAllPeople();
 		var _i;
 		for(_i = 0; _i < _people.length; _i++){
-			var _person = _people[i];
+			var _person = _people[_i];
 			_list.push({
 				'address' : _person.getAddress(),
 				'birthday' : _person.getBirthday(),
@@ -59,7 +59,7 @@
 	  *  @param : {Object} parameter 
 	  *  @return: True or False */
 	_self.createContact = function(parameter){
-		if(_validateContact){
+		if(_validateContact(parameter)){
 			Ti.Contacts.createPerson(parameter);	
 		}
 		else{
@@ -71,13 +71,35 @@
 	  * @param {Object} parameter
       * @return : True or False */
 	var _validateContact = function _validateContact(parameter){
-		var _result = true;
 		if(typeof parameter['address'] != 'Object'){
-			_result = false;
+			Ti.API.error('[Ti.API.Contact] Key Address should be Object');
+			return false;
 		}
 		else if(typeof parameter['address'] != 'undefined'){
-			_result = _validateMultiAddress(parameter['address']);
+			if(!_validateMultiAddress(parameter['address'])){
+				return false;
+			}
 		}
+		if(_result && typeof parameter['birthday'] != 'String'){
+			Ti.API.error('[Ti.API.Contact] Key Birthday should be String');
+			return false;
+		}
+		else if(typeof parameter['birthday'] != 'undefined'){
+			if(!_validateBirthday(['birthday'])){
+				return false;
+			}
+		}
+		return true;
+	};
+	
+	/** Private Function to validate Birthday 
+	  * @param {String} Birthday format ISO8601
+      * @return : True or False */
+	var _validateBirthday = function _validateBirthday(birthday){
+		var _exprISO8601 = "([0-9]{4})(-([0-9]{2})(-([0-9]{2})" +
+        "(T([0-9]{2}):([0-9]{2})(:([0-9]{2})(\.([0-9]+))?)?" +
+        "(Z|(([-+])([0-9]{2}):([0-9]{2})))?)?)?)?";
+		return birthday.match(new RegExp(_exprISO8601)) != null;
 	};
 	
 	/** Private Function to validate Multi Address Object 
@@ -86,27 +108,32 @@
 	var _validateMultiAddress = function _validateMultiAddress(multiAddress){
 		for(var i in multiAddress){
 			if(typeof multiAddress[i] != 'Array'){
+				Ti.API.error('[Ti.API.Contact] Key Address ('+i+') should be Array');
 				return false;
 			}
 			else{
-				if(!parameter['address'][i].every(_validateAddress)){
-					return false;
-				}
+				parameter['address'][i].every(_validateSingleAddress);
 			}
 		}
 		return true;
 	};
 	
 	/** Private Function to validate Single Address Object 
-	  * @param {Object} Address Array
+	  * @param {Array} Address Array, {Object} Address Element
       * @return : True or False */
 	var _validateSingleAddress = function _validateSingleAddress(element, index, array) {
-		for(var i in element){
-			if (i == 'CountryCode' && i == 'County' && _device == 'android'){
-				return false;
-			}
-			else{}
+		var _keys = {'Street' : '', 'City' : '', 'State' : '' , 'Country' : '', 'ZIP' : ''};
+		if (_device == 'android'){
+			_keys.CountryCode = '';
+			_keys.County = '';
 		}
+		for(var key in element){
+			if(!key in _keys){
+				Ti.API.warn('[Ti.API.Contact] Key deleted. It is not compatible with createConcat function: '+ key);
+				delete element[key];
+			}
+		}
+		return true;
 	};
 	
 	return _self;
