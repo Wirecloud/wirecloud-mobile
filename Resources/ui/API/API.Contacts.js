@@ -42,7 +42,7 @@
 				'date' : _person.getDate(),
 				'email' : _person.getEmail(),
 				'im' : _person.getInstantMessage(),
-				'image' : _person.getImage(),
+				'image' : Ti.Utils.base64encode(_person.getImage().read()).toString(),
 				'name' : (_person.getMiddleName == '') ? _person.getFirstName() :
 				         _person.getFirstName() + " " + _person.getMiddleName(),
 				'surname' : _person.getLastName(),
