@@ -90,11 +90,11 @@
 		}
 		
 		if(typeof parameter['date'] != 'undefined'){
-			if(typeof parameter['dates'] != 'Object'){
+			if(typeof parameter['date'] != 'Object'){
 				parameter['date'] = '[WARN] Key dates should be Object';
 			}
 			else{
-				parameter['date'] = _validateMultiDate(parameter['dates']);
+				parameter['date'] = _validateMultiDate(parameter['date']);
 			}
 		}
 		
@@ -170,19 +170,38 @@
 		return parameter;
 	};
 	
-	/** Private Function to validate Birthday 
-	  * @param {String} Birthday format ISO8601
+	/** Private Function to validate single Date 
+	  * @param {String} Date format ISO8601
       * @return : True or False */
-	var _validateBirthday = function _validateBirthday(birthday){
+	var _validateSingleDate = function _validateSingleDate(date){
 		var _exprISO8601 = "([0-9]{4})(-([0-9]{2})(-([0-9]{2})" +
         "(T([0-9]{2}):([0-9]{2})(:([0-9]{2})(\.([0-9]+))?)?" +
         "(Z|(([-+])([0-9]{2}):([0-9]{2})))?)?)?)?";
-		if(birthday.match(new RegExp(_exprISO8601)) == null){
+		if(date.match(new RegExp(_exprISO8601)) == null){
 			return false;
 		}
 		else{
-			return new Date(birthday).toDateString != 'Invalid Date';
+			return new Date(date).toDateString != 'Invalid Date';
 		}
+	};
+	
+	/** Private Function to validate Multi Date 
+	  * @param {Object} Multi Date format ISO8601
+      * @return : True or False */
+	var _validateMultiDate = function _validateMultiDate(multiDate){
+		for(var i in multiDate){
+			if(typeof multiDate[i] != 'Array'){
+				multiDate[i] = '[WARN] Key birthday '+i+' should be Array';
+			}
+			else{
+				for(var j = 0; j < multiDate[i].length; j++){
+					if(!_validateSingleDate(multiDate[i][j])){
+						multiDate[i] = '[WARN] Key birthday '+i+' have not valid date or format';
+					}
+				}
+			}
+		}
+		return multiDate;
 	};
 	
 	/** Private Function to validate Multi Address Object 
