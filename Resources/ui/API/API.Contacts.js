@@ -116,6 +116,15 @@
 			delete parameter['im'];
 		}
 		
+		if(typeof parameter['image'] != 'undefined'){
+			if(typeof parameter['image'] != 'String'){
+				parameter['image'] = '[WARN] Key image should be String in Base64';	
+			}
+			else{
+				parameter['image'] = Ti.Utils.base64decode(parameter['image']);
+			}
+		}
+		
 		if(typeof parameter['name'] != 'undefined'){
 			if(typeof parameter['name'] != 'String'){
 				parameter['firstname'] = '[WARN] Key name should be String';
