@@ -3,6 +3,57 @@
  * Titanium Appcelerator 3.2.0GA
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
+ * 
+ *   getAuthorization
+ *      Request authorization if permission is AUTHORIZATION_UNKNOWN
+ *      Return [AUTHORIZATION_AUTHORIZED | AUTHORIZATION_RESTRICTED]
+ * 
+ *   getContactList
+ *      Optional Search with parameter (name, middlename, lastname or combination)
+ *      Return Contact Array
+ * 
+ *   createContact
+ *      Parameters of Contact
+ *         address:  {Object}
+ *                   keys = home, work or other
+ *                   values = {Object Array}
+ *                           keys = CountryCode, Street, City, County, State, Country, ZIP
+ *                           values = {String}
+ *         birthday: {String} Date Format ISO8601 (2013-09-23T22:03:46.000+0000)
+ *         date:     {Object}
+ *                   keys = anniversary or other
+ *                   values = {String Array} Date Format ISO8601
+ *         email:    {Object}
+ *                   keys = home, work or other
+ *                   values = {String Array}
+ *         im:       {Object}
+ *                   keys = home, work or other
+ *                   values = {Object Array}
+ *                           keys = service, username
+ *                           - service = AIM, Facebook, GaduGadu, GoogleTalk, ICQ, MSN, QQ, Skype or Yahoo
+ *                           - username = {String}
+ *         image:    {String} Base64 Representation of Ti.Blob              
+ *         name:     {String} Concatenation of firstname and middlename
+ *         surname:  {String} Representation of lastname
+ *         nick:     {String} Representation of nickname
+ *         note:     {String}
+ *         phone:    {Object}
+ *                   keys = home, work, other, mobile, pager, workFax, homeFax or main
+ *                   values = {String}
+ *         organization = {String}
+ *         website:  {Object}
+ *                   keys = homepage, home, work or other
+ *                   values = {String Array}
+ *      Return Contact Object
+ * 
+ *   deleteContact
+ *      Search with parameter (name, middlename, lastname or combination)
+ *      Return status code [0 = Success, 1 = Not Found, 2 = Multiple Contacts Found]
+ * 
+ *   saveChanges
+ *   
+ *   revertChanges
+ *   
  */
 
 (function() {
@@ -49,7 +100,7 @@
 				'note' : _person.getNote(),
 				'phone' : _person.getPhone(),
 				'organization' : _person.getOrganization(),
-				'websites' : _person.getUrl() 
+				'website' : _person.getUrl() 
 			});
 		}
 		return _list;
