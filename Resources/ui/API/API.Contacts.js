@@ -56,7 +56,7 @@
 	};
 	
 	/** Create Contact
-	  *  @param : {Object} parameter 
+	  *  @param: {Object} parameter with contact info 
 	  *  @return : Object Contact */
 	_self.createContact = function(parameter){
 		parameter = _validateContact(parameter);
@@ -65,6 +65,33 @@
 			Ti.Contacts.createPerson(parameter);
 		}
 		return parameter;
+	};
+
+	/** Save Changes */
+	_self.saveChanges = function(){
+		Ti.Contacts.save();
+	};
+	
+	/** Revert Changes from last save */
+	_self.revertChanges = function(){
+		Ti.Contacts.revert();
+	};
+	
+	/** Delete Contact
+	 *  @param: {String} Name, MiddleName, LastName or a combination
+	 *  @return: 0 (Success) , 1 (Not found) , 2 (Multiple Contact) */
+	_self.deleteContact = function(parameter){
+		var list = _self.getContactList(parameter);
+		if(list.length == 0){
+			return 1;
+		}
+		else if(list.length == 1){
+			Ti.Contacts.removePerson(list[0]);
+			return 0;
+		}
+		else{
+			return 2;
+		}
 	};
 
 	/** Private Function to validate parameters 
