@@ -91,7 +91,7 @@
 		
 		if(typeof parameter['date'] != 'undefined'){
 			if(typeof parameter['date'] != 'Object'){
-				parameter['date'] = '[WARN] Key dates should be Object';
+				parameter['date'] = '[WARN] Key date should be Object';
 			}
 			else{
 				parameter['date'] = _validateMultiDate(parameter['date']);
@@ -100,20 +100,21 @@
 		
 		if(typeof parameter['email'] != 'undefined'){
 			if(typeof parameter['email'] != 'Object'){
-				parameter['email'] = '[WARN] Key dates should be Object';
+				parameter['email'] = '[WARN] Key email should be Object';
 			}
 			else{
-				parameter['email'] = _validateMultiValue(parameter['email']);
+				parameter['email'] = _validateMultiValue(parameter['email'], 'email');
 			}
 		}
 		
 		if(typeof parameter['im'] != 'undefined'){
 			if(typeof parameter['im'] != 'Object'){
-				parameter['im'] = '[WARN] Key dates should be Object';
+				parameter['instantMessage'] = '[WARN] Key im should be Object';
 			}
 			else{
-				parameter['im'] = _validateMultiIM(parameter['im']);
+				parameter['instantMessage'] = _validateMultiIM(parameter['im']);
 			}
+			delete parameter['im'];
 		}
 		
 		if(typeof parameter['name'] != 'undefined'){
@@ -187,7 +188,7 @@
 	
 	/** Private Function to validate Multi Date 
 	  * @param {Object} Multi Date format ISO8601
-      * @return : True or False */
+      * @return : Object */
 	var _validateMultiDate = function _validateMultiDate(multiDate){
 		for(var i in multiDate){
 			if(typeof multiDate[i] != 'Array'){
@@ -204,20 +205,87 @@
 		return multiDate;
 	};
 	
+	/** Private Function to validate multi value String 
+	  * @param {Object} Generic Object with Array String {String} data type
+      * @return : Object */
+	var _validateMultiValue = function _validateMultiValue(multiValue, type){
+		for(var i in multiValue){
+			if(typeof multiValue[i] != 'Array'){
+				multiValue[i] = '[WARN] Key '+type+' '+i+' should be Array';
+			}
+			else{
+				for(var j = 0; j < multiValue[i].length; j++){
+					if(typeof (multiValue[i][j]) != 'String'){
+						multiValue[i] = '[WARN] Key '+type+' '+i+' have not valid '+type;
+					}
+				}
+			}
+		}
+		return multiValue;
+	};
+	
+	/** Private Function to validate Instant Messaging 
+	  * @param {Object} Instant Messaging Array and IM
+      * @return : Object */
+	var _validateMultiIM = function _validateMultiIM(multiIm){
+		for(var i in multiIm){
+			if(typeof multiIm[i] != 'Array'){
+				multiIm[i] = '[WARN] Key Instant Messaging '+i+' should be Array';
+			}
+			else{
+				for(var j = 0; j < multiIm[i].length; j++){
+					multiIm[i][j] = _validateSingleIM(multiIm[i][j]);
+				}
+			}
+		}
+		return multiIm;
+	};
+	
+	/** Private Function to validate Single Instant Messaging 
+	  * @param {Object} Instant Messaging (Service | Username)
+      * @return : Same Object or Warning */
+	var _validateSingleIM = function _validateSingleIM(singleIm){
+		var _services = {'AIM' : '', 'Facebook' : '', 'GaduGadu' : '' , 
+		             'GoogleTalk' : '', 'ICQ' : '', 'MSN' : '',
+		             'QQ' : '', 'Skype' : '', 'Yahoo' : ''};
+		var _keys = {'service' : '', 'username' : ''};
+		if(typeof singleIm != 'Object'){
+			return '[WARN] Key Instant Messaging '+i+' should be Array';
+		}
+		else{
+			for(var key in singleIm){
+				if(!key in _keys){
+					return '[WARN] Key Instant Messaging '+key+' is not a valid key';
+				}
+				else if(key == 'service'){
+					if(!singleIm[key] in _services){
+						return '[WARN] Key Instant Messaging '+singleIm[key]+' is not a valid service'
+					}
+				}
+				else if(key == 'username'){
+					if(typeof singleIm[key] != 'String'){
+						return '[WARN] Key Instant Messaging '+singleIm[key]+' is not a valid format of username'
+					}
+				}
+			}
+		}
+		return singleIm;
+	};
+	
 	/** Private Function to validate Multi Address Object 
 	  * @param {Object} Address Object
-      * @return : True or False */
+      * @return : Object */
 	var _validateMultiAddress = function _validateMultiAddress(multiAddress){
 		for(var i in multiAddress){
 			if(typeof multiAddress[i] != 'Array'){
-				Ti.API.error('[Ti.API.Contact] Key Address ('+i+') should be Array');
+				multiAddress = '[WARN] Key address +'i'+ should be Array';
 				return false;
 			}
 			else{
-				parameter['address'][i].every(_validateSingleAddress);
+				multiAddress['address'][i].every(_validateSingleAddress);
 			}
 		}
-		return true;
+		return multiAddress;
 	};
 	
 	/** Private Function to validate Single Address Object 
@@ -231,8 +299,7 @@
 		}
 		for(var key in element){
 			if(!key in _keys){
-				Ti.API.warn('[Ti.API.Contact] Key deleted. It is not compatible with createConcat function: '+ key);
-				delete element[key];
+				element[key] = '[WARN] Key address '+key+' is not a valid key';
 			}
 		}
 		return true;
