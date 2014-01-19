@@ -57,8 +57,7 @@
 	};
 	
 	/** Create Contact
-	  *  @param : {Object} parameter 
-	  *  @return: True or False */
+	  *  @param : {Object} parameter */
 	_self.createContact = function(parameter){
 		parameter = _validateContact(parameter);
 		Ti.Contacts.createPerson(parameter);
@@ -66,7 +65,7 @@
 
 	/** Private Function to validate parameters 
 	  * @param {Object} parameter
-      * @return : True or False */
+      * @return : Contact Object */
 	var _validateContact = function _validateContact(parameter){
 		
 		if(typeof parameter['address'] != 'undefined'){
@@ -119,23 +118,33 @@
 		
 		if(typeof parameter['name'] != 'undefined'){
 			if(typeof parameter['name'] != 'String'){
-				parameter['name'] = '[WARN] Key name should be String';
+				parameter['firstname'] = '[WARN] Key name should be String';
 			}
 			else{
-				parameter['name'] = _validateName(parameter['name']);
+				var _objectName = _validateName(parameter['name']);
+				parameter['firstname'] = _objectName['firstname'];
+				parameter['middlename'] = _objectName['middlename'];
 			}
 		}
 		
 		if(typeof parameter['surname'] != 'undefined'){
 			if(typeof parameter['surname'] != 'String'){
-				parameter['surname'] = '[WARN] Key surname should be String';
+				parameter['lastname'] = '[WARN] Key surname should be String';
 			}
+			else{
+				parameter['lastname'] = parameter['surname'];
+			}
+			delete parameter['surname'];
 		}
 		
 		if(typeof parameter['nick'] != 'undefined'){
 			if(typeof parameter['nick'] != 'String'){
-				parameter['nick'] = '[WARN] Key nick should be String';
+				parameter['nickname'] = '[WARN] Key nick should be String';
 			}
+			else{
+				parameter['nickname'] = parameter['nick'];
+			}
+			delete parameter['nick'];
 		}
 		
 		if(typeof parameter['note'] != 'undefined'){
@@ -155,20 +164,40 @@
 				parameter['phone'] = '[WARN] Key phone should be Object';
 			}
 			else{
-				parameter['phone'] = _validatePhone(parameter['phone']);
+				parameter['phone'] = _validateMultiPhone(parameter['phone']);
 			}
 		}
 		
 		if(typeof parameter['website'] != 'undefined'){
 			if(typeof parameter['website'] != 'Object'){
-				parameter['website'] = '[WARN] Key website should be Object';
+				parameter['url'] = '[WARN] Key website should be Object';
 			}
 			else{
-				parameter['website'] = _validateMultiValue(parameter['website']);
+				parameter['url'] = _validateMultiValue(parameter['website'], 'website');
 			}
+			delete parameter['website']
 		}
 		
 		return parameter;
+	};
+	
+	/** Private Function to validate Name 
+	  * @param {String} Name with/without MiddleName
+      * @return : Object ['firstname', 'middlename'] */
+	var _validateName = function _validateName(name){
+		var _name = name;
+		var _middlename = '';
+		if(name.indexOf(' ') > 0) {
+			var _param = name.split(' ');
+			_name = _param[0];
+			for(var i = 1; i < _param.length; i++){
+				_middlename = _middlename + ' ' + _param[i];
+			}
+		}
+		return {
+			'firstname' : _name,
+			'middlename' : _middlename
+		};
 	};
 	
 	/** Private Function to validate single Date 
@@ -190,14 +219,19 @@
 	  * @param {Object} Multi Date format ISO8601
       * @return : Object */
 	var _validateMultiDate = function _validateMultiDate(multiDate){
+		var _keys = {'anniversary' : '', 'other' : ''};
 		for(var i in multiDate){
 			if(typeof multiDate[i] != 'Array'){
 				multiDate[i] = '[WARN] Key birthday '+i+' should be Array';
+			}
+			else if(!i in _keys){
+				multiDate[i] = '[WARN] Key birthday '+i+' is not a valid key';	
 			}
 			else{
 				for(var j = 0; j < multiDate[i].length; j++){
 					if(!_validateSingleDate(multiDate[i][j])){
 						multiDate[i] = '[WARN] Key birthday '+i+' have not valid date or format';
+						break;
 					}
 				}
 			}
@@ -205,18 +239,56 @@
 		return multiDate;
 	};
 	
+	/** Private Function to validate Multi Phone Values 
+	  * @param {Object} Multi Phone String
+      * @return : Object */
+	var _validateMultiPhone = function _validateMultiPhone(multiPhone){
+		var _keys = {'home' : '', 'work' : '', 'other' : '' , 
+		             'mobile' : '', 'pager' : '', 'workFax' : '',
+		             'homeFax' : '', 'main' : ''};
+		if(_device == 'ios'){
+			_keys['iphone'] = '';
+		}
+		for(var i in multiPhone){
+			if(typeof multiPhone[i] != 'Array'){
+				multiPhone[i] = '[WARN] Key phone '+i+' should be Array';
+			}
+			else if(!i in _keys){
+				multiPhone[i] = '[WARN] Key phone '+i+' is not a valid key';
+			}
+			else{
+				for(var j = 0; j < multiPhone[i].length; j++){
+					if(typeof multiPhone[i][j] != 'String'){
+						multiPhone[i] = '[WARN] Key phone '+i+' have not valid phone';
+						break;
+					}
+				}
+			}
+		}
+		return multiPhone;
+	};
+	
+	
 	/** Private Function to validate multi value String 
 	  * @param {Object} Generic Object with Array String {String} data type
       * @return : Object */
 	var _validateMultiValue = function _validateMultiValue(multiValue, type){
+		var _keys = {'home' : '', 'work' : '', 'other' : ''};
+		if(type == 'website'){
+			_keys['homepage'] = '';
+		}
 		for(var i in multiValue){
 			if(typeof multiValue[i] != 'Array'){
 				multiValue[i] = '[WARN] Key '+type+' '+i+' should be Array';
+			}
+			else if(!i in _keys){
+				multiValue[i] = '[WARN] Key '+type+' '+i+' is not a valid key';
 			}
 			else{
 				for(var j = 0; j < multiValue[i].length; j++){
 					if(typeof (multiValue[i][j]) != 'String'){
 						multiValue[i] = '[WARN] Key '+type+' '+i+' have not valid '+type;
+						break;
 					}
 				}
 			}
@@ -228,9 +300,13 @@
 	  * @param {Object} Instant Messaging Array and IM
       * @return : Object */
 	var _validateMultiIM = function _validateMultiIM(multiIm){
+		var _keys = {'home' : '', 'work' : '', 'other' : ''};
 		for(var i in multiIm){
 			if(typeof multiIm[i] != 'Array'){
 				multiIm[i] = '[WARN] Key Instant Messaging '+i+' should be Array';
+			}
+			else if(!i in _keys){
+				multiIm[i] = '[WARN] Key Instant Messaging '+i+' is not a valid key';
 			}
 			else{
 				for(var j = 0; j < multiIm[i].length; j++){
