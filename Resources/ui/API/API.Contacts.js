@@ -184,7 +184,7 @@
 			else{
 				parameter['url'] = _validateMultiValue(parameter['website'], 'website');
 			}
-			delete parameter['website']
+			delete parameter['website'];
 		}
 		
 		return parameter;
@@ -344,12 +344,12 @@
 				}
 				else if(key == 'service'){
 					if(!singleIm[key] in _services){
-						return '[WARN] Key Instant Messaging '+singleIm[key]+' is not a valid service'
+						return '[WARN] Key Instant Messaging '+singleIm[key]+' is not a valid service';
 					}
 				}
 				else if(key == 'username'){
 					if(typeof singleIm[key] != 'String'){
-						return '[WARN] Key Instant Messaging '+singleIm[key]+' is not a valid format of username'
+						return '[WARN] Key Instant Messaging '+singleIm[key]+' is not a valid format of username';
 					}
 				}
 			}
@@ -363,7 +363,7 @@
 	var _validateMultiAddress = function _validateMultiAddress(multiAddress){
 		for(var i in multiAddress){
 			if(typeof multiAddress[i] != 'Array'){
-				multiAddress = '[WARN] Key address +'i'+ should be Array';
+				multiAddress = '[WARN] Key address '+i+' should be Array';
 				return false;
 			}
 			else{
