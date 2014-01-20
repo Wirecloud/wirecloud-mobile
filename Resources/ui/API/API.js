@@ -19,7 +19,7 @@ var API = function() {
 		},
 		HW : {
 			Acceloremeter : '',
-			Battery : '',
+			Battery : require('API.Battery'),
 			Camera : '',
 			GeoLocation : '',
 			Gesture : '',
