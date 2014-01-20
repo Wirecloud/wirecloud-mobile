@@ -25,7 +25,7 @@ var API = function() {
 			Gesture : '',
 			Media : '',
 			Network : '',
-			System : '',
+			System : require('API.System'),
 		}		
 	};
 			
