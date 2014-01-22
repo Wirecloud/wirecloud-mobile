@@ -311,7 +311,7 @@ var Contacts = function() {
         'surname' : '', 'nick' : '', 'note' : '', 'phone' : '',
         'organization' : '', 'website' : ''}, key;
         for(key in parameter){
-            if(keys.hasOwnProperty(key)){
+            if(!keys.hasOwnProperty(key)){
                 parameter.key = '[WARN] Key '+key+' is not valid';
                 parameter.validate = false;
             }
