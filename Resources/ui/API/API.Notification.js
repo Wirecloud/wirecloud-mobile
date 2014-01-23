@@ -23,6 +23,7 @@ var Notification = function() {
     var _validateToastNotification = function _validateToastNotification(parameter) {
         var keys = {'backgroundColor' : '', 'borderColor' : '', 'borderRadius' : '',
         'borderWidth' : '', 'message' : '', 'opacity' : '' }, key;
+        parameter.validate = true;
         if(typeof parameter.message === 'undefined'){
             parameter.message = '[WARN] Key message should be defined';
             parameter.validate = false;
@@ -30,17 +31,17 @@ var Notification = function() {
         else{
             for(key in parameter){
                 if(!keys.hasOwnProperty(key)){
-                    parameter.key = '[WARN] Key '+key+' is not valid';
+                    parameter[key] = '[WARN] Key '+key+' is not valid';
                     parameter.validate = false;
                 }
                 else if((key === 'backgroundColor' || key === 'borderColor' ||
-                key === 'message' || key === 'opacity') && typeof key !== 'string'){
-                    parameter.key = '[WARN] Key '+key+' should be String';
+                key === 'message' || key === 'opacity') && typeof parameter[key] !== 'string'){
+                    parameter[key] = '[WARN] Key '+key+' should be String';
                     parameter.validate = false;
                 }
                 else if((key === 'borderWidth' || key === 'borderRadius') &&
-                typeof key !== 'number'){
-                    parameter.key = '[WARN] Key '+key+' should be Number';
+                typeof parameter[key] !== 'number'){
+                    parameter[key] = '[WARN] Key '+key+' should be Number';
                     parameter.validate = false;
                 }
             }
@@ -76,7 +77,21 @@ var Notification = function() {
         }));
         window.add(notification);
         notification = null;
-        return window;
+        var interval = 2000;
+        if(parameter.duration === 'DURATION_SHORT'){
+            interval = 1500;
+        }
+        else if(parameter.duration === 'DURATION_LONG'){
+            interval = 5000;
+        }
+        window.open();
+        setTimeout(function(){
+            window.close({
+                opacity: 0,
+                duration: 1000
+            });
+            window = null;
+        }, interval);
     };
 
 	/** Create Toast Notification
@@ -86,31 +101,10 @@ var Notification = function() {
 		parameter = _validateToastNotification(parameter);
 		if(parameter.validate !== false){
 			delete parameter.validate;
-			_self.toastnotification = _createToastNotification(parameter);
+			_createToastNotification(parameter);
 		}
 		return parameter;
 	};
-
-    /** Show Toast Notification
-      *  @param: {String | Number} duration info
-      *  @return : Object Notification */
-    _self.showNotification = function showNotification(duration) {
-        var interval = 2000;
-        if(duration === 'DURATION_SHORT'){
-            interval = 1500;
-        }
-        else if(duration === 'DURATION_LONG'){
-            interval = 5000;
-        }
-        _self.toastnotification.open();
-        setTimeout(function(){
-            _self.toastnotification.close({
-                opacity: 0,
-                duration: 1000
-            });
-            _self.toastnotification = null;
-        }, interval);
-    };
 
 	return _self;
 
