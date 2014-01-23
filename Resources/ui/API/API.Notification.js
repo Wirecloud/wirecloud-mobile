@@ -8,7 +8,7 @@
 
 "use strict";
 
-var Notification = function() {
+var Notification = (function() {
 
 	var _device = (Ti.Platform.getOsname() === 'ipad' ||
                    Ti.Platform.getOsname() === 'iphone') ? 'ios' : 'android',
@@ -108,6 +108,6 @@ var Notification = function() {
 
 	return _self;
 
-}();
+}());
 
 module.exports = Notification;
