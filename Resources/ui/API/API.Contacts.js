@@ -81,7 +81,7 @@ var Contacts = (function() {
 	};
 
 	/** Get Contact List
-	 *  @param : {String} optional parameter */
+	  * @param {String} parameter */
 	_self.getContactList = function(parameter) {
 		var list = [], i, person,
 		people = (parameter) ? Ti.Contacts.getPeopleWithName(parameter) : Ti.Contacts.getAllPeople();
@@ -108,8 +108,8 @@ var Contacts = (function() {
 	};
 
     /** Private Function to validate Name
-      * @param {String} Name with/without MiddleName
-      * @return : Object ['firstname', 'middlename'] */
+      * @param {String} name
+      * @return {Object} */
     var _validateName = function _validateName(name) {
         var firstname = name, middlename = '', param, i;
         if(name.indexOf(' ') > 0) {
@@ -126,8 +126,8 @@ var Contacts = (function() {
     };
 
     /** Private Function to validate single Date
-      * @param {String} Date format ISO8601
-      * @return : True or False */
+      * @param {String} date
+      * @return {Boolean} */
     var _validateSingleDate = function _validateSingleDate(date){
         var _exprISO8601 = "([0-9]{4})(-([0-9]{2})(-([0-9]{2})" +
         "(T([0-9]{2}):([0-9]{2})(:([0-9]{2})(\.([0-9]+))?)?" +
@@ -142,8 +142,8 @@ var Contacts = (function() {
     };
 
     /** Private Function to validate Multi Date
-      * @param {Object} Multi Date format ISO8601
-      * @return : Object */
+      * @param {Object} multiDate
+      * @return {Object} */
     var _validateMultiDate = function _validateMultiDate(multiDate) {
         var keys = {'anniversary' : '', 'other' : ''}, key, i;
         for(key in multiDate){
@@ -169,8 +169,8 @@ var Contacts = (function() {
     };
 
     /** Private Function to validate multi value String
-      * @param {Object} Generic Object with Array String {String} data type
-      * @return : Object */
+      * @param {Object, String} multiValue, type
+      * @return {Object} */
     var _validateMultiValue = function _validateMultiValue(multiValue, type) {
         var keys = {'home' : '', 'work' : '', 'other' : ''}, key, i;
         if(type === 'website'){
@@ -207,8 +207,8 @@ var Contacts = (function() {
     };
 
     /** Private Function to validate Single Instant Messaging
-      * @param {Object} Instant Messaging (Service | Username)
-      * @return : Same Object or Warning */
+      * @param {Object} singleIm
+      * @return {Object} */
     var _validateSingleIM = function _validateSingleIM(singleIm){
         var services = {'AIM' : '', 'Facebook' : '', 'GaduGadu' : '' ,
                      'GoogleTalk' : '', 'ICQ' : '', 'MSN' : '',
@@ -236,8 +236,8 @@ var Contacts = (function() {
     };
 
     /** Private Function to validate Instant Messaging
-      * @param {Object} Instant Messaging Array and IM
-      * @return : Object */
+      * @param {Object} multiIm
+      * @return {Object} */
     var _validateMultiIM = function _validateMultiIM(multiIm) {
         var keys = {'home' : '', 'work' : '', 'other' : ''}, key, i;
         for(key in multiIm){
@@ -268,8 +268,8 @@ var Contacts = (function() {
     };
 
     /** Private Function to validate Single Address Object
-      * @param {Array} Address Array, {Object} Address Element
-      * @return : True or False */
+      * @param {Object, Number, Array} element, index, array
+      * @return {Boolean} */
     var _validateSingleAddress = function _validateSingleAddress(element, index, array) {
         var keys = {'Street' : '', 'City' : '', 'State' : '' , 'Country' : '', 'ZIP' : ''}, key;
         if (_device === 'android'){
@@ -286,8 +286,8 @@ var Contacts = (function() {
     };
 
     /** Private Function to validate Multi Address Object
-      * @param {Object} Address Object
-      * @return : Object */
+      * @param {Object} multiAddress
+      * @return {Object} */
     var _validateMultiAddress = function _validateMultiAddress(multiAddress) {
         var keys = {'home' : '', 'work' : '' , 'other' : ''}, key;
         for(key in multiAddress){
@@ -308,7 +308,7 @@ var Contacts = (function() {
 
     /** Private Function to validate parameters
       * @param {Object} parameter
-      * @return : Contact Object with validate property */
+      * @return {Object} */
     var validateContact = function validateContact(parameter) {
         var keys = {'address' : '', 'birthday' : '', 'date' : '',
         'email' : '' , 'im': '', 'image' : '', 'name' : '',
@@ -404,8 +404,8 @@ var Contacts = (function() {
     };
 
 	/** Create Contact
-	  *  @param: {Object} parameter with contact info
-	  *  @return : Object Contact */
+	  * @param {Object} parameter
+	  * @return {Object} */
 	_self.createContact = function(parameter) {
 		parameter = validateContact(parameter);
 		if(parameter.validate !== false){
@@ -427,8 +427,8 @@ var Contacts = (function() {
 	};
 
 	/** Delete Contact
-	 *  @param: {String} Name, MiddleName, LastName or a combination
-	 *  @return: 0 (Success) , 1 (Not found) , 2 (Multiple Contact) */
+	  * @param {String} parameter
+	  * @return {Number} */
 	_self.deleteContact = function(parameter) {
 		var list = _self.getContactList(parameter);
 		var result;
