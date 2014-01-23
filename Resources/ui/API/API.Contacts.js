@@ -169,7 +169,8 @@ var Contacts = (function() {
     };
 
     /** Private Function to validate multi value String
-      * @param {Object, String} multiValue, type
+      * @param {Object} multiValue
+      * @param {String} type
       * @return {Object} */
     var _validateMultiValue = function _validateMultiValue(multiValue, type) {
         var keys = {'home' : '', 'work' : '', 'other' : ''}, key, i;
@@ -268,7 +269,9 @@ var Contacts = (function() {
     };
 
     /** Private Function to validate Single Address Object
-      * @param {Object, Number, Array} element, index, array
+      * @param {Object} element
+      * @param {Number} index
+      * @param {Array} array
       * @return {Boolean} */
     var _validateSingleAddress = function _validateSingleAddress(element, index, array) {
         var keys = {'Street' : '', 'City' : '', 'State' : '' , 'Country' : '', 'ZIP' : ''}, key;
