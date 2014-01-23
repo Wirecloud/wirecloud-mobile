@@ -30,7 +30,7 @@
         }
     });
 
-    Object.preventExtensions(API.addEventListener);
+    Object.preventExtensions(window.API.addEventListener);
 
     Object.defineProperty(window.API, 'removeEventListener', {
         value: function removeEventListener(publicEvent, handler) {
@@ -47,7 +47,7 @@
         }
     });
 
-    Object.preventExtensions(API.removeEventListener);
+    Object.preventExtensions(window.API.removeEventListener);
 
     Object.defineProperty(window.MashupPlatform, 'eventNotification', {
         value: function eventNotification(publicEvent, data) {
@@ -59,6 +59,6 @@
         }
     });
 
-    Object.preventExtensions(API.eventNotification);
+    Object.preventExtensions(window.API.eventNotification);
 
-})();
+}());
