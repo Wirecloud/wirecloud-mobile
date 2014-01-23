@@ -24,7 +24,7 @@ var Battery = (function() {
     /** Set battery monitoring.
       * @param: {Bool} true to activate monitoring and false to disable monitoring
       * @return : Bool */
-    _self.setBatteryMonitoring = function setBatteryMonitoring(activate) {
+    var _setBatteryMonitoring = function _setBatteryMonitoring(activate) {
         return Ti.Platform.setBatteryMonitoring(activate);
     };
 
@@ -62,6 +62,7 @@ var Battery = (function() {
                     }
     };
 
+    _setBatteryMonitoring(true);
     return _self;
 
 }());
