@@ -7,7 +7,7 @@
  */
 'use strict';
 
-var Battery = function() {
+var Battery = (function() {
 
     var _device = (Ti.Platform.getOsname() === 'ipad' ||
                    Ti.Platform.getOsname() === 'iphone') ? 'ios' : 'android';
@@ -64,6 +64,6 @@ var Battery = function() {
 
     return _self;
 
-}();
+}());
 
 module.exports = Battery;
