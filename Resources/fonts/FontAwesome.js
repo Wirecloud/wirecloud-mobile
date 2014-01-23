@@ -1,8 +1,16 @@
+/**
+ * Copyright (c) 2014 by Center Open Middleware. All Rights Reserved.
+ * Titanium Appcelerator 3.2.0GA
+ * Licensed under the terms of the Apache Public License
+ * Please see the LICENSE included with this distribution for details.
+ *
+ */
 
-var FontAwesome = function FontAwesome(options) {
-	
-	var _self = {};
-	var _charcode = {
+"use strict";
+
+var FontAwesome = function FontAwesome() {
+
+	var _self = {}, _charcode = {
 		"icon-glass" : 0xf000,
 		"icon-music" : 0xf001,
 		"icon-search" : 0xf002,
@@ -363,8 +371,8 @@ var FontAwesome = function FontAwesome(options) {
 		"icon-bug" : 0xf188,
 		"icon-vk" : 0xf189,
 		"icon-weibo" : 0xf18a,
-		"icon-renren" : 0xf18b,
-	}; 
+		"icon-renren" : 0xf18b
+	};
 
 	/** @title: getCharCode (Function)
 	 *  @usage: return string for FontAwesome font */
@@ -377,7 +385,7 @@ var FontAwesome = function FontAwesome(options) {
 	_self.getFontFamily = function getFontFamily() {
 		return 'FontAwesome';
 	};
-	
+
 	return _self;
 
 };
