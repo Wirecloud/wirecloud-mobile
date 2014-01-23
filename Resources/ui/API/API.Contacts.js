@@ -58,7 +58,7 @@
 
 "use strict";
 
-var Contacts = function() {
+var Contacts = (function() {
 
 	var _device = (Ti.Platform.getOsname() === 'ipad' ||
 		           Ti.Platform.getOsname() === 'iphone') ? 'ios' : 'android',
@@ -447,6 +447,6 @@ var Contacts = function() {
 
 	return _self;
 
-}();
+}());
 
 module.exports = Contacts;
