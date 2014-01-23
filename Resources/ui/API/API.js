@@ -37,7 +37,8 @@ var API = (function() {
     };
 
     var _initEvents = function _initEvents() {
-        var key, eventId, publicName, eventData;
+        var key, eventId, publicName, eventData, enventId;
+
         /* TODO new class eventData
          * API.Example.events = {
          *      'publicEventName': {
@@ -46,6 +47,7 @@ var API = (function() {
          *      }
          * };
          */
+
         for (key in _self.SW) {
             if (_self.SW[key].events) {
                 for (eventId in _self.SW[key].events) {
@@ -71,17 +73,19 @@ var API = (function() {
      * @param: {data} event data.
      * @return : Bool true if success or false if error*/
     var _fireHTMLEvents = function _fireHTMLEvents(eventName, data) {
-        var key, viewId;
+        var key, viewId, result;
+
         if (_self.events.activeHandlers[eventName]) {
             for (key in _self.events.activeHandlers[eventName].views) {
                 viewId = _self.events.activeHandlers[eventName].views[key];
                 // This event will be received by all listeners API.Commons
                 Ti.App.fireEvent(eventName, data);
             }
-            return true;
+            result = true;
         } else {
-            return false;
+            result = false;
         }
+        return result;
     };
 
     /** AddEventListener from a HTML view (througth APICommons.js TODO)
@@ -152,9 +156,9 @@ var API = (function() {
 
         dataParsed = JSON.parse(data);
 
-        if (dataParsed.action == 'addEventListener') {
+        if (dataParsed.action === 'addEventListener') {
             _self.events.addEventListener(dataParsed.event, dataParsed.viewId);
-        } else if (dataParsed.action == 'removeEventListener') {
+        } else if (dataParsed.action === 'removeEventListener') {
             _self.events.removeEventListener(dataParsed.event, dataParsed.viewId);
         }
     };
