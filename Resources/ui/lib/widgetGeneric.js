@@ -1,9 +1,10 @@
 
 //Widget Generic Component Constructor
+'use strict';
 
 function widgetGeneric(dim, parameters, idWidget) {
 
-	var _isApple = (Ti.Platform.osname == 'ipad');
+	var _isApple = (Ti.Platform.osname === 'ipad');
 	var _self;
 	if(parameters.name.indexOf("map-viewer") !== -1){
 		var _widgetMapClass = require("ui/widgets/widgetMap");
@@ -48,7 +49,7 @@ function widgetGeneric(dim, parameters, idWidget) {
 		};
 		_self.clearObject = function clearObject(){
 			_self.removeEventListener('load', _self.funPlatformInfo);
-			delete _self['funPlatformInfo'];
+			delete _self.funPlatformInfo;
 			_isApple = null;
 		};
 		_self.addEventListener('load', _self.funPlatformInfo);
