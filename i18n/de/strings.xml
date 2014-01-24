@@ -15,7 +15,7 @@
 	<string name="label_downloader_desc_down">Loading Arbeitsbereich</string>
 	<string name="label_downloader_desc_main_fl">Ein fehler ist aufgetreten, wenn sie versuchen zu visualisieren</string>
 	<string name="label_downloader_desc_main_ol">\n\nEs scheint, dass Widgets oder Betreiber fehlende cache Wirecloud4Tablet\n\nwird der download solcher abhängigkeiten gehen\n\nWeiter\?</string>
-	<string name="label_downloader_row_url">Überprüfung von abhängigkeiten in Wirecloud gespeichert</string
+	<string name="label_downloader_row_url">Überprüfung von abhängigkeiten in Wirecloud gespeichert</string>
 	<string name="label_downloader_row_wid">Widgets heruntergeladen zwischengespeichert oder betreiber</string>
 	<string name="label_downloader_row_wid_build">Konstruiert cache zugewiesenen ressourcen Workspace</string>
 	<string name="label_downloader_row_wait">Bitte warten Sie ...</string>
