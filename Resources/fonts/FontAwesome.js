@@ -8,9 +8,9 @@
 
 "use strict";
 
-var FontAwesome = function FontAwesome() {
+var FontAwesome = (function () {
 
-	var _self = {}, _charcode = {
+	var _self = {}, charcode = {
 		"icon-glass" : 0xf000,
 		"icon-music" : 0xf001,
 		"icon-search" : 0xf002,
@@ -374,20 +374,21 @@ var FontAwesome = function FontAwesome() {
 		"icon-renren" : 0xf18b
 	};
 
-	/** @title: getCharCode (Function)
-	 *  @usage: return string for FontAwesome font */
+    /** Get char code from string or icon identifier
+     *  @param {String} iconName
+     *  @return {String}  */
 	_self.getCharCode = function getCharCode(iconName) {
-		return String.fromCharCode(_charcode[iconName]);
+		return String.fromCharCode(charcode[iconName]);
 	};
 
-	/** @title: getFontFamily (Function)
-	 *  @usage: return font in use */
+    /** Get font family used (ttf file referenced)
+     *  @return {String} */
 	_self.getFontFamily = function getFontFamily() {
 		return 'FontAwesome';
 	};
 
 	return _self;
 
-};
+}());
 
 module.exports = FontAwesome;
