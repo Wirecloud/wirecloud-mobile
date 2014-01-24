@@ -24,7 +24,7 @@ function mainView(data) {
 		left : 0,
 		height : _heightSelf,
 		width : Ti.Platform.displayCaps.platformWidth,
-		fontAw : require('ui/fonts/FontAwesome')()
+		fontAw : require('fonts/FontAwesome')()
 	});
 	_heightSelf = null;
 

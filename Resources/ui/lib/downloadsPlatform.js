@@ -8,7 +8,7 @@ function downloadsPlatform(h, listWidgets, listOperators, workspaceName) {
 		left : 0,
 		height : h,
 		width : Ti.Platform.displayCaps.platformWidth,
-		fontAw : require('ui/fonts/FontAwesome')()
+		fontAw : require('fonts/FontAwesome')()
 	});
 	
 	var _widgetsToDownload = listWidgets;

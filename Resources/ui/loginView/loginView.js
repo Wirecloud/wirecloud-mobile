@@ -98,7 +98,7 @@ function loginView() {
 		right : parseInt((_self.width / 2 * 0.22),10),
 	});
 	_self.add(_internetLabel);
-	var _fontObject = require('ui/fonts/FontAwesome');
+	var _fontObject = require('fonts/FontAwesome');
 	var _fontA = new _fontObject();
 	var _internetLabelIcon = Ti.UI.createLabel({
 		text : _fontA.getCharCode('icon-signal'),

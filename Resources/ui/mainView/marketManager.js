@@ -16,7 +16,7 @@ function marketManager(dataConstructor) {
 		height : _dataSession.heightView - 51,
 		width : Ti.Platform.displayCaps.platformWidth,
 		error: false,
-		fontAw : require('ui/fonts/FontAwesome')()
+		fontAw : require('fonts/FontAwesome')()
 	});
 
 	var _conObject = require('/connections/appConnection');
