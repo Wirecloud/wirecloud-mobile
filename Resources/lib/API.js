@@ -10,7 +10,7 @@ var API = (function() {
 
     _self = {
         SW : {
-            Contacts : require('API.Contacts'),
+            Contacts : require('lib/API.Contacts'),
             Calendar : '',
             FileSystem : '',
             DataBase : '',
@@ -20,14 +20,14 @@ var API = (function() {
             Social : ''
         },
         HW : {
-            Acceloremeter : require('API.Accelerometer'),
-            Battery : require('API.Battery'),
+            Acceloremeter : require('lib/API.Accelerometer'),
+            Battery : require('lib/API.Battery'),
             Camera : '',
             GeoLocation : '',
             Gesture : '',
             Media : '',
-            Network : '',
-            System : require('API.System')
+            Network : require('lib/API.Network'),
+            System : require('lib/API.System')
         }
     };
 
@@ -192,8 +192,8 @@ var API = (function() {
         Ti.App.addEventListener('APIMethod', _self.events.APIMethodHandler);
     };
 
+    _self.init();
 
-    _self.Init();
     return _self;
 
 }());

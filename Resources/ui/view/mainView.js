@@ -1,5 +1,10 @@
-
-//Main View Component Constructor
+/**
+ * Copyright (c) 2014 by Center Open Middleware. All Rights Reserved.
+ * Titanium Appcelerator 3.2.0GA
+ * Licensed under the terms of the Apache Public License
+ * Please see the LICENSE included with this distribution for details.
+ *
+ */
 
 function mainView(data) {
 
@@ -24,7 +29,7 @@ function mainView(data) {
 		left : 0,
 		height : _heightSelf,
 		width : Ti.Platform.displayCaps.platformWidth,
-		fontAw : require('fonts/FontAwesome')()
+		fontAw : require('ui/fonts/FontAwesome')()
 	});
 	_heightSelf = null;
 
@@ -78,7 +83,7 @@ function mainView(data) {
 			backgroundColor : _menuBar.backgroundColor
 		}));
 	}
-	
+
 	// Separator Line between Header and View
 	_self.add(Ti.UI.createView({
 		left : 0,
@@ -112,22 +117,22 @@ function mainView(data) {
 	 *  @usage: add Mashups to ScrollView (local marketplace)
 	 *  @extras: require marketManager */
 	function loadMarketplace() {
-		
+
 		_marketOptions = {
 			searched : false,
 			orderMode : "-popularity",
 			searchText : null
 		};
-		
+
 		var _searchView = null;
 		var _menuBarSearchButton = null;
 		var _menuBarSortButton = null;
 		var _searchViewTField = null;
-		
+
 		createMarketPlaceView();
 		createSortButton();
 		createSearchButton();
-		
+
 		// Back Button MarketPlace
 		_sliderOverButton.removeEventListener('click', _self.funShowSlider);
 		_sliderOverButton.setText(_self.fontAw.getCharCode("icon-reply"));
@@ -151,7 +156,7 @@ function mainView(data) {
 			_marketClass = null;
 			changeLayout("marketplace", _marketView);
 		};
-		
+
 		/** @title: createCancelSearchButton (Function)
 		 *  @usage: create Button and events */
 		function createCancelSearchButton() {
@@ -195,14 +200,14 @@ function mainView(data) {
 			_menuBarSearchButton.addEventListener('click', _self.funShowsearchMarket);
 			_self.add(_menuBarSearchButton);
 		};
-		
+
 		/** @title: createSortButton (Function)
 		 *  @usage: create Button and events */
 		function createSortButton() {
 			_menuBarSortButton = createMenuBarButton("right", 51, "icon-sort-by-attributes");
 			_self.funShowsortMarket = function funShowsortMarket(){
 				var _sortView = Ti.UI.createOptionDialog({
-					options : [L("alert_button_popularity"), L("alert_button_creation"), 
+					options : [L("alert_button_popularity"), L("alert_button_creation"),
 					           L("alert_button_name"), L("alert_button_vendor"), L("alert_button_author"),
 					           L("alert_button_cancel")],
 					title : L("alert_label_ordermarket"),
@@ -239,7 +244,7 @@ function mainView(data) {
 			_menuBarSortButton.addEventListener('click', _self.funShowsortMarket);
 			_self.add(_menuBarSortButton);
 		};
-		
+
 		/** @title: createSearchView (Function)
 		 *  @usage: create Search View and TextField */
 		function createSearchView() {
@@ -320,7 +325,7 @@ function mainView(data) {
 			_sliderOverButton.setText(_self.fontAw.getCharCode("icon-reorder"));
 			_sliderOverButton.addEventListener('click', _self.funShowSlider);
 		}
-	
+
 	};
 
 	/** @title: changeLayout (Function)
@@ -339,7 +344,7 @@ function mainView(data) {
 				_contentView.tabFunction(null);
 			};
 			_menuBarLabelTab.addEventListener('click',_self.funShowTab);
-		} 
+		}
 		else {
 			_menuBarLabelTab.text = "";
 			_menuBarLabelTab.removeEventListener('click',_self.funShowTab);
@@ -383,7 +388,7 @@ function mainView(data) {
 		_button.funTouchEnd = function funTouchEnd(){
 			_button.color = "#35576E";
 		};
-		_button.addEventListener('touchend', _button.funTouchEnd);		
+		_button.addEventListener('touchend', _button.funTouchEnd);
 		_button.clearObject = function clearObject(){
 			_button.removeEventListener('touchstart', _button.funTouchStart);
 			_button.removeEventListener('touchend', _button.funTouchEnd);
