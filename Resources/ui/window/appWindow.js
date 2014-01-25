@@ -9,12 +9,24 @@
 "use strict";
 
 // Libraries
-var FontAwesome4 = require('fonts/FontAwesome4');
-var FontAwesome3 = require('fonts/FontAwesome');
-var API = require('lib/API');
+Ti.App.FontAwesome4 = require('fonts/FontAwesome4');
+Ti.App.FontAwesome3 = require('fonts/FontAwesome');
+Ti.App.API = require('lib/API');
+Ti.App.mergeObject = function (obj1, obj2){
+    var result = null, key;
+    if (obj1 !== null && obj2 !== null){
+        for (key in obj2){
+            if (obj2.hasOwnProperty(key)){
+                obj1[key] = obj2[key];
+            }
+        }
+        result = obj1;
+    }
+    return result;
+};
 
 // Global Variables
-var isApple = (Ti.Platform.osname === 'ipad');
+Ti.App.isApple = (Ti.Platform.osname === 'ipad');
 
 var appWindow = (function () {
 

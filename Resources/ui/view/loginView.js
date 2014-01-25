@@ -8,12 +8,12 @@
 
 "use strict";
 
-var loginView = (function (parentWindow) {
+var loginView = function (parentWindow) {
 
-    var containerForm, userTextField, passTextField, activitySession,
-    os = (isApple) ? "iPad" : "Android", version = "", internetLabel, internetIcon,
+    var theme = require('ui/style/loginViewStyle'), containerForm, userTextField, passTextField,
+    activitySession, os = (Ti.App.isApple) ? "iPad" : "Android", version = "", internetLabel, internetIcon,
     _self = Ti.UI.createView({
-        top: 0,
+        top: 10,
         left : 0,
         backgroundColor : '#FFFFFF',
         width : Ti.Platform.displayCaps.platformWidth,
@@ -22,19 +22,17 @@ var loginView = (function (parentWindow) {
     heightLogo = (_self.getWidth()/2 !== 800) ? parseInt((500 * ((_self.getWidth()/2)/800)), 10) : 500;
 
     // Enterprise Logo
-    _self.add(Ti.UI.createWebView({
-        url : Ti.Filesystem.resourcesDirectory + '/images/logo_tab.svg',
-        height : heightLogo,
-        width : _self.getWidth() / 2,
-        left : parseInt(((_self.getWidth()/2) * 0.05), 10),
-        top : parseInt((_self.getHeight()-heightLogo)/2, 10),
-        enableZoomControls : false,
-        showScrollbars : false,
-        touchEnabled : false
-    }));
+    _self.add(Ti.UI.createWebView(Ti.App.mergeObject(
+        theme.logo, {
+            height : heightLogo,
+            width : _self.getWidth() / 2,
+            left : parseInt(((_self.getWidth()/2) * 0.05), 10),
+            top : parseInt((_self.getHeight()-heightLogo)/2, 10)
+        }
+    )));
 
     // Label OS , Version and Internet
-    if(!isApple){
+    if(!Ti.App.isApple){
         var splited = Ti.Platform.version.split('.');
         if(splited[0] === '2'){
             if(splited[1] === '2'){
@@ -57,32 +55,35 @@ var loginView = (function (parentWindow) {
         }
         splited = null;
     }
-    _self.add(Ti.UI.createLabel({
-        id : 'systemLabel',
-        text : Ti.Locale('label_system') + ': ' + os + ' ' + Ti.Platform.version + version,
-        top : parseInt(_self.getHeight() * 0.075, 10),
-        right : parseInt((_self.getWidth()/2 * 0.15), 10)
-    }));
+    _self.add(Ti.UI.createLabel(Ti.App.mergeObject(
+        theme.systemLabel, {
+            text : Ti.Locale.getString('label_system') + ': ' + os + ' ' + Ti.Platform.version + version,
+            top : parseInt(_self.getHeight() * 0.075, 10),
+            right : parseInt((_self.getWidth()/2 * 0.15), 10)
+        }
+    )));
     os = null;
     version = null;
-    internetLabel = Ti.UI.createLabel({
-        id: 'internetLabel',
-        text : (Ti.Network.online) ? Ti.Locale('label_inet_connected') : Ti.Locale('label_inet_noconnected'),
-        top : parseInt(_self.getHeight() * 0.17, 10),
-        right : parseInt((_self.getWidth()/2 * 0.22), 10)
-    });
+    internetLabel = Ti.UI.createLabel(Ti.App.mergeObject(
+        theme.internetLabel, {
+            text : (Ti.Network.online) ? Ti.Locale.getString('label_inet_connected') :
+                                         Ti.Locale.getString('label_inet_noconnected'),
+            top : parseInt(_self.getHeight() * 0.17, 10),
+            right : parseInt((_self.getWidth()/2 * 0.22), 10)
+        }
+    ));
     _self.add(internetLabel);
-    internetIcon = Ti.UI.createLabel({
-        id : 'internetIcon',
-        text : FontAwesome4.getCharCode('fa-signal'),
-        color : (Ti.Network.online) ? "#00FF00" : "#FF0000",
-        top : parseInt(_self.getHeight() * 0.175, 10),
-        right : parseInt((_self.getWidth()/2 * 0.15), 10)
-    });
+    internetIcon = Ti.UI.createLabel(Ti.App.mergeObject(
+        theme.internetIcon, {
+            color : (Ti.Network.online) ? "#00FF00" : "#FF0000",
+            top : parseInt(_self.getHeight() * 0.175, 10),
+            right : parseInt((_self.getWidth()/2 * 0.15), 10)
+        }
+    ));
     _self.add(internetIcon);
     _self.onChangeConnection = function onChangeConnection(){
-        internetLabel.text = (Ti.Network.online) ? Ti.Locale('label_inet_connected') :
-                              Ti.Locale('label_inet_noconnected');
+        internetLabel.text = (Ti.Network.online) ? Ti.Locale.getString('label_inet_connected') :
+                              Ti.Locale.getString('label_inet_noconnected');
         internetIcon.color = (Ti.Network.online) ? "#00FF00" : "#FF0000";
     };
     Ti.Network.addEventListener('change', _self.onChangeConnection);
@@ -92,7 +93,7 @@ var loginView = (function (parentWindow) {
     var connectionError = function connectionError(string) {
         var stringSearch;
         if (Ti.Network.online){
-            stringSearch = (isApple) ? "error_connection_login_ios" : "error_connection_login_android";
+            stringSearch = (Ti.App.isApple) ? "error_connection_login_ios" : "error_connection_login_android";
         }
         else{
             stringSearch = "error_connection_inet";
@@ -100,7 +101,7 @@ var loginView = (function (parentWindow) {
         var alertError = Ti.UI.createAlertDialog({
             title: "Wirecloud",
             message: Ti.Localte(stringSearch),
-            buttonNames: [Ti.Locale("alert_button_accept")]
+            buttonNames: [Ti.Locale.getString("alert_button_accept")]
         });
         alertError.show();
         stringSearch = null;
@@ -113,23 +114,24 @@ var loginView = (function (parentWindow) {
 	/** Private function to do HTTP Basic Auth */
 	var checkAuthentication = function checkAuthentication() {
         if(userTextField.value.length === 0){
-            alert(Ti.Locale('error_login_username'));
+            alert(Ti.Locale.getString('error_login_username'));
         }
         else if(passTextField.value.length === 0){
-            alert(Ti.Locale('error_login_password'));
+            alert(Ti.Locale.getString('error_login_password'));
         }
         else{
             containerForm.borderWidth = 0;
             containerForm.animate({duration : 1000, delay : 0, opacity : 0},function(){
-                activitySession = Ti.UI.createLabel({
-                    id : 'activityLabel',
-                    text : Ti.Locale("label_login_wait"),
-                    left : parseInt(_self.getWidth()/2+(_self.getWidth()/2 * 0.15), 10),
-                    width : parseInt((_self.getWidth()/2 * 0.7), 10),
-                    top : parseInt(((_self.getHeight()-heightLogo)/2)+(heightLogo/2),10)
-                });
+                activitySession = Ti.UI.createLabel(Ti.App.mergeObject(
+                    theme.activityLabel, {
+                        text : Ti.Locale.getString("label_login_wait"),
+                        left : parseInt(_self.getWidth()/2+(_self.getWidth()/2 * 0.15), 10),
+                        width : parseInt((_self.getWidth()/2 * 0.7), 10),
+                        top : parseInt(((_self.getHeight()-heightLogo)/2)+(heightLogo/2),10)
+                    }
+                ));
                 _self.add(activitySession);
-                API.Network.checkCredentials(userTextField.value, passTextField.value, function(credentials){
+                Ti.App.API.Network.checkCredentials(userTextField.value, passTextField.value, function(credentials){
                     if(credentials.status === 'Credential Error'){
                         connectionError('login');
                     }
@@ -148,52 +150,59 @@ var loginView = (function (parentWindow) {
 
     /** Private Function to create Form Login */
     var createForm = function createForm() {
-        containerForm = Ti.UI.createView({
-            id : 'container',
-            height : heightLogo / 2,
-            width : parseInt(_self.getWidth()/2 * 0.7,10),
-            left : parseInt(_self.getWidth()/2+(_self.getWidth()/2 * 0.15), 10),
-            top : parseInt(((_self.getHeight()-heightLogo)/2)+(heightLogo/4), 10)
-        });
+        containerForm = Ti.UI.createView(Ti.App.mergeObject(
+            theme.containerView, {
+                height : heightLogo / 2,
+                width : parseInt(_self.getWidth()/2 * 0.7,10),
+                left : parseInt(_self.getWidth()/2+(_self.getWidth()/2 * 0.15), 10),
+                top : parseInt(((_self.getHeight()-heightLogo)/2)+(heightLogo/4), 10)
+            }
+        ));
         _self.add(containerForm);
 
-        userTextField = Ti.UI.createTextField({
-            id : 'inputForm',
-            borderStyle : Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
-            autocapitalization : false,
-            autocorrect: false,
-            clearOnEdit : false,
-            enableReturnKey : false,
-            keyboardType : Ti.UI.KEYBOARD_EMAIL,
-            returnKeyType : Ti.UI.RETURNKEY_DONE,
-            softKeyboardOnFocus : (isApple) ? null : Ti.UI.Android.SOFT_KEYBOARD_SHOW_ON_FOCUS,
-            hintText : Ti.Locale('label_username')
-        });
+        userTextField = Ti.UI.createTextField(Ti.App.mergeObject(
+            theme.inputTextField, {
+                top : '15%',
+                borderStyle : Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
+                autocapitalization : false,
+                autocorrect: false,
+                clearOnEdit : false,
+                enableReturnKey : false,
+                keyboardType : Ti.UI.KEYBOARD_EMAIL,
+                returnKeyType : Ti.UI.RETURNKEY_DONE,
+                softKeyboardOnFocus : (Ti.App.isApple) ? null : Ti.UI.Android.SOFT_KEYBOARD_SHOW_ON_FOCUS,
+                hintText : Ti.Locale.getString('label_username')
+            }
+        ));
         userTextField.returnUserTField = function (e){
             userTextField.blur();
         };
         userTextField.addEventListener('return', userTextField.returnUserTField);
         containerForm.add(userTextField);
 
-        passTextField = Ti.UI.createTextField({
-            id : 'inputForm',
-            borderStyle : Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
-            autocapitalization : false,
-            autocorrect: false,
-            passwordMask : true,
-            clearOnEdit : true,
-            enableReturnKey : false,
-            keyboardType : Ti.UI.KEYBOARD_DEFAULT,
-            returnKeyType : Ti.UI.RETURNKEY_GO,
-            softKeyboardOnFocus : (isApple) ? null : Ti.UI.Android.SOFT_KEYBOARD_SHOW_ON_FOCUS,
-            hintText : Ti.Locale('label_password')
-        });
+        passTextField = Ti.UI.createTextField(Ti.App.mergeObject(
+            theme.inputTextField, {
+                bottom : '15%',
+                borderStyle : Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
+                autocapitalization : false,
+                autocorrect: false,
+                passwordMask : true,
+                clearOnEdit : true,
+                enableReturnKey : false,
+                keyboardType : Ti.UI.KEYBOARD_DEFAULT,
+                returnKeyType : Ti.UI.RETURNKEY_GO,
+                softKeyboardOnFocus : (Ti.App.isApple) ? null : Ti.UI.Android.SOFT_KEYBOARD_SHOW_ON_FOCUS,
+                hintText : Ti.Locale.getString('label_password')
+            }
+        ));
         passTextField.returnPassTField = function (e){
             checkAuthentication();
         };
         passTextField.addEventListener('return', passTextField.returnPassTField);
 		containerForm.add(passTextField);
 	};
+
+    createForm();
 
 	/** Destroy LoginView and Objects inside */
 	_self.destroy = function destroy() {
@@ -216,6 +225,6 @@ var loginView = (function (parentWindow) {
 
 	return _self;
 
-}());
+};
 
 module.exports = loginView;
