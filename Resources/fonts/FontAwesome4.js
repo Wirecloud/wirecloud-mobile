@@ -392,7 +392,7 @@ var FontAwesome4 = (function () {
     /** Get font family used (ttf file referenced)
      *  @return {String} */
     _self.getFontFamily = function getFontFamily() {
-        return 'FontAwesome4';
+        return 'FontAwesome';
     };
 
     return _self;
