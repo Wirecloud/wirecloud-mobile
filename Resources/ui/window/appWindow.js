@@ -31,12 +31,12 @@ Ti.App.isApple = (Ti.Platform.osname === 'ipad');
 var appWindow = (function () {
 
     var _self = Ti.UI.createWindow({
-        exitOnClose : true,
-        navBarHidden : true,
-        backgroundColor : '#FFFFFF',
-        width : Ti.Platform.displayCaps.platformWidth,
-        height : Ti.Platform.displayCaps.platformHeight,
-        orientationModes : [Ti.UI.LANDSCAPE_LEFT, Ti.UI.LANDSCAPE_RIGHT]
+        exitOnClose: true,
+        navBarHidden: true,
+        backgroundColor: '#FFFFFF',
+        width: Ti.Platform.displayCaps.platformWidth,
+        height: Ti.Platform.displayCaps.platformHeight,
+        orientationModes: [Ti.UI.LANDSCAPE_LEFT, Ti.UI.LANDSCAPE_RIGHT]
     }), loginView;
 
     // Quick Start
