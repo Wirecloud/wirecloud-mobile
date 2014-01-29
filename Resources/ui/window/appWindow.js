@@ -16,9 +16,7 @@ Ti.App.mergeObject = function (obj1, obj2){
     var result = null, key;
     if (obj1 !== null && obj2 !== null){
         for (key in obj2){
-            if (obj2.hasOwnProperty(key)){
-                obj1[key] = obj2[key];
-            }
+            obj1[key] = obj2[key];
         }
         result = obj1;
     }
@@ -50,6 +48,7 @@ var appWindow = (function () {
 	// Login HTTP Basic Cache Deleted
 	Ti.App.Properties.removeProperty('cookie_csrftoken');
 	Ti.App.Properties.removeProperty('cookie_sessionid');
+	Ti.App.Properties.removeProperty('cookie_oilsid');
 
 	_self.showMainView = function showMainView(data){
 
