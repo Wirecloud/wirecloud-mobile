@@ -52,8 +52,8 @@ var appWindow = (function () {
 
 	_self.showMainView = function showMainView(data){
 
+		_self.remove(loginView.view);
 		loginView.destroy();
-		_self.remove(loginView);
 		loginView = null;
 		var mainView = require('ui/view/mainView')(data);
 		_self.add(mainView);
@@ -63,7 +63,7 @@ var appWindow = (function () {
 	};
 
 	loginView = require('ui/view/loginView')(_self);
-    _self.add(loginView);
+    _self.add(loginView.view);
 
 	return _self;
 

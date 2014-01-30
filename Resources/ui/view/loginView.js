@@ -12,22 +12,24 @@ var loginView = function (parentWindow) {
 
     var theme = require('ui/style/loginViewStyle'), containerForm, userTextField, passTextField,
     activitySession, os = (Ti.App.isApple) ? "iPad" : "Android", version = "", internetLabel, internetIcon,
-    _self = Ti.UI.createView({
-        top: 10,
-        left: 0,
-        backgroundColor: '#FFFFFF',
-        width: Ti.Platform.displayCaps.platformWidth,
-        height: Ti.Platform.displayCaps.platformHeight
-    }),
-    heightLogo = (_self.getWidth()/2 !== 800) ? parseInt((500 * ((_self.getWidth()/2)/800)), 10) : 500;
+    _self = {
+       view : Ti.UI.createView({
+            top: 10,
+            left: 0,
+            backgroundColor: '#FFFFFF',
+            width: Ti.Platform.displayCaps.platformWidth,
+            height: Ti.Platform.displayCaps.platformHeight
+        })
+    },
+    heightLogo = (_self.view.getWidth()/2 !== 800) ? parseInt((500 * ((_self.view.getWidth()/2)/800)), 10) : 500;
 
     // Enterprise Logo
-    _self.add(Ti.UI.createWebView(Ti.App.mergeObject(
+    _self.view.add(Ti.UI.createWebView(Ti.App.mergeObject(
         theme.logo, {
             height: heightLogo,
-            width: _self.getWidth() / 2,
-            left: parseInt(((_self.getWidth()/2) * 0.05), 10),
-            top: parseInt((_self.getHeight()-heightLogo)/2, 10)
+            width: _self.view.getWidth() / 2,
+            left: parseInt(((_self.view.getWidth()/2) * 0.05), 10),
+            top: parseInt((_self.view.getHeight()-heightLogo)/2, 10)
         }
     )));
 
@@ -55,11 +57,11 @@ var loginView = function (parentWindow) {
         }
         splited = null;
     }
-    _self.add(Ti.UI.createLabel(Ti.App.mergeObject(
+    _self.view.add(Ti.UI.createLabel(Ti.App.mergeObject(
         theme.systemLabel, {
             text: Ti.Locale.getString('label_system') + ': ' + os + ' ' + Ti.Platform.version + version,
-            top: parseInt(_self.getHeight() * 0.075, 10),
-            right: parseInt((_self.getWidth()/2 * 0.15), 10)
+            top: parseInt(_self.view.getHeight() * 0.075, 10),
+            right: parseInt((_self.view.getWidth()/2 * 0.15), 10)
         }
     )));
     os = null;
@@ -68,19 +70,19 @@ var loginView = function (parentWindow) {
         theme.internetLabel, {
             text: (Ti.Network.online) ? Ti.Locale.getString('label_inet_connected') :
                                          Ti.Locale.getString('label_inet_noconnected'),
-            top: parseInt(_self.getHeight() * 0.17, 10),
-            right: parseInt((_self.getWidth()/2 * 0.22), 10)
+            top: parseInt(_self.view.getHeight() * 0.17, 10),
+            right: parseInt((_self.view.getWidth()/2 * 0.22), 10)
         }
     ));
-    _self.add(internetLabel);
+    _self.view.add(internetLabel);
     internetIcon = Ti.UI.createLabel(Ti.App.mergeObject(
         theme.internetIcon, {
             color: (Ti.Network.online) ? "#00FF00" : "#FF0000",
-            top: parseInt(_self.getHeight() * 0.175, 10),
-            right: parseInt((_self.getWidth()/2 * 0.15), 10)
+            top: parseInt(_self.view.getHeight() * 0.175, 10),
+            right: parseInt((_self.view.getWidth()/2 * 0.15), 10)
         }
     ));
-    _self.add(internetIcon);
+    _self.view.add(internetIcon);
     _self.onChangeConnection = function onChangeConnection(){
         internetLabel.text = (Ti.Network.online) ? Ti.Locale.getString('label_inet_connected') :
                               Ti.Locale.getString('label_inet_noconnected');
@@ -99,14 +101,14 @@ var loginView = function (parentWindow) {
             stringSearch = "error_connection_inet";
         }
         var alertError = Ti.UI.createAlertDialog({
-            title: "Wirecloud",
-            message: Ti.Localte(stringSearch),
+            title: "AppBase",
+            message: Ti.Locale.getString(stringSearch),
             buttonNames: [Ti.Locale.getString("alert_button_accept")]
         });
         alertError.show();
         stringSearch = null;
         alertError = null;
-        _self.remove(activitySession);
+        _self.view.remove(activitySession);
         activitySession = null;
         containerForm.setOpacity(1);
     };
@@ -125,22 +127,20 @@ var loginView = function (parentWindow) {
                 activitySession = Ti.UI.createLabel(Ti.App.mergeObject(
                     theme.activityLabel, {
                         text: Ti.Locale.getString("label_login_wait"),
-                        left: parseInt(_self.getWidth()/2+(_self.getWidth()/2 * 0.15), 10),
-                        width: parseInt((_self.getWidth()/2 * 0.7), 10),
-                        top: parseInt(((_self.getHeight()-heightLogo)/2)+(heightLogo/2),10)
+                        left: parseInt(_self.view.getWidth()/2+(_self.view.getWidth()/2 * 0.15), 10),
+                        width: parseInt((_self.view.getWidth()/2 * 0.7), 10),
+                        top: parseInt(((_self.view.getHeight()-heightLogo)/2)+(heightLogo/2),10)
                     }
                 ));
-                _self.add(activitySession);
-                Ti.App.API.Network.checkCredentials(userTextField.value, passTextField.value, function(credentials){
-                    if(credentials.status === 'Credential Error'){
+                _self.view.add(activitySession);
+                Ti.App.API.HW.Network.login(userTextField.value, passTextField.value, function(response){
+                    if(response === 'Error Credential'){
                         connectionError('login');
                     }
-                    else if(credentials.status === 'Wirecloud Error'){
-                        connectionError('wirecloud');
+                    else if(response === 'Error Server'){
+                        connectionError('server');
                     }
-                    else{
-                        Ti.App.Properties.setString('cookie_csrftoken',credentials.csrftoken);
-                        Ti.App.Properties.setString('cookie_sessionid',credentials.sessionid);
+                    else if(response === 'Success Credential'){
                         parentWindow.showMainView();
                     }
                 });
@@ -153,12 +153,11 @@ var loginView = function (parentWindow) {
         containerForm = Ti.UI.createView(Ti.App.mergeObject(
             theme.containerView, {
                 height : heightLogo / 2,
-                width : parseInt(_self.getWidth()/2 * 0.7,10),
-                left : parseInt(_self.getWidth()/2+(_self.getWidth()/2 * 0.15), 10),
-                top : parseInt(((_self.getHeight()-heightLogo)/2)+(heightLogo/4), 10)
+                width : parseInt(_self.view.getWidth()/2 * 0.7,10),
+                left : parseInt(_self.view.getWidth()/2+(_self.view.getWidth()/2 * 0.15), 10),
+                top : parseInt(((_self.view.getHeight()-heightLogo)/2)+(heightLogo/4), 10)
             }
         ));
-        _self.add(containerForm);
 
         userTextField = Ti.UI.createTextField(Ti.App.mergeObject(
             theme.inputTextField, {
@@ -189,15 +188,16 @@ var loginView = function (parentWindow) {
             checkAuthentication();
         };
         passTextField.focusPassTField = function focusPassTField(e){
-            _self.setTop(-(containerForm.height/2));
+            _self.view.setTop(-(containerForm.height/2));
         };
         passTextField.blurPassTField = function blurPassTField(e){
-            _self.setTop(0);
+            _self.view.setTop(0);
         };
         passTextField.addEventListener('return', passTextField.returnPassTField);
         passTextField.addEventListener('focus', passTextField.focusPassTField);
         passTextField.addEventListener('blur', passTextField.blurPassTField);
 		containerForm.add(passTextField);
+		_self.view.add(containerForm);
 	};
 
     createForm();
@@ -216,15 +216,16 @@ var loginView = function (parentWindow) {
         delete passTextField.blurPassTField;
         containerForm.remove(passTextField);
         passTextField = null;
-        _self.remove(containerForm);
+        _self.view.remove(containerForm);
         containerForm = null;
-		_self.remove(activitySession);
+		_self.view.remove(activitySession);
 		activitySession = null;
-		_self.remove(internetLabel);
+		_self.view.remove(internetLabel);
 		internetLabel = null;
-		_self.remove(internetIcon);
+		_self.view.remove(internetIcon);
         internetIcon = null;
 		Ti.Network.removeEventListener('change', _self.onChangeConnection);
+		delete _self.view;
 	};
 
 	return _self;
