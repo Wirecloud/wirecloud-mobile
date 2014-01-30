@@ -63,17 +63,23 @@ var loginViewStyle = (function() {
     };
 
     _self.inputTextField = {
-        width : '90%',
-        left : '5%',
-        color : '#354B5D',
+        width: '90%',
+        left: '5%',
+        height: '30%',
+        color: '#354B5D',
         backgroundColor: '#FFFFFF',
         borderRadius: 5,
         borderWidth: 1,
         borderColor: '#6890B2',
         paddingLeft: 10,
-        font : {
-            fontSize : 20,
-            fontFamily : 'Comfortaa'
+        borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
+        autocapitalization: false,
+        enableReturnKey: false,
+        softKeyboardOnFocus : (Ti.App.isApple) ? null : Ti.UI.Android.SOFT_KEYBOARD_SHOW_ON_FOCUS,
+        autocorrect: false,
+        font: {
+            fontSize: 20,
+            fontFamily: 'Comfortaa'
         }
     };
 

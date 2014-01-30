@@ -1,64 +1,130 @@
-(function() {
+/**
+ * Copyright (c) 2014 by Center Open Middleware. All Rights Reserved.
+ * Titanium Appcelerator 3.2.0GA
+ * Licensed under the terms of the Apache Public License
+ * Please see the LICENSE included with this distribution for details.
+ *
+ */
 
-	var _isApple = (Ti.Platform.osname == 'ipad');
-	//var _mainUrl = "https://mashup.lab.fi-ware.eu/";
-	var _mainUrl = "http://138.100.12.106:8088/";
-	var _tim = 100000;
+"use strict";
 
-	/** @title: checkCredentials (Function)
-	 *  @param: [username, password], callback_function
-	 *  @usage: check and get session */
-	function checkCredentials(credentials, callback_function) {
-		var url = _mainUrl + 'login';
-		var response;
-		var client = Ti.Network.createHTTPClient({
-			onload : function(e) {
-				var _cookies = this.getResponseHeader('Set-Cookie');
-				var _csrftoken = _cookies.substr(10, 32);
-				var _sessionid = _cookies.substr(_cookies.indexOf('sessionid')+10, 32);
-				credentials[2] = _csrftoken;
-				client = Ti.Network.createHTTPClient({
-					onload : function(e) {
-						if(this.responseText.indexOf('csrfmiddlewaretoken') == -1){
-							credentials[3] = _sessionid;
-							callback_function(credentials);
-						}
-						else callback_function("Credential Error");
-					},
-					onerror : function(e) {
-						callback_function("Wirecloud Error");
-					},
-					_timeout : _tim
-				});
-				var boundary = '----Wirecloud4TabletBoundary';  
-    			var body =  "--" + boundary + "\r\n" + "Content-Disposition: form-data; name=\"username\"\r\n\r\n" + credentials[0] + "\r\n";
-    			header += "--" + boundary + "\r\n" + "Content-Disposition: form-data; name=\"password\"\r\n\r\n" + credentials[1] + "\r\n";
-    			header += "--" + boundary + "\r\n" + "Content-Disposition: form-data; name=\"csrfmiddlewaretoken\"\r\n\r\n" + credentials[2] + "\r\n";
-    			header += "--" + boundary + "--";    
-				client.open("POST", url);
-				client.setRequestHeader("Content-type", "multipart/form-data; boundary=\"" + boundary + "\"");  
-				client.clearCookies(_mainUrl);
-				client.setRequestHeader("Cookie", "csrftoken=" + _csrftoken);
-				client.setRequestHeader("Cookie", "sessionid=" + _sessionid);				
-				client.send(body);
+var Network = (function () {
+
+    // Configuration Network
+    var _self = {},
+    /*mainURL = 'https://mashup.lab.fi-ware.eu/',
+    loginURL = 'https://account.lab.fi-ware.eu/',
+    oauthURL = 'https://account.lab,fi-ware.eu/aouth2/',
+    tokenURL = 'https://account.lab,fi-ware.eu/aouth2/',
+    typeServer = 'fiware',*/
+    mainURL = 'http://138.100.12.106:8088/',
+    loginURL = 'http://138.100.12.106:8088/login',
+    oauthURL = 'http://138.100.12.106:8088/',
+    tokenURL = 'http://138.100.12.106:8088/',
+    typeServer = 'wirecloud',
+    tim = 90000;
+
+    /** Private function to connect Wirecloud
+     *  @param {Object} data: username, password, cookie
+     *  @param {Function} callback */
+    var loginWirecloud = function loginWirecloud(data, callback){
+        var csrftoken = data.cook.substr(10, 32), bound, boundary,
+        sessionid = data.cook.substr(data.cook.indexOf('sessionid')+10, 32),
+        client = Ti.Network.createHTTPClient({
+            onload: function(e) {
+                if(this.responseText.indexOf('csrfmiddlewaretoken') === -1 &&
+                   this.responseText.indexOf('CSRF verification failed') === -1){
+                    Ti.App.Properties.setString('cookie_csrftoken', csrftoken);
+                    Ti.App.Properties.setString('cookie_sessionid', sessionid);
+                    callback('Success Credential');
+                }
+                else{
+                    callback('Error Credential');
+                }
+            },
+            onerror: function(e) {
+                callback('Error Server');
+            },
+            timeout: tim
+        });
+        boundary = {
+            'username': data.user,
+            'password': data.pass,
+            'csrfmiddlewaretoken': csrftoken
+        };
+        client.open("POST", loginURL);
+        client.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+        client.clearCookies(loginURL);
+        client.clearCookies(mainURL);
+        client.setRequestHeader("Cookie", "csrftoken=" + csrftoken);
+        client.setRequestHeader("Cookie", "sessionid=" + sessionid);
+        client.send(boundary);
+    };
+
+    /** Private function to connect FiWare
+     *  @param {Object} data: username, password, cookie
+     *  @param {Function} callback */
+    var loginFiWare = function loginFiWare(data, callback){
+
+    };
+
+    /** Private function to connect AppBase
+     *  @param {Object} data: username, password, cookie
+     *  @param {Function} callback */
+    var loginAppBase = function loginAppBase(data, callback){
+
+    };
+
+	/** HTTP or HTTPS Basic Login
+	 *  @param {String} username
+	 *  @param {String} password
+	 *  @param {Function} callback */
+	_self.login = function login(username, password, callback) {
+		var response, client = Ti.Network.createHTTPClient({
+			onload: function(e) {
+			    var data = {
+			        'user': username,
+			        'pass': password,
+			        'cook': this.getResponseHeader('Set-Cookie')
+			    };
+			    if(typeServer === 'wirecloud') {
+			        loginWirecloud(data, function(response){
+			            callback(response);
+                    });
+			    }
+			    else if(typeServer === 'fiware') {
+                    loginFiWare(data, function(response){
+                        callback(response);
+                    });
+			    }
+			    else if(typeServer === 'appbase') {
+                    loginAppBase(data, function(response){
+                        callback(response);
+                    });
+			    }
+			    else {
+			        callback('Error Configuration');
+			    }
 			},
 			onerror : function(e) {
-				callback_function("Wirecloud Error");
+				callback('Error Server');
 			},
-			_timeout : _tim
+			timeout: tim
 		});
-		client.open("GET", url);
-		client.clearCookies(_mainUrl);
+		client.open("GET", loginURL);
+		client.clearCookies(loginURL);
+		client.clearCookies(mainURL);
 		client.send();
 	};
-	
-	/** @title: getWirecloud (Function)
+
+/*
+	 @title: getWirecloud (Function)
 	 *  @param: csrftoken, sessionid, callback_function
-	 *  @usage: get Information Wirecloud Account */
+	 *  @usage: get Information Wirecloud Account
 	function getWirecloud(callback_function) {
 		getWorkspaces(function(wValues) {
-			var _error = false;
-			for (var i = 0; i < wValues.length; i++) {
+			var _error = false, i;
+			for (i = 0; i < wValues.length; i++) {
 				if (wValues[i] == "Error") {
 					_error = true;
 					callback_function("Error");
@@ -78,9 +144,9 @@
 		});
 	};
 
-	/** @title: getWorkspaces (Function)
+	 @title: getWorkspaces (Function)
 	 *  @param: csrftoken, sessionid, callback_function
-	 *  @usage: create HTTP client for Wirecloud API */
+	 *  @usage: create HTTP client for Wirecloud API
 	function getWorkspaces(callback_function) {
 		var url = _mainUrl + "api/workspaces";
 		var response;
@@ -109,9 +175,9 @@
 		client.send();
 	};
 
-	/** @title: getResources (Function)
+	 @title: getResources (Function)
 	 *  @param: csrftoken, sessionid, callback_function
-	 *  @usage: create HTTP client for Wirecloud API */
+	 *  @usage: create HTTP client for Wirecloud API
 	function getResources(callback_function) {
 		var url = _mainUrl + "api/resources";
 		var client = Ti.Network.createHTTPClient({
@@ -135,9 +201,9 @@
 		client.send();
 	};
 
-	/** @title: getWorkspacesData (Function)
+	 @title: getWorkspacesData (Function)
 	 *  @param: numberWorkspace, callback_function
-	 *  @usage: create HTTP client for Wirecloud API */
+	 *  @usage: create HTTP client for Wirecloud API
 	function getWorkspacesData(numberWorkspace, callback_function) {
 		var url = _mainUrl + "api/workspace/" + numberWorkspace;
 		var client = Ti.Network.createHTTPClient({
@@ -161,9 +227,9 @@
 		client.send();
 	};
 
-	/** @title: deleteWorkspaceTab (Function)
+	 @title: deleteWorkspaceTab (Function)
 	 *  @param: workspace id, tab id, callback_function
-	 *  @usage: create HTTP client for Wirecloud API */
+	 *  @usage: create HTTP client for Wirecloud API
 	function deleteWorkspaceTab(workspace, id, callback_function) {
 		var url = _mainUrl + "api/workspace/" + workspace + '/tab/' + id;
 		var client = Ti.Network.createHTTPClient({
@@ -187,9 +253,9 @@
 		client.send();
 	};
 
-	/** @title: getMarketPlaces (Function)
+	 @title: getMarketPlaces (Function)
 	 *  @param: csrftoken, sessionid, callback_function
-	 *  @usage: create HTTP client for Wirecloud API */
+	 *  @usage: create HTTP client for Wirecloud API
 	function getMarketPlaces(callback_function) {
 		var url = _mainUrl + "api/markets";
 		var client = Ti.Network.createHTTPClient({
@@ -213,9 +279,9 @@
 		client.send();
 	};
 
-	/** @title: getMarketPlaces (Function)
+	 @title: getMarketPlaces (Function)
 	 *  @param: csrftoken, sessionid, callback_function
-	 *  @usage: create HTTP client for Wirecloud API */
+	 *  @usage: create HTTP client for Wirecloud API
 	function getWidgetsMarket(options, callback_function) {
 		var url;
 		var arguments = "?" + "orderby=" + options.orderby;
@@ -247,9 +313,9 @@
 		client.send();
 	};
 
-	/** @title: putWorkspaceMashup (Function)
+	 @title: putWorkspaceMashup (Function)
 	 *  @param: csrftoken, sessionid, mashupData, callback_function
-	 *  @usage: create HTTP client for Wirecloud API */
+	 *  @usage: create HTTP client for Wirecloud API
 	function putWorkspaceMashup(mashupData, callback_function) {
 		var url = _mainUrl + "api/workspaces";
 		var client = Ti.Network.createHTTPClient({
@@ -277,9 +343,9 @@
 		client.send(JSON.stringify(param));
 	};
 
-	/** @title: getRouteWidgetMap (Function)
+	 @title: getRouteWidgetMap (Function)
 	 *  @param: pointOrigin, pointDestiny, mode, callback_function
-	 *  @usage: create HTTP client for Create Route */
+	 *  @usage: create HTTP client for Create Route
 	function getRouteWidgetMap(pointOrigin, pointDestiny, mode, callback_function) {
 		var url = "http://maps.googleapis.com/maps/api/directions/json?origin=" + pointOrigin.lat + "," + pointOrigin.lng + "&destination=" + pointDestiny.lat + "," + pointDestiny.lng + "&sensor=false&optimize=true&mode=" + mode + "&language=" + Ti.Locale.currentLanguage;
 		var client = Ti.Network.createHTTPClient({
@@ -295,9 +361,9 @@
 		client.send();
 	};
 
-	/** @title: makeExternRequest (Function)
+	 @title: makeExternRequest (Function)
 	 *  @param: data (options make request + url), callback_function
-	 *  @usage: create request to external server */
+	 *  @usage: create request to external server
 	function makeExternRequest(data, callback_function) {
 		var url = data.url;
 		var opt = data.options;
@@ -308,7 +374,7 @@
 			onerror : function(e) {
 				callback_function(this);
 			},
-			_timeout : _tim
+			_timeout : tim
 		});
 		client.open(opt.method, url);
 		var enc = (!opt.encoding) ? "charset=UTF-8" : "charset=" + opt.encoding;
@@ -318,7 +384,8 @@
 			client.setRequestHeader("Content-Type", opt.contentType + "; " + enc);
 		client.clearCookies(url);
 		if (opt.requestHeaders) {
-			for (var i in opt.requestHeaders) {
+		    var i;
+			for (i in opt.requestHeaders) {
 				client.setRequestHeader(i, opt.requestHeaders[i]);
 			}
 		}
@@ -330,19 +397,19 @@
 			client.send();
 	};
 
-	/** @title: checkListResource (Function)
+	 @title: checkListResource (Function)
 	 *  @param: data (widgets and operators uri), callback_function
-	 *  @usage: create requests to wirecloud file system */
+	 *  @usage: create requests to wirecloud file system
 	function checkListResource(data, callback_function) {
 		var _error = {};
 		_error.value = false;
-		var _resources = {};
-		for(var i in data) {
+		var _resources = {}, i, j;
+		for(i in data) {
 			_resources[i] = checkResource(data[i], i, function(result) {
 				_error = result;
 				if (_error.value == true) {
 					if (Ti.Network.online) _error.id = "error_inet";
-					for(var j in _resources) {
+					for(j in _resources) {
 						_resources[j].abort();
 						delete _resources[j];
 					}
@@ -352,9 +419,9 @@
 			});
 		}
 
-		/** @title: checkResource (Function)
+		 @title: checkResource (Function)
 		 *  @param: uri (Vendor/name/version), connection id, callback
-		 *  @usage: check exist config.xml of widget/operator */ 
+		 *  @usage: check exist config.xml of widget/operator
 		function checkResource(uri, id, callback) {
 			var url = _mainUrl + 'showcase/media/' + uri + '/config.xml';
 			var client = Ti.Network.createHTTPClient({
@@ -389,22 +456,22 @@
 		};
 	};
 
-	/** @title: downloadListResource (Function)
+	 @title: downloadListResource (Function)
 	 *  @param: data (widgets and operators uri), number of widgets, callback_function
-	 *  @usage: create requests to download wirecloud files */
+	 *  @usage: create requests to download wirecloud files
 	function downloadListResource(data, barrier, callback_function) {
 		var _error = {};
 		_error.value = false;
 		_error.files = {};
-		var _resources = {};
-		for (var i = 0; i < data.length; i++) {
+		var _resources = {}, i, j;
+		for (i = 0; i < data.length; i++) {
 			var flag = false;
 			if (i < barrier) flag = true;
 			_resources[i] = downloadResources(data[i], i, flag, function(result) {
 				_error.value = result.value;
 				if (_error.value == true && Ti.Network.online) {
 					_error.uri = "error_inet";
-					for(var j in _resources) {
+					for(j in _resources) {
 						_resources[j].abort();
 						delete _resources[j];
 					}
@@ -416,10 +483,10 @@
 				if (Object.keys(_resources).length === 0) callback_function(_error);
 			});
 		}
-		
-		/** @title: downloadResources (Function)
+
+		 @title: downloadResources (Function)
 		 *  @param: widgets uri, id, type [operator|widget] and callback_function
-		 *  @usage: download index.html and files */
+		 *  @usage: download index.html and files
 		 function downloadResources(uri, id, flag, callback) {
 			 var urlResource = _mainUrl + 'api/resource/' + uri + '/description?include_wgt_files=true';
 			 var client = Ti.Network.createHTTPClient({
@@ -428,8 +495,8 @@
 					var _files = JSON.parse(this.responseText);
 					_files = _files.wgt_files;
 					var _path = uri.split('/');
-					var _pathUse = '';
-					for (var k in _path) {
+					var _pathUse = '', k, j;
+					for (k in _path) {
 						_pathUse = _pathUse + _path[k];
 						if (!Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, _type + _pathUse).exists())
 							Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, _type + _pathUse).createDirectory();
@@ -439,7 +506,7 @@
 						var _extension = JSON.parse(this.responseText);
 						_extension = _extension.code_url;
 						_extension = _extension.substr(_extension.lastIndexOf('/')+1, _extension.length-1);
-				    	Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'widgets/' + uri + '/TIWebView').write(_extension, false);
+                        Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'widgets/' + uri + '/TIWebView').write(_extension, false);
 						_extension = null;
 					}
 					_path = null;
@@ -447,13 +514,13 @@
 					Ti.API.info("Result [get files] of " + uri + ": Success");
 					var _error = {};
 					var _filesResource = {};
-					for (var k in _files) {
+					for (k in _files) {
 						_filesResource[k] = downloadFile(_type, uri, _files[k], k, function(result) {
 							_error.value = result.value;
 							if (_error.value == true) {
 								if (Ti.Network.online) _error.uri = "error_inet";
 								else _error.uri = result.uri;
-								for(var j in _filesResource) {
+								for(j in _filesResource) {
 									_filesResource[j].abort();
 									delete _filesResource[j];
 								}
@@ -483,17 +550,17 @@
 			client.send();
 			return client;
 		};
-		
-		/** @title: downloadFile (Function)
+
+		 @title: downloadFile (Function)
 		 *  @param: url and type [operator|widget], id and callback_function
-		 *  @usage: download any type file from wirecloud instance */
+		 *  @usage: download any type file from wirecloud instance
 		function downloadFile(folderType, uri, file, id, callback) {
 			var url = _mainUrl + 'showcase/media/' + uri + '/' + file;
 			var client = Ti.Network.createHTTPClient({
 				onload : function(e) {
 					var _path = file.split('/');
-					var _pathUse = '';
-					for (var k = 0; k < _path.length - 1; k++) {
+					var _pathUse = '', k;
+					for (k = 0; k < _path.length - 1; k++) {
 						_pathUse = _pathUse + _path[k];
 						if (!Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, folderType + uri + '/' + _pathUse).exists())
 							Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, folderType + uri + '/' + _pathUse).createDirectory();
@@ -529,26 +596,10 @@
 			return client;
 		};
 
-	};
+	};*/
 
-	// Wirecloud API Fi-WARE
-	module.exports.checkCredentials = checkCredentials;
-	module.exports.getWirecloud = getWirecloud;
-	module.exports.getWorkspaces = getWorkspaces;
-	module.exports.getResources = getResources;
-	module.exports.deleteWorkspaceTab = deleteWorkspaceTab;
-	module.exports.getWorkspacesData = getWorkspacesData;
-	module.exports.putWorkspaceMashup = putWorkspaceMashup;
+	return _self;
 
-	// MarketPlace API Fi-WARE
-	module.exports.getMarketPlaces = getMarketPlaces;
-	module.exports.getWidgetsMarket = getWidgetsMarket;
+}());
 
-	// Extras Connection
-	module.exports.getRouteWidgetMap = getRouteWidgetMap;
-	module.exports.makeExternRequest = makeExternRequest;
-	module.exports.checkListResource = checkListResource;
-	module.exports.downloadListResource = downloadListResource;
-
-})();
-
+module.exports = Network;

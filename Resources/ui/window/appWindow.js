@@ -16,9 +16,7 @@ Ti.App.mergeObject = function (obj1, obj2){
     var result = null, key;
     if (obj1 !== null && obj2 !== null){
         for (key in obj2){
-            if (obj2.hasOwnProperty(key)){
-                obj1[key] = obj2[key];
-            }
+            obj1[key] = obj2[key];
         }
         result = obj1;
     }
@@ -31,12 +29,12 @@ Ti.App.isApple = (Ti.Platform.osname === 'ipad');
 var appWindow = (function () {
 
     var _self = Ti.UI.createWindow({
-        exitOnClose : true,
-        navBarHidden : true,
-        backgroundColor : '#FFFFFF',
-        width : Ti.Platform.displayCaps.platformWidth,
-        height : Ti.Platform.displayCaps.platformHeight,
-        orientationModes : [Ti.UI.LANDSCAPE_LEFT, Ti.UI.LANDSCAPE_RIGHT]
+        exitOnClose: true,
+        navBarHidden: true,
+        backgroundColor: '#FFFFFF',
+        width: Ti.Platform.displayCaps.platformWidth,
+        height: Ti.Platform.displayCaps.platformHeight,
+        orientationModes: [Ti.UI.LANDSCAPE_LEFT, Ti.UI.LANDSCAPE_RIGHT]
     }), loginView;
 
     // Quick Start
@@ -50,11 +48,12 @@ var appWindow = (function () {
 	// Login HTTP Basic Cache Deleted
 	Ti.App.Properties.removeProperty('cookie_csrftoken');
 	Ti.App.Properties.removeProperty('cookie_sessionid');
+	Ti.App.Properties.removeProperty('cookie_oilsid');
 
 	_self.showMainView = function showMainView(data){
 
+		_self.remove(loginView.view);
 		loginView.destroy();
-		_self.remove(loginView);
 		loginView = null;
 		var mainView = require('ui/view/mainView')(data);
 		_self.add(mainView);
@@ -64,7 +63,7 @@ var appWindow = (function () {
 	};
 
 	loginView = require('ui/view/loginView')(_self);
-    _self.add(loginView);
+    _self.add(loginView.view);
 
 	return _self;
 
