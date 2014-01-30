@@ -22,7 +22,7 @@ var API = (function() {
         HW : {
             Acceloremeter : require('lib/API.Accelerometer'),
             Battery : require('lib/API.Battery'),
-            Camera : '',
+            Camera : require('lib/API.Camera'),
             GeoLocation : '',
             Gesture : '',
             Media : '',
