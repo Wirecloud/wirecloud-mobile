@@ -13,6 +13,13 @@ var Camera = (function() {
                    Ti.Platform.getOsname() === 'iphone') ? 'ios' : 'android';
     var version = parseInt(Ti.Platform.getVersion().split('.')[0], 10);
     
+    var TiError = function TiError (msg) {
+        this.name = "TiError";
+        this.message = msg;
+    };
+
+    TiError.prototype = new Error();
+
     var self = {};
 
     /** Creates and returns an instance of Titanium.Media.VideoPlayer.
