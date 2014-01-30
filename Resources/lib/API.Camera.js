@@ -9,54 +9,53 @@
 
 var Camera = (function() {
 
-    var _device = (Ti.Platform.getOsname() === 'ipad' || 
+    var device = (Ti.Platform.getOsname() === 'ipad' ||
                    Ti.Platform.getOsname() === 'iphone') ? 'ios' : 'android';
-    var _version = parseInt(Ti.Platform.getVersion().split('.')[0], 10);
+    var version = parseInt(Ti.Platform.getVersion().split('.')[0], 10);
     
-    var _self = {};
+    var self = {};
 
     /** Creates and returns an instance of Titanium.Media.VideoPlayer.
      *  @param {Object} parameters : It is a dictionary (optional)
      *  @return Object */
-    _self.createVideoPlayer = function createVideoPlayer(videoPlayerDictionary) {
+    self.createVideoPlayer = function createVideoPlayer(videoPlayerDictionary) {
     };
-    _self.
 
     /** Gets the value of the availableCameraMediaTypes property.
      * @return {Object[]} */
-    _self.getAvailableCameraMediaTypes = function getAvailableCameraMediaTypes() {
+    self.getAvailableCameraMediaTypes = function getAvailableCameraMediaTypes() {
         return Titanium.Media.getAvailableCameraMediaTypes();
     };
 
     /** Gets the value of the availableCameras property.
      * @return {Object[]} */
-    _self.getAvailableCameras = function getAvailableCameras() {
+    self.getAvailableCameras = function getAvailableCameras() {
     };
 
     /** Gets the value of the availablePhotoGalleryMediaTypes property.
      * @return {Object[]} */
-    _self.getAvailablePhotoGalleryMediaTypes = function getAvailablePhotoGalleryMediaTypes() {
+    self.getAvailablePhotoGalleryMediaTypes = function getAvailablePhotoGalleryMediaTypes() {
     };
 
     /** Gets the value of the availablePhotoMediaTypes property.
      * @return {Object[]} */
-    _self.getAvailablePhotoMediaTypes = function getAvailablePhotoMediaTypes() {
+    self.getAvailablePhotoMediaTypes = function getAvailablePhotoMediaTypes() {
     };
 
     /** Gets the value of the canRecord property.
      * @return {Boolean} */
-    _self.getCanRecord = function getCanRecord() {
+    self.getCanRecord = function getCanRecord() {
     };
 
     /** Gets the value of the isCameraSupported property.
      * @return {Boolean} */
-    _self.getIsCameraSupported = function getIsCameraSupported() {
+    self.getIsCameraSupported = function getIsCameraSupported() {
     };
 
     /** Hides the device camera UI. Must be called after calling showCamera and
      * only when autohide is set to false. This method causes the media capture
      * UI to be hidden. */
-    _self.hideCamera = function hideCamera() {
+    self.hideCamera = function hideCamera() {
     };
 
     /** Returns true if the source supports the specified media type. You can
@@ -70,21 +69,20 @@ var Camera = (function() {
      * @param {String} source : Media source specified as a string: camera for Camera or photo for Photo Library.
      * @param {String} type : Media type to check, either MEDIA_TYPE_PHOTO or MEDIA_TYPE_VIDEO.
      * @return {Boolean} */
-    _self.isMediaTypeSupported = function isMediaTypeSupported() {
+    self.isMediaTypeSupported = function isMediaTypeSupported() {
     };
-_self.
+
     /** Opens the photo gallery image picker.
      * @param {PhotoGalleryOptionsType} options : Photo gallery options as described in PhotoGalleryOptionsType.
      * @return {Object} */
-    _self.openPhotoGallery = function openPhotoGallery() {
-      
+    self.openPhotoGallery = function openPhotoGallery() {
     };
 
     /** Displays the given image.
      * @param {PreviewImageOptions} options : Dictionary containing the image
      *      and callback functions.
      * @return {Object} */
-    _self.previewImage = function previewImage() {
+    self.previewImage = function previewImage() {
     };
 
     /** Saves media to the device's photo gallery / camera roll. This operation
@@ -103,34 +101,34 @@ _self.
      *      function that will be called when the save succeeds, and error a
      *      function that will be called upon receiving an error.
      * @return {Object} */
-    _self.saveToPhotoGallery = function saveToPhotoGallery() {
+    self.saveToPhotoGallery = function saveToPhotoGallery() {
     };
 
     /** Sets the value of the availableCameraMediaTypes property.
      * @param {Object[]} : availableCameraMediaTypes: New value for the
      *      property.
      * @return {Object} */
-    _self.setAvailableCameraMediaTypes = function setAvailableCameraMediaTypes() {
+    self.setAvailableCameraMediaTypes = function setAvailableCameraMediaTypes() {
     };
     
     /** Sets the value of the availablePhotoGalleryMediaTypes property.
      * @param {Object[]} availablePhotoGalleryMediaTypes : New value for the property.
      * @return {Object} */
-    _self.setAvailablePhotoGalleryMediaTypes = function setAvailablePhotoGalleryMediaTypes() {
+    self.setAvailablePhotoGalleryMediaTypes = function setAvailablePhotoGalleryMediaTypes() {
     };
 
     /** Sets the value of the availablePhotoMediaTypes property.
      * @param {Object[]} availablePhotoMediaTypes
      * @return {Object} */
-    _self.setAvailablePhotoMediaTypes = function setAvailablePhotoMediaTypes(availablePhotoMediaTypes) {
+    self.setAvailablePhotoMediaTypes = function setAvailablePhotoMediaTypes(availablePhotoMediaTypes) {
     };
 
     /** Shows the camera. By default, the native camera controls are displayed.
      *  To add your own camera controls, you can add an overlay view by setting
      *  the overlay property on the options argument.
      * @param {Object} callback*/
-    _self.showCamera = function showCamera(callback) {
-        Titanium.Media.showCamera({
+    self.showCamera = function showCamera(callback) {
+        Ti.Media.showCamera({
             success: function (e) {
                 if (e.mediaType === Titanium.Media.MEDIA_TYPE_PHOTO) {
                     callback({
@@ -152,22 +150,27 @@ _self.
             allowEditing: false,
             autoHide: false,
             saveToPhotoGallery: true,
-            mediaTypes: [Titanium.Media.MEDIA_TYPE_PHOTO]
+            mediaTypes: [Ti.Media.MEDIA_TYPE_PHOTO]
         });
     };
 
     /** Switches between front and rear-facing cameras. Its parameter is
      * CAMERA_FRONT or CAMERA_REAR.
-     * @param {Number} camera : (CAMERA_FRONT | CAMERA_REAR)
+     * @param {String} camera : ('CAMERA_FRONT' | 'CAMERA_REAR')
      * @return {Object} */
-    _self.switchCamera = function switchCamera(camera) {
+    self.switchCamera = function switchCamera(camera) {
+        if (camera === 'CAMERA_FRONT' || camera === 'CAMERA_REAR') {
+            Ti.Media.switchcamera(Ti.Media[camera]);
+        } else {
+            throw new TypeError('switchCamera(camera) has received wrong parameters');
+        }
     };
 
-    /** Uses the device camera to capture a photo.
-     * Must be called after calling showCamera and only when autohide is set to false.
-     * This method causes the media capture device to capture a photo and call the success callback.
-     * @return {Object} */
-    _self.takePicture = function takePicture() {
+    /** Uses the device camera to capture a photo. Must be called after calling
+     * showCamera and only when autohide is set to false. This method causes the
+     * media capture device to capture a photo and call the success callback.*/
+    self.takePicture = function takePicture() {
+        Ti.Media.takePicture();
     };
 
     /** Takes a screen shot of the visible UI on the device. This method is
@@ -176,10 +179,10 @@ _self.
      *  Blob object.
      * @param {Function} callback
      * @return {Object} */
-    _self.takeScreenshot = function takeScreenshot(callback) {
+    self.takeScreenshot = function takeScreenshot(callback) {
     };
     
-    return _self;
+    return self;
         
 }());
 
