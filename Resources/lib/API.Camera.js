@@ -7,12 +7,15 @@
 
 "use strict";
 
+/* FYI: http://docs.appcelerator.com/titanium/3.0/#!/api/Titanium.Media*/
 var Camera = (function() {
 
     var device = (Ti.Platform.getOsname() === 'ipad' ||
                    Ti.Platform.getOsname() === 'iphone') ? 'ios' : 'android';
     var version = parseInt(Ti.Platform.getVersion().split('.')[0], 10);
     
+    var CALL_FAILURE = "call failed: ";
+
     var TiError = function TiError (msg) {
         this.name = "TiError";
         this.message = msg;
@@ -20,49 +23,116 @@ var Camera = (function() {
 
     TiError.prototype = new Error();
 
+    var returnFunctionWithoutParams = function returnFunctionWithoutParams(funcName){
+        var result;
+
+        try {
+            result = Ti.Media[funcName].apply(Ti.Media[funcName]);
+        } catch (e) {
+            throw new TiError(funcName + " " + CALL_FAILURE + e.message);
+        }
+
+        return result;
+    };
+
+    var returnFunctionWithParams = function returnFunctionWithParams(funcName, params){
+        var result;
+
+        var paramsIsArray = params instanceof Array;
+        if (!paramsIsArray) {
+            throw new TypeError("returnFunction call failed. 'params' is not an Array.");
+        }
+
+        try {
+            result = Ti.Media[funcName].apply(Ti.Media[funcName], params);
+        } catch (e) {
+            throw new TiError(funcName + " " + CALL_FAILURE + e.message);
+        }
+
+        return result;
+    };
+
+    /** It returns the result of Ti.Media native call.
+     *  @param {String} funcName : The function name.
+     *  @param {String} params : An array of params.
+     *  @return Object : Native result. */
+    var returnFunction = function returnFunction(funcName, params){
+        var result;
+        if (!params) {
+            result = returnFunctionWithoutParams(funcName);
+        } else {
+            result = returnFunctionWithParams(funcName, params);
+        }
+
+        return result;
+    };
+
+    var process = function process (funcName, params) {
+        try {
+            if (!params) {
+                Ti.Media[funcName].apply(Ti.Media[funcName]);
+            } else {
+                var paramsIsArray = params instanceof Array;
+                if (!paramsIsArray) {
+                    throw new TypeError("returnFunction call failed. 'params' is not an Array.");
+                }
+                Ti.Media[funcName].apply(Ti.Media[funcName], params);
+            }
+        } catch (e) {
+            throw new TiError(funcName + " " + CALL_FAILURE + e.message);
+        }
+    };
+
     var self = {};
 
     /** Creates and returns an instance of Titanium.Media.VideoPlayer.
      *  @param {Object} parameters : It is a dictionary (optional)
      *  @return Object */
     self.createVideoPlayer = function createVideoPlayer(videoPlayerDictionary) {
+        return returnFunction("createVideoPlayer", [videoPlayerDictionary]);
     };
 
     /** Gets the value of the availableCameraMediaTypes property.
      * @return {Object[]} */
     self.getAvailableCameraMediaTypes = function getAvailableCameraMediaTypes() {
-        return Titanium.Media.getAvailableCameraMediaTypes();
+        return returnFunction("getAvailableCameraMediaTypes");
     };
 
     /** Gets the value of the availableCameras property.
-     * @return {Object[]} */
+     * @return {Number[]} : CAMERA_FRONT, CAMERA_REAR or both*/
     self.getAvailableCameras = function getAvailableCameras() {
+        return returnFunction("getAvailableCameras");
     };
 
     /** Gets the value of the availablePhotoGalleryMediaTypes property.
      * @return {Object[]} */
     self.getAvailablePhotoGalleryMediaTypes = function getAvailablePhotoGalleryMediaTypes() {
+        return returnFunction("getAvailablePhotoGalleryMediaTypes");
     };
 
     /** Gets the value of the availablePhotoMediaTypes property.
      * @return {Object[]} */
     self.getAvailablePhotoMediaTypes = function getAvailablePhotoMediaTypes() {
+        return returnFunction("getAvailablePhotoMediaTypes");
     };
 
     /** Gets the value of the canRecord property.
      * @return {Boolean} */
     self.getCanRecord = function getCanRecord() {
+        return returnFunction("getCanRecord");
     };
 
     /** Gets the value of the isCameraSupported property.
      * @return {Boolean} */
     self.getIsCameraSupported = function getIsCameraSupported() {
+        return returnFunction("getIsCameraSupported");
     };
 
     /** Hides the device camera UI. Must be called after calling showCamera and
      * only when autohide is set to false. This method causes the media capture
      * UI to be hidden. */
     self.hideCamera = function hideCamera() {
+        process("hideCamera");
     };
 
     /** Returns true if the source supports the specified media type. You can
@@ -73,23 +143,27 @@ var Camera = (function() {
      * photo library. However, when calling openPhotoGallery on iOS, the entire
      * library is displayed, and there is currently no way to restrict the
      * gallery to show only the camera roll/saved images album.
-     * @param {String} source : Media source specified as a string: camera for Camera or photo for Photo Library.
-     * @param {String} type : Media type to check, either MEDIA_TYPE_PHOTO or MEDIA_TYPE_VIDEO.
+     * @param {String} source : Media source specified as a string: camera for
+     *      Camera or photo for Photo Library.
+     * @param {String} type : Media type to check, either MEDIA_TYPE_PHOTO or
+     *      MEDIA_TYPE_VIDEO.
      * @return {Boolean} */
-    self.isMediaTypeSupported = function isMediaTypeSupported() {
+    self.isMediaTypeSupported = function isMediaTypeSupported(source, type) {
+        return returnFunction("isMediaTypeSupported", [source, type]);
     };
 
     /** Opens the photo gallery image picker.
-     * @param {PhotoGalleryOptionsType} options : Photo gallery options as described in PhotoGalleryOptionsType.
-     * @return {Object} */
-    self.openPhotoGallery = function openPhotoGallery() {
+     * @param {PhotoGalleryOptionsType} options : Photo gallery options as
+     *      described in PhotoGalleryOptionsType. */
+    self.openPhotoGallery = function openPhotoGallery(options) {
+        process("openPhotoGallery", [options]);
     };
 
     /** Displays the given image.
      * @param {PreviewImageOptions} options : Dictionary containing the image
-     *      and callback functions.
-     * @return {Object} */
-    self.previewImage = function previewImage() {
+     *      and callback functions. */
+    self.previewImage = function previewImage(options) {
+        process("previewImage", [options]);
     };
 
     /** Saves media to the device's photo gallery / camera roll. This operation
@@ -108,26 +182,30 @@ var Camera = (function() {
      *      function that will be called when the save succeeds, and error a
      *      function that will be called upon receiving an error.
      * @return {Object} */
-    self.saveToPhotoGallery = function saveToPhotoGallery() {
+    self.saveToPhotoGallery = function saveToPhotoGallery(media, callbacks) {
+        process("saveToPhotoGallery", [media, callbacks]);
     };
 
     /** Sets the value of the availableCameraMediaTypes property.
      * @param {Object[]} : availableCameraMediaTypes: New value for the
      *      property.
      * @return {Object} */
-    self.setAvailableCameraMediaTypes = function setAvailableCameraMediaTypes() {
+    self.setAvailableCameraMediaTypes = function setAvailableCameraMediaTypes(availableCameraMediaTypes) {
+        process("setAvailableCameraMediaTypes", [availableCameraMediaTypes]);
     };
     
     /** Sets the value of the availablePhotoGalleryMediaTypes property.
      * @param {Object[]} availablePhotoGalleryMediaTypes : New value for the property.
      * @return {Object} */
-    self.setAvailablePhotoGalleryMediaTypes = function setAvailablePhotoGalleryMediaTypes() {
+    self.setAvailablePhotoGalleryMediaTypes = function setAvailablePhotoGalleryMediaTypes(availablePhotoGalleryMediaTypes) {
+        process("setAvailablePhotoGalleryMediaTypes", [availablePhotoGalleryMediaTypes]);
     };
 
     /** Sets the value of the availablePhotoMediaTypes property.
      * @param {Object[]} availablePhotoMediaTypes
      * @return {Object} */
     self.setAvailablePhotoMediaTypes = function setAvailablePhotoMediaTypes(availablePhotoMediaTypes) {
+        process("setAvailablePhotoMediaTypes", [availablePhotoMediaTypes]);
     };
 
     /** Shows the camera. By default, the native camera controls are displayed.
@@ -177,7 +255,7 @@ var Camera = (function() {
      * showCamera and only when autohide is set to false. This method causes the
      * media capture device to capture a photo and call the success callback.*/
     self.takePicture = function takePicture() {
-        Ti.Media.takePicture();
+        process("takePicture");
     };
 
     /** Takes a screen shot of the visible UI on the device. This method is
@@ -187,6 +265,7 @@ var Camera = (function() {
      * @param {Function} callback
      * @return {Object} */
     self.takeScreenshot = function takeScreenshot(callback) {
+        //TODO
     };
     
     return self;
