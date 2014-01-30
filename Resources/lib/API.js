@@ -16,7 +16,7 @@ var API = (function() {
             DataBase : '',
             Log : '',
             Map : '',
-            Notification : '',
+            Notification : require('lib/API.Notification'),
             Social : ''
         },
         HW : {
