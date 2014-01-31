@@ -18,11 +18,11 @@ var Network = (function () {
 
     // Configuration Network
     var _self = {},
-    mainURL = 'https://mashup.lab.fi-ware.eu/',
-    loginURL = 'https://account.lab.fi-ware.eu/users/sign_in',
-    oauthURL = 'https://account.lab.fi-ware.eu/aouth2/',
-    tokenURL = 'https://account.lab.fi-ware.eu/aouth2/',
-    typeServer = 'fiware',
+    mainURL = 'http://138.100.12.106:8088/',
+    loginURL = 'http://138.100.12.106:8088/login',
+    oauthURL = 'http://138.100.12.106:8088/',
+    tokenURL = 'http://138.100.12.106:8088/',
+    typeServer = 'wirecloud',
     tim = 90000;
 
     /** Private function to connect Wirecloud
@@ -48,11 +48,9 @@ var Network = (function () {
             },
             timeout: tim
         });
-        boundary = {
-            'username': data.user,
-            'password': data.pass,
-            'csrfmiddlewaretoken': csrftoken
-        };
+        boundary = Ti.Network.encodeURIComponent('csrfmiddlewaretoken') + '=' + Ti.Network.encodeURIComponent(csrftoken) +
+             '&' + Ti.Network.encodeURIComponent('username') + '=' + Ti.Network.encodeURIComponent(data.user) +
+             '&' + Ti.Network.encodeURIComponent('password') + '=' + Ti.Network.encodeURIComponent(data.pass);
         client.open("POST", loginURL);
         client.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
         client.clearCookies(loginURL);
@@ -86,18 +84,16 @@ var Network = (function () {
             },
             timeout: tim
         });
-        boundary = {
-            'user[email]': data.user,
-            'user[password]': data.pass,
-            'authenticity_token': data.csrf
-        };
+        boundary = Ti.Network.encodeURIComponent('authenticity_token') + '=' + Ti.Network.encodeURIComponent(data.csrf) +
+             '&' + Ti.Network.encodeURIComponent('user[email]') + '=' + Ti.Network.encodeURIComponent(data.user) +
+             '&' + Ti.Network.encodeURIComponent('user[password]') + '=' + Ti.Network.encodeURIComponent(data.pass);
         client.open("POST", loginURL);
         client.setRequestHeader("Accept", 'text/html');
         client.setRequestHeader("Content-Type",'application/x-www-form-urlencoded');
         client.clearCookies(loginURL);
         client.clearCookies(mainURL);
         client.setRequestHeader("Cookie", '_fi-ware-idm_session=' + idm_session);
-        client.send(JSON.stringify(boundary));
+        client.send(boundary);
     };
 
     /** Private function to connect AppBase

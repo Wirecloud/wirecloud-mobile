@@ -26,7 +26,7 @@ var API = (function() {
             GeoLocation : '',
             Gesture : '',
             Media : '',
-            //Network : require('lib/API.Network'),
+            Network : require('lib/API.Network'),
             System : require('lib/API.System')
         }
     };
