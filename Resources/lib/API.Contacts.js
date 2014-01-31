@@ -422,11 +422,13 @@ var Contacts = (function() {
 
 	/** Save Changes */
 	_self.saveChanges = function() {
+	    // TODO: Uncaught Error: save: Invalid number of arguments. Expected 1 but got 0
 		Ti.Contacts.save();
 	};
 
 	/** Revert Changes from last save */
 	_self.revertChanges = function() {
+	    // TODO: Uncaught TypeError: Object #<Contacts> has no method 'revert'
 		Ti.Contacts.revert();
 	};
 
