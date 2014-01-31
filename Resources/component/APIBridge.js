@@ -18,7 +18,7 @@
     var inputs = {};
     var callCounter = 0;
 
-    var _genericMethodHandler = function _genericMethodHandler(callback, methName, options, isAsync) {
+    var _genericMethodHandler = function _genericMethodHandler(callback, methName, params, options, isAsync) {
         var methodInfo, data;
 
         if (methodHandlers[methName] == null) {
@@ -40,7 +40,8 @@
             name: methodInfo[3],
             eventName: methName
         },
-        'params': options,
+        'params': params,
+        'options': options,
         'viewId': id,
         'callId': callCounter
         };
@@ -76,59 +77,54 @@
                     Contacts : {
                         /** Get Authorization Property
                           * Condition AUTHORIZATION_UNKNOWN -> RequestAuthorization
+                          * @param {function} Callback
                           * @return : AUTHORIZATION_AUTHORIZED or AUTHORIZATION_RESTRICTED */
-                        getAuthorization: function(callback, param) {
+                        getAuthorization: function(callback) {
                             _genericMethodHandler.call(this, callback, 'API.SW.Contacts.getAuthorization');
                         },
                         /** Get Contact List
-                            * @param {'name': String} optional */
-                        getContactList: function(callback, options) {
+                            * @param {function} Callback
+                            * @param {Object} {'name': String} optional
+                            * @return [contact] */
+                        getContactList: function(callback, options)
+                        {
                             if (!(options instanceof Object) || options.name == null) {
                                 options = null;
                             }
-                            _genericMethodHandler.call(this, callback, 'API.SW.Contacts.getContactList', options);
+                            _genericMethodHandler.call(this, callback, 'API.SW.Contacts.getContactList', [], options);
                         },
                          /** Create Contact
-                          * @param {Object} parameter
+                          * @param {function} Callback
+                          * @param {Object}
                           * @return {Object} */
                         createContact: function(callback, options) {
-                            if (options && options instanceof Object) {
-                                _genericMethodHandler.call(this, callback, 'API.SW.Contacts.createContact', options);
+                            if (!(options instanceof Object) || options.name == null) {
+                                options = null;
                             }
+                            _genericMethodHandler.call(this, callback, 'API.SW.Contacts.createContact', [], options);
                         },
-                        /** Save Changes */
-                        saveChanges: function(callback, options) {
-                            if (options && options instanceof Object) {
-                                _genericMethodHandler.call(this, callback, 'API.SW.Contacts.saveChanges', options);
-                            }
+                        /** Save Changes
+                          * @param {function} Callback  */
+                        saveChanges: function(callback) {
+                            _genericMethodHandler.call(this, callback, 'API.SW.Contacts.saveChanges');
                         },
-                        /** Revert Changes from last save */
-                        revertChanges: function(callback, options) {
-                            if (options && options instanceof Object) {
-                                _genericMethodHandler.call(this, callback, 'API.SW.Contacts.revertChanges', options);
-                            }
+                        /** Revert Changes from last save
+                          * @param {function} Callback  */
+                        revertChanges: function(callback) {
+                            _genericMethodHandler.call(this, callback, 'API.SW.Contacts.revertChanges');
                         },
                         /** Delete Contact
-                          * @param {String} parameter
+                          * @param {function} Callback
+                          * @param {String} Contact Name
                           * @return {Number} */
-                        deleteContact: function(callback, options) {
-                            if (options && options instanceof Object) {
-                                _genericMethodHandler.call(this, callback, 'API.SW.Contacts.deleteContact', options);
+                        deleteContact: function(callback, contactName) {
+                            if (typeof contactName === "string") {
+                                _genericMethodHandler.call(this, callback, 'API.SW.Contacts.deleteContact', [contactName]);
                             }
                         },
                     },
                     Calendar : {
-                        /*
-                            var methName = 'API.SW.Calendar.getAuthorization';
 
-                            if (methodHandlers[methName]) {
-                                methodHandlers[methName] = {};
-                            }
-                            methodHandlers[methName][internalID] = callback;
-                            callCounter = callCounter + 1;
-                            options.internalID = callCounter;
-                            Ti.App.fireEvent('APIMethod', {'method': methName,'params': options, 'id': id});
-                        }*/
                     },
                     FileSystem : {
 

@@ -170,18 +170,24 @@ var API = (function() {
     _self.events.APIMethodHandler = function APIMethodHandler(data) {
         var result;
 
-        if (data.method !== null && data.params == null) {
+        Ti.API.info('____Evento recibido en API: ' + data);
+        Ti.API.info('____Con los parámetros:' + data.params);
+        Ti.API.info('____Con las opciones:' + data.options);
+        if (data.method !== null && data.params == null && data.options == null) {
             result = _self[data.method.type][data.method.subapi][data.method.name]();
         } else if (data.method !== null && data.params !== null) {
-            result = _self[data.method.type][data.method.subapi][data.method.name](data.params);
+            if (data.options !== null) {
+                data.params.push(data.options);
+            }
+            result = _self[data.method.type][data.method.subapi][data.method.name].apply(null, data.params);
         } else {
             // Error. Method doesn't exist
             result = "Error. Unknown API method";
         }
-        Ti.API.info('Evento de vuelta  deste API: ' + data.method.eventName + '_' + data.viewId + '_' + data.callId);
-        Ti.API.info('con los datos: ' + result);
+        Ti.API.info('____Evento de vuelta  deste API: ' + data.method.eventName + '_' + data.viewId + '_' + data.callId);
+        Ti.API.info('____con los datos: ' + result);
         var resultStringi = JSON.stringify(result);
-        Ti.API.info('stringificados: ' + resultStringi);
+        Ti.API.info('____stringificados: ' + resultStringi);
         Ti.App.fireEvent(data.method.eventName + '_' + data.viewId + '_' + data.callId, {'returnedData': result});
     };
 
