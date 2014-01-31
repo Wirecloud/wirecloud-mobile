@@ -11,16 +11,173 @@
     "use strict";
 
     var eventHandlers = {};
-    var id = null;
+    var methodHandlers = {};
+    // TODO: When titanium load, will replace "var id = null" with the correct id value. This line must be unique in this file.
+    var id = 69;
     var prefs = null;
     var inputs = {};
+    var callCounter = 0;
+
+    var _genericMethodHandler = function _genericMethodHandler(callback, methName, options, isAsync) {
+        var methodInfo, data;
+
+        if (methodHandlers[methName] == null) {
+            methodHandlers[methName] = {};
+        }
+
+        callCounter = callCounter + 1;
+        methodHandlers[methName][callCounter] = callback;
+
+        methodInfo = methName.split('.');
+
+        console.log('----Adding html listener in APIBridge----: ' + methName + '_' + id + '_' + callCounter);
+        Ti.App.addEventListener(methName + '_' + id + '_' + callCounter, _sendMethodResult.bind(this, methName, callCounter));
+
+        data = {
+        'method': {
+            type: methodInfo[1],
+            subapi: methodInfo[2],
+            name: methodInfo[3],
+            eventName: methName
+        },
+        'params': options,
+        'viewId': id,
+        'callId': callCounter
+        };
+
+
+        if (!isAsync) {
+            console.log('----Fire Event in APIBridge---- event: "APIMethod". data: ' + data);
+            Ti.App.fireEvent('APIMethod', data);
+        } else {
+            console.log('----Fire Event in APIBridge---- event: "APIMethodAsync". data: ' + data);
+            Ti.App.fireEvent('APIMethodAsync', data);
+        }
+    };
+
+    var _sendMethodResult = function (methName, callCounter, data) {
+        console.log('++++++++++++BRIDGE++++++++++++++++ HTML!!!');
+        console.log(data);
+        if (methodHandlers[methName] == null || methodHandlers[methName][callCounter] == null) {
+            // TODO Error. Callback not found
+        } else {
+            // Execute callback
+            methodHandlers[methName][callCounter](data);
+        }
+    };
 
     // APIBridge definition
-    Object.defineProperty(window, 'API', {value: {}});
+    Object.defineProperty(window, 'API', {value: {
+                SW : {
+                    Contacts : {
+                        /** Get Authorization Property
+                          * Condition AUTHORIZATION_UNKNOWN -> RequestAuthorization
+                          * @return : AUTHORIZATION_AUTHORIZED or AUTHORIZATION_RESTRICTED */
+                        getAuthorization: function(callback, param) {
+                            _genericMethodHandler.call(this, callback, 'API.SW.Contacts.getAuthorization');
+                        },
+                        /** Get Contact List
+                            * @param {'name': String} optional */
+                        getContactList: function(callback, options) {
+                            if (!(options instanceof Object) || options.name == null) {
+                                options = null;
+                            }
+                            _genericMethodHandler.call(this, callback, 'API.SW.Contacts.getContactList', options);
+                        },
+                         /** Create Contact
+                          * @param {Object} parameter
+                          * @return {Object} */
+                        createContact: function(callback, options) {
+                            if (options && options instanceof Object) {
+                                _genericMethodHandler.call(this, callback, 'API.SW.Contacts.createContact', options);
+                            }
+                        },
+                        /** Save Changes */
+                        saveChanges: function(callback, options) {
+                            if (options && options instanceof Object) {
+                                _genericMethodHandler.call(this, callback, 'API.SW.Contacts.saveChanges', options);
+                            }
+                        },
+                        /** Revert Changes from last save */
+                        revertChanges: function(callback, options) {
+                            if (options && options instanceof Object) {
+                                _genericMethodHandler.call(this, callback, 'API.SW.Contacts.revertChanges', options);
+                            }
+                        },
+                        /** Delete Contact
+                          * @param {String} parameter
+                          * @return {Number} */
+                        deleteContact: function(callback, options) {
+                            if (options && options instanceof Object) {
+                                _genericMethodHandler.call(this, callback, 'API.SW.Contacts.deleteContact', options);
+                            }
+                        },
+                    },
+                    Calendar : {
+                        /*
+                            var methName = 'API.SW.Calendar.getAuthorization';
+
+                            if (methodHandlers[methName]) {
+                                methodHandlers[methName] = {};
+                            }
+                            methodHandlers[methName][internalID] = callback;
+                            callCounter = callCounter + 1;
+                            options.internalID = callCounter;
+                            Ti.App.fireEvent('APIMethod', {'method': methName,'params': options, 'id': id});
+                        }*/
+                    },
+                    FileSystem : {
+
+                    },
+                    DataBase : {
+
+                    },
+                    Log : {
+
+                    },
+                    Map : {
+
+                    },
+                    Notification : {
+
+                    },
+                    Social : {
+
+                    },
+                },
+                HW : {
+                    Acceloremeter : {
+
+                    },
+                    Battery : {
+
+                    },
+                    Camera : {
+
+                    },
+                    GeoLocation : {
+
+                    },
+                    Gesture : {
+
+                    },
+                    Media : {
+
+                    },
+                    Network : {
+
+                    },
+                    System : {
+
+                    },
+                }
+            }
+    });
+
     Object.defineProperty(window.API, 'addEventListener', {
         value: function addEventListener(publicEvent, handler) {
 
-            if (!eventHandlers[publicEvent]) {
+            if (eventHandlers[publicEvent] == null) {
                 eventHandlers[publicEvent] = [];
             }
             eventHandlers[publicEvent].push(handler);
@@ -36,7 +193,7 @@
         value: function removeEventListener(publicEvent, handler) {
             var index;
 
-            if (!eventHandlers[publicEvent]) {
+            if (eventHandlers[publicEvent] == null) {
                 return false;
             }
             index = eventHandlers[publicEvent].indexOf(handler);
@@ -49,7 +206,7 @@
 
     Object.preventExtensions(window.API.removeEventListener);
 
-    Object.defineProperty(window.MashupPlatform, 'eventNotification', {
+    Object.defineProperty(window.API, 'eventNotification', {
         value: function eventNotification(publicEvent, data) {
             var i;
 
