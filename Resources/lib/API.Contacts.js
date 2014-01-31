@@ -82,9 +82,9 @@ var Contacts = (function() {
 
 	/** Get Contact List
 	  * @param {String} parameter */
-	_self.getContactList = function(parameter) {
+	_self.getContactList = function(options) {
 		var list = [], i, person,
-		people = (parameter) ? Ti.Contacts.getPeopleWithName(parameter) : Ti.Contacts.getAllPeople();
+		people = (options && options.name) ? Ti.Contacts.getPeopleWithName(options.name) : Ti.Contacts.getAllPeople();
 		for(i = 0; i < people.length; i++){
 			person = people[i];
 			list.push({
@@ -93,17 +93,18 @@ var Contacts = (function() {
 				'date' : person.getDate(),
 				'email' : person.getEmail(),
 				'im' : person.getInstantMessage(),
-				'image' : Ti.Utils.base64encode(person.getImage().read()).toString(),
+				///'image' : Ti.Utils.base64encode(person.getImage().read()).toString(), /* TODO: undefined.read() in Android */
 				'name' : (person.getMiddleName === '') ? person.getFirstName() :
-				         person.getFirstName() + " " + person.getMiddleName(),
+				         person.getFirstName() + " " + person.getMiddleName(),/* TODO: fullname? */
 				'surname' : person.getLastName(),
-				'nick' : person.getNickName(),
+				//'nick' : person.getNickName(), /* TODO: method not found in Android */
 				'note' : person.getNote(),
 				'phone' : person.getPhone(),
 				'organization' : person.getOrganization(),
 				'website' : person.getUrl()
 			});
 		}
+		Ti.API.info(list);
 		return list;
 	};
 
