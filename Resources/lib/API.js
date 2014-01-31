@@ -12,21 +12,21 @@ var API = (function() {
         SW : {
             Contacts : require('lib/API.Contacts'),
             Calendar : '',
-            FileSystem : require('lib/API.FileSystem'),
+            FileSystem : '',
             DataBase : '',
             Log : '',
             Map : '',
-            Notification : require('lib/API.Notification'),
+            Notification : '',
             Social : ''
         },
         HW : {
-            Acceloremeter : require('lib/API.Accelerometer'),
+            //Acceloremeter : require('lib/API.Accelerometer'),
             Battery : require('lib/API.Battery'),
-            Camera : require('lib/API.Camera'),
+            Camera : '',
             GeoLocation : '',
             Gesture : '',
             Media : '',
-            Network : require('lib/API.Network'),
+            //Network : require('lib/API.Network'),
             System : require('lib/API.System')
         }
     };
@@ -152,14 +152,11 @@ var API = (function() {
      * }
      **/
     _self.events.APIEventHandler = function APIEventHandler(data) {
-        var dataParsed;
 
-        dataParsed = JSON.parse(data);
-
-        if (dataParsed.action === 'addEventListener') {
-            _self.events.addEventListener(dataParsed.event, dataParsed.viewId);
-        } else if (dataParsed.action === 'removeEventListener') {
-            _self.events.removeEventListener(dataParsed.event, dataParsed.viewId);
+        if (data.action === 'addEventListener') {
+            _self.events.addEventListener(data.event, data.viewId);
+        } else if (data.action === 'removeEventListener') {
+            _self.events.removeEventListener(data.event, data.viewId);
         }
     };
 
@@ -171,25 +168,45 @@ var API = (function() {
      * }
      **/
     _self.events.APIMethodHandler = function APIMethodHandler(data) {
-        var result, dataParsed;
+        var result;
 
-        dataParsed = JSON.parse(data);
-
-        if (dataParsed.method && !dataParsed.params) {
-            result = dataParsed.method();
-        } else if (dataParsed.method && dataParsed.params) {
-            result = dataParsed.method(dataParsed.params);
+        if (data.method !== null && data.params == null) {
+            result = _self[data.method.type][data.method.subapi][data.method.name]();
+        } else if (data.method !== null && data.params !== null) {
+            result = _self[data.method.type][data.method.subapi][data.method.name](data.params);
         } else {
             // Error. Method doesn't exist
             result = "Error. Unknown API method";
         }
-        Ti.App.fireEvent(dataParsed.eventName, result);
+        Ti.API.info('Evento de vuelta  deste API: ' + data.method.eventName + '_' + data.viewId + '_' + data.callId);
+        Ti.API.info('con los datos: ' + result);
+        result = JSON.stringify(result);
+        Ti.API.info('stringificados: ' + result);
+        Ti.App.fireEvent(data.method.eventName + '_' + data.viewId + '_' + data.callId, result);
+    };
+
+    _self.events.APIMethodAsyncHandler = function APIMethodAsyncHandler(data) {
+        var result;
+
+        var genericHandler = function(initialData, result) {
+            Ti.App.fireEvent(data.method.eventName + '_' + data.viewId + '_' + data.callId, result);
+        };
+
+        if (data.method !== null && data.params == null) {
+            _self[data.method.type][data.method.subapi][data.method.name](genericHandler.bind(_self, data));
+        } else if (data.method !== null && data.params !== null) {
+            result = _self[data.method.type][data.method.subapi][data.method.name](genericHandler.bind(_self, data), data.params);
+        } else {
+            // Error. Method doesn't exist
+            result = "Error. Unknown API method";
+        }
     };
 
     _self.init = function init() {
         _initEvents(_self);
         Ti.App.addEventListener('APIEvent', _self.events.APIEventHandler);
         Ti.App.addEventListener('APIMethod', _self.events.APIMethodHandler);
+        Ti.App.addEventListener('APIMethodAsync', _self.events.APIMethodAsyncHandler);
     };
 
     _self.init();
