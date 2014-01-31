@@ -4,6 +4,12 @@
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  *
+ * Test Configuration Wirecloud Instance:
+ * mainURL    : 'http://138.100.12.106:8088/'
+ * loginURL   : 'http://138.100.12.106:8088/login'
+ * oauthURL   : 'http://138.100.12.106:8088/'
+ * tokenURL   : 'http://138.100.12.106:8088/'
+ * typeServer : 'wirecloud'
  */
 
 "use strict";
@@ -12,23 +18,18 @@ var Network = (function () {
 
     // Configuration Network
     var _self = {},
-    /*mainURL = 'https://mashup.lab.fi-ware.eu/',
-    loginURL = 'https://account.lab.fi-ware.eu/',
-    oauthURL = 'https://account.lab,fi-ware.eu/aouth2/',
-    tokenURL = 'https://account.lab,fi-ware.eu/aouth2/',
-    typeServer = 'fiware',*/
-    mainURL = 'http://138.100.12.106:8088/',
-    loginURL = 'http://138.100.12.106:8088/login',
-    oauthURL = 'http://138.100.12.106:8088/',
-    tokenURL = 'http://138.100.12.106:8088/',
-    typeServer = 'wirecloud',
+    mainURL = 'https://mashup.lab.fi-ware.eu/',
+    loginURL = 'https://account.lab.fi-ware.eu/users/sign_in',
+    oauthURL = 'https://account.lab.fi-ware.eu/aouth2/',
+    tokenURL = 'https://account.lab.fi-ware.eu/aouth2/',
+    typeServer = 'fiware',
     tim = 90000;
 
     /** Private function to connect Wirecloud
      *  @param {Object} data: username, password, cookie
      *  @param {Function} callback */
     var loginWirecloud = function loginWirecloud(data, callback){
-        var csrftoken = data.cook.substr(10, 32), bound, boundary,
+        var csrftoken = data.cook.substr(10, 32), boundary,
         sessionid = data.cook.substr(data.cook.indexOf('sessionid')+10, 32),
         client = Ti.Network.createHTTPClient({
             onload: function(e) {
@@ -65,7 +66,38 @@ var Network = (function () {
      *  @param {Object} data: username, password, cookie
      *  @param {Function} callback */
     var loginFiWare = function loginFiWare(data, callback){
-
+        var idm_session = data.cook.substr(21, 222), boundary,
+        client = Ti.Network.createHTTPClient({
+            onload: function(e) {
+                if(this.getResponseText().indexOf('Signed in successfully') !== -1){
+                    callback('Success Credential');
+                }
+                else{
+                    callback('Error Credential');
+                }
+            },
+            onerror: function(e) {
+                if(this.status === 401){
+                    callback('Error Credential');
+                }
+                else{
+                    callback('Error Server');
+                }
+            },
+            timeout: tim
+        });
+        boundary = {
+            'user[email]': data.user,
+            'user[password]': data.pass,
+            'authenticity_token': data.csrf
+        };
+        client.open("POST", loginURL);
+        client.setRequestHeader("Accept", 'text/html');
+        client.setRequestHeader("Content-Type",'application/x-www-form-urlencoded');
+        client.clearCookies(loginURL);
+        client.clearCookies(mainURL);
+        client.setRequestHeader("Cookie", '_fi-ware-idm_session=' + idm_session);
+        client.send(JSON.stringify(boundary));
     };
 
     /** Private function to connect AppBase
@@ -80,7 +112,7 @@ var Network = (function () {
 	 *  @param {String} password
 	 *  @param {Function} callback */
 	_self.login = function login(username, password, callback) {
-		var response, client = Ti.Network.createHTTPClient({
+		var client = Ti.Network.createHTTPClient({
 			onload: function(e) {
 			    var data = {
 			        'user': username,
@@ -93,6 +125,8 @@ var Network = (function () {
                     });
 			    }
 			    else if(typeServer === 'fiware') {
+			        var pos = this.getResponseText().indexOf('name="csrf-token"');
+			        data.csrf = this.getResponseText().substr(pos-46, 44);
                     loginFiWare(data, function(response){
                         callback(response);
                     });
@@ -112,7 +146,8 @@ var Network = (function () {
 			timeout: tim
 		});
 		client.open("GET", loginURL);
-		client.clearCookies(loginURL);
+		client.setRequestHeader("Content-Type", 'text/html');
+        client.clearCookies(loginURL);
 		client.clearCookies(mainURL);
 		client.send();
 	};
