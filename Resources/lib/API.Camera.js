@@ -13,15 +13,8 @@ var Camera = (function() {
     var device = (Ti.Platform.getOsname() === 'ipad' ||
                    Ti.Platform.getOsname() === 'iphone') ? 'ios' : 'android';
     var version = parseInt(Ti.Platform.getVersion().split('.')[0], 10);
-    
+
     var CALL_FAILURE = "call failed: ";
-
-    var TiError = function TiError (msg) {
-        this.name = "TiError";
-        this.message = msg;
-    };
-
-    TiError.prototype = new Error();
 
     var returnFunctionWithoutParams = function returnFunctionWithoutParams(funcName){
         var result;
@@ -29,6 +22,7 @@ var Camera = (function() {
         try {
             result = Ti.Media[funcName].apply(Ti.Media[funcName]);
         } catch (e) {
+            var TiError = require('APIError');
             throw new TiError(funcName + " " + CALL_FAILURE + e.message);
         }
 
@@ -46,6 +40,7 @@ var Camera = (function() {
         try {
             result = Ti.Media[funcName].apply(Ti.Media[funcName], params);
         } catch (e) {
+            var TiError = require('APIError');
             throw new TiError(funcName + " " + CALL_FAILURE + e.message);
         }
 
@@ -79,6 +74,7 @@ var Camera = (function() {
                 Ti.Media[funcName].apply(Ti.Media[funcName], params);
             }
         } catch (e) {
+            var TiError = require('APIError');
             throw new TiError(funcName + " " + CALL_FAILURE + e.message);
         }
     };
@@ -267,9 +263,9 @@ var Camera = (function() {
     self.takeScreenshot = function takeScreenshot(callback) {
         //TODO
     };
-    
+
     return self;
-        
+
 }());
 
 module.exports = Camera;
