@@ -16,20 +16,20 @@ var Battery = (function() {
     var _self = {};
 
     /** Private Function to check if battery monitoring is enabled.
-      * @return : Bool */
+      * @return Bool */
     _self.batteryMonitoring = function batteryMonitoring() {
         return Ti.Platform.getBatteryMonitoring();
     };
 
     /** Set battery monitoring.
       * @param: {Bool} true to activate monitoring and false to disable monitoring
-      * @return : Bool */
+      * @return Bool */
     var _setBatteryMonitoring = function _setBatteryMonitoring(activate) {
         return Ti.Platform.setBatteryMonitoring(activate);
     };
 
     /** Private Function to get Battery level
-      * @return : Int (percent) or String (error message)*/
+      * @return Int (percent) or String (error message)*/
     _self.getBatteryLevel = function getBatteryLevel() {
         var level;
 
@@ -42,7 +42,7 @@ var Battery = (function() {
     };
 
     /** Private Function to get Battery level
-      * @return : Int or String (error message)*/
+      * @return Int or String (error message)*/
     _self.getBatteryState = function getBatteryState() {
         var state;
 
@@ -55,6 +55,23 @@ var Battery = (function() {
         return state;
     };
 
+    /** Private Function to get Battery level
+      * @return Int or String (error message)*/
+    _self.getBatteryState = function getBatteryState() {
+        var state;
+
+        if (Ti.Platform.getBatteryMonitoring()) {
+            state = Ti.Platform.getBatteryLevel();
+            // TODO establecer nuestro propio código de estado de la bateria
+        } else {
+            state = 'Error. Need to activate Batrery Monitoring';
+        }
+        return state;
+    };
+
+
+    /** Events to publish
+      * @return Int or String (error message)*/
     _self.events = {
                     'batterychange': {
                         event: 'battery',
@@ -62,7 +79,10 @@ var Battery = (function() {
                     }
     };
 
+    /* By the moment, battery monitoring always true.
+     *  */
     _setBatteryMonitoring(true);
+
     return _self;
 
 }());
