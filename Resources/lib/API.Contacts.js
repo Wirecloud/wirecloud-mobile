@@ -81,7 +81,7 @@ var Contacts = (function() {
 	};
 
 	/** Get Contact List
-	  * @param {String} parameter */
+	  * @param {name: String} optional */
 	_self.getContactList = function(options) {
 		var list = [], i, person,
 		people = (options && options.name) ? Ti.Contacts.getPeopleWithName(options.name) : Ti.Contacts.getAllPeople();
@@ -434,7 +434,7 @@ var Contacts = (function() {
 	  * @param {String} parameter
 	  * @return {Number} */
 	_self.deleteContact = function(parameter) {
-		var list = _self.getContactList(parameter);
+		var list = _self.getContactList({'name': parameter});
 		var result;
 		if(list.length === 0){
 			result = 1;
