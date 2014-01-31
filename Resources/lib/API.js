@@ -12,17 +12,17 @@ var API = (function() {
         SW : {
             Contacts : require('lib/API.Contacts'),
             Calendar : '',
-            FileSystem : '',
+            FileSystem : require('lib/API.FileSystem'),
             DataBase : '',
             Log : '',
             Map : '',
-            Notification : '',
+            Notification : require('lib/API.Notification'),
             Social : ''
         },
         HW : {
             //Acceloremeter : require('lib/API.Accelerometer'),
             Battery : require('lib/API.Battery'),
-            Camera : '',
+            Camera : require('lib/API.Camera'),
             GeoLocation : '',
             Gesture : '',
             Media : '',
