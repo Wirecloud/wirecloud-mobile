@@ -12,7 +12,7 @@ var API = (function() {
         SW : {
             Contacts : require('lib/API.Contacts'),
             Calendar : '',
-            FileSystem : '',
+            FileSystem : require('lib/API.FileSystem'),
             DataBase : '',
             Log : '',
             Map : '',
