@@ -180,9 +180,9 @@ var API = (function() {
         }
         Ti.API.info('Evento de vuelta  deste API: ' + data.method.eventName + '_' + data.viewId + '_' + data.callId);
         Ti.API.info('con los datos: ' + result);
-        result = JSON.stringify(result);
-        Ti.API.info('stringificados: ' + result);
-        Ti.App.fireEvent(data.method.eventName + '_' + data.viewId + '_' + data.callId, result);
+        var resultStringi = JSON.stringify(result);
+        Ti.API.info('stringificados: ' + resultStringi);
+        Ti.App.fireEvent(data.method.eventName + '_' + data.viewId + '_' + data.callId, {'returnedData': result});
     };
 
     _self.events.APIMethodAsyncHandler = function APIMethodAsyncHandler(data) {

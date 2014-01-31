@@ -57,12 +57,16 @@
 
     var _sendMethodResult = function (methName, callCounter, data) {
         console.log('++++++++++++BRIDGE++++++++++++++++ HTML!!!');
-        console.log(data);
+        console.log('llegaron los datos: ' + data.returnedData);
+        console.log('estringificados: ' + JSON.stringify(data.returnedData));
+        //console.log('parseados?: ' + JSON.parse(data));
         if (methodHandlers[methName] == null || methodHandlers[methName][callCounter] == null) {
             // TODO Error. Callback not found
+            console.log('error in _sendMethodResult APIBridge');
         } else {
             // Execute callback
-            methodHandlers[methName][callCounter](data);
+            console.log('invocando callback html...');
+            methodHandlers[methName][callCounter](data.returnedData);
         }
     };
 
