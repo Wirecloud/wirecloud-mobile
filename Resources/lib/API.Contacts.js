@@ -139,32 +139,6 @@ var Contacts = (function() {
         return list;
     };
 
-    /** Private Function to Remove Single Contact
-     *  @param {Number} parameter
-     *  @return {Boolean} result */
-    var removeContact = function removeContact(parameter){
-        var list = Ti.Contacts.getAllPeople(), i, remove = null, result;
-        for(i = 0; i < list.length; i++){
-            if((list[i].getId() === parameter && !Ti.App.isApple) ||
-               (list[i].getRecordId() === parameter && Ti.App.isApple)){
-                remove = list[i];
-            }
-        }
-        if(remove === null){
-            result = false;
-        }
-        else{
-            Ti.Contacts.removePerson(remove);
-            result = true;
-        }
-        for(i = 0; i < list.length; i++){
-            list[i] = null;
-        }
-        remove = null;
-        list = null;
-        return result;
-    };
-
     /** Private Function to validate Name
       * @param {String} name
       * @return {Object} */
@@ -494,11 +468,21 @@ var Contacts = (function() {
         _self.tempContacts = [];
     };
 
-    /** Delete Contact
-      * @param {String} parameter
-      * @return {Number} */
-    _self.deleteContact = function(parameter) {
-        return removeContact(parameter);
+    /** Delete Single Contact
+      * @param {Number} idContact
+      * @return {Boolean} result */
+    _self.deleteContact = function(idContact) {
+        var result, contact;
+        contact = Ti.Contacts.getPersonByID(idContact);
+        if(!contact){
+            result = false;
+        }
+        else{
+            Ti.Contacts.removePerson(contact);
+            result = true;
+        }
+        contact = null;
+        return result;
     };
 
     return _self;
