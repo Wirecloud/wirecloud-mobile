@@ -6,7 +6,7 @@
  *
  *   getAuthorization
  *      Request authorization if permission is AUTHORIZATION_UNKNOWN
- *      Return [AUTHORIZATION_AUTHORIZED | AUTHORIZATION_RESTRICTED]
+ *      Return [AUTHORIZATION_AUTHORIZED | AUTHORIZATION_RESTRICTED] in callback
  *
  *   getContactList
  *      Optional Search with Object with property 'value' like name, middlename, combination, etc
@@ -66,18 +66,23 @@ var Contacts = (function() {
     };
 
     /** Get Authorization Property
-     * Condition AUTHORIZATION_UNKNOWN -> RequestAuthorization
-     * @return : AUTHORIZATION_AUTHORIZED or AUTHORIZATION_RESTRICTED */
-    _self.getAuthorization = function() {
+     * @param {Function} callback
+     * @return {String} state */
+    _self.getAuthorization = function(callback) {
         var auth = Ti.Contacts.getContactsAuthorization();
         if(auth === Ti.Contacts.AUTHORIZATION_UNKNOWN){
-            Ti.Contacts.requestAuthorization(function (){
-                return 'AUTHORIZATION_AUTHORIZED';
+            Ti.Contacts.requestAuthorization(function(){
+                auth = (auth === Ti.Contacts.AUTHORIZATION_AUTHORIZED) ?
+                    'AUTHORIZATION_AUTHORIZED' : 'AUTHORIZATION_RESTRICTED';
+                callback(auth);
             });
         }
-        auth = (auth === Ti.Contacts.AUTHORIZATION_AUTHORIZED) ?
-            'AUTHORIZATION_AUTHORIZED' : 'AUTHORIZATION_RESTRICTED';
-        return auth;
+        else{
+            auth = (auth === Ti.Contacts.AUTHORIZATION_AUTHORIZED) ?
+                'AUTHORIZATION_AUTHORIZED' : 'AUTHORIZATION_RESTRICTED';
+            callback(auth);
+        }
+        auth = null;
     };
 
     /** Get Contact List
