@@ -103,6 +103,7 @@ var Contacts = (function() {
                 'birthday': (people[i].getBirthday() !== null) ? people[i].getBirthday() : '',
                 'date': (people[i].getDate() === undefined) ? {} : people[i].getDate(),
                 'email': (people[i].getEmail() === undefined) ? {} : people[i].getEmail(),
+                'id': (Ti.App.isApple) ? people[i].getRecordId() : people[i].getId(),
                 'im': (people[i].getInstantMessage() === undefined) ? {} : people[i].getInstantMessage(),
                 'image' : (people[i].getImage()) ? 'data:image/png;base64,' +
                             Ti.Utils.base64encode(people[i].getImage()).toString() : '',
@@ -139,32 +140,27 @@ var Contacts = (function() {
     };
 
     /** Private Function to Remove Single Contact
-     *  @param {String} parameter
-     *  @return {Number} state */
+     *  @param {Number} parameter
+     *  @return {Boolean} result */
     var removeContact = function removeContact(parameter){
-        var list = Ti.Contacts.getAllPeople(), i, removeList = [], result;
+        var list = Ti.Contacts.getAllPeople(), i, remove = null, result;
         for(i = 0; i < list.length; i++){
-            if(list[i].getFullName().indexOf(parameter) !== -1){
-                removeList.push(list[i]);
+            if((list[i].getId() === parameter && !Ti.App.isApple) ||
+               (list[i].getRecordId() === parameter && Ti.App.isApple)){
+                remove = list[i];
             }
         }
-        if(removeList.length === 0){
-            result = 1;
-        }
-        else if(removeList.length === 1){
-            Ti.Contacts.removePerson(removeList[0]);
-            result = 0;
+        if(remove === null){
+            result = false;
         }
         else{
-            removeList = list.length;
-        }
-        for(i = 0; i < removeList.length; i++){
-            removeList[i] = null;
+            Ti.Contacts.removePerson(remove);
+            result = true;
         }
         for(i = 0; i < list.length; i++){
             list[i] = null;
         }
-        removeList = null;
+        remove = null;
         list = null;
         return result;
     };
