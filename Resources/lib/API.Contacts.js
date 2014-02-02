@@ -173,7 +173,8 @@ var Contacts = (function() {
         if(name.indexOf(' ') > 0) {
             param = name.split(' ');
             firstname = param[0];
-            for(i = 1; i < param.length; i++){
+            middlename = param[1];
+            for(i = 2; i < param.length; i++){
                 middlename = middlename + ' ' + param[i];
             }
         }
@@ -374,9 +375,9 @@ var Contacts = (function() {
         var keys = {'address' : '', 'birthday' : '', 'date' : '',
         'email' : '' , 'im': '', 'image' : '', 'name' : '',
         'surname' : '', 'nick' : '', 'note' : '', 'phone' : '',
-        'organization' : '', 'website' : ''}, key;
+        'organization' : '', 'website' : ''}, key, temp = JSON.stringify(parameter);
         parameter.validate = true;
-        for(key in parameter){
+        for(key in JSON.parse(temp)){
             if(!keys.hasOwnProperty(key)){
                 parameter[key] = '[WARN] Key '+key+' is not valid';
                 parameter.validate = false;
@@ -433,13 +434,13 @@ var Contacts = (function() {
             }
             else if(key === 'name'){
                 var objectName = validateName(parameter.name);
-                parameter.firstname = objectName.firstname;
-                parameter.middlename = objectName.middlename;
+                parameter.firstName = objectName.firstname;
+                parameter.middleName = objectName.middlename;
                 delete parameter.name;
                 objectName = null;
             }
             else if(key === 'surname'){
-                parameter.lastname = parameter.surname;
+                parameter.lastName = parameter.surname;
                 delete parameter.surname;
             }
             else if(key === 'nick'){
