@@ -52,8 +52,6 @@
  *
  *   saveChanges
  *
- *   revertChanges
- *
  */
 
 "use strict";
@@ -63,7 +61,9 @@ var Contacts = (function() {
 	var _device = (Ti.Platform.getOsname() === 'ipad' ||
 		           Ti.Platform.getOsname() === 'iphone') ? 'ios' : 'android',
 	_version = parseInt(Ti.Platform.getVersion().split('.')[0], 10),
-    _self = {};
+    _self = {
+        'tempContacts': []
+    };
 
 	/** Get Authorization Property
 	  * Condition AUTHORIZATION_UNKNOWN -> RequestAuthorization
@@ -97,44 +97,46 @@ var Contacts = (function() {
 		    else if((people[i].getMiddleName() === null && Ti.App.isApple) ||
 		            (people[i].getMiddleName() === undefined && !Ti.App.isApple)){
 		        name = people[i].getFirstName();
-			}
-			newPerson = {
-				'address': (people[i].getAddress() === undefined) ? {} : people[i].getAddress(),
-				'birthday': (people[i].getBirthday() !== null) ? people[i].getBirthday() : '',
-				'date': (people[i].getDate() === undefined) ? {} : people[i].getDate(),
-				'email': (people[i].getEmail() === undefined) ? {} : people[i].getEmail(),
-				'im': (people[i].getInstantMessage() === undefined) ? {} : people[i].getInstantMessage(),
-				'image' : (people[i].getImage()) ? 'data:image/png;base64,' +
-				          Ti.Utils.base64encode(people[i].getImage()).toString() : '',
-				'name': name,
-				'surname': ((people[i].getLastName() !== null && Ti.App.isApple) ||
-				            (people[i].getLastName() !== undefined && !Ti.App.isApple))
-				            ? people[i].getLastName() : '',
-				'fullname': people[i].getFullName(),
-				'nick': ((people[i].getNickname() !== null && Ti.App.isApple) ||
-                         (people[i].getNickname() !== undefined && !Ti.App.isApple))
-                         ? people[i].getNickname() : '',
-				'note': ((people[i].getNote() !== null && Ti.App.isApple) ||
-                         (people[i].getNote() !== undefined && !Ti.App.isApple))
-                         ? people[i].getNote() : '',
-				'phone': (people[i].getPhone() === undefined) ? {} : people[i].getPhone(),
-				'organization': ((people[i].getOrganization() !== null && Ti.App.isApple) ||
-                         (people[i].getOrganization() !== undefined && !Ti.App.isApple))
-                         ? people[i].getOrganization() : '',
-				'website': (people[i].getUrl() === undefined) ? {} : people[i].getUrl()
-			};
-			if(options && options.value){
-			    options.value = options.value.toLowerCase();
-			    if(newPerson.fullname.toLowerCase().indexOf(options.value) !== -1){
-                    Ti.API.info(newPerson);
+            }
+            newPerson = {
+                'address': (people[i].getAddress() === undefined) ? {} : people[i].getAddress(),
+                'birthday': (people[i].getBirthday() !== null) ? people[i].getBirthday() : '',
+                'date': (people[i].getDate() === undefined) ? {} : people[i].getDate(),
+                'email': (people[i].getEmail() === undefined) ? {} : people[i].getEmail(),
+                'im': (people[i].getInstantMessage() === undefined) ? {} : people[i].getInstantMessage(),
+                'image' : (people[i].getImage()) ? 'data:image/png;base64,' +
+                            Ti.Utils.base64encode(people[i].getImage()).toString() : '',
+                'name': name,
+                'surname': ((people[i].getLastName() !== null && Ti.App.isApple) ||
+                            (people[i].getLastName() !== undefined && !Ti.App.isApple))
+                            ? people[i].getLastName() : '',
+                'fullname': people[i].getFullName(),
+                'nick': ((people[i].getNickname() !== null && Ti.App.isApple) ||
+                            (people[i].getNickname() !== undefined && !Ti.App.isApple))
+                            ? people[i].getNickname() : '',
+                'note': ((people[i].getNote() !== null && Ti.App.isApple) ||
+                            (people[i].getNote() !== undefined && !Ti.App.isApple))
+                            ? people[i].getNote() : '',
+                'phone': (people[i].getPhone() === undefined) ? {} : people[i].getPhone(),
+                'organization': ((people[i].getOrganization() !== null && Ti.App.isApple) ||
+                            (people[i].getOrganization() !== undefined && !Ti.App.isApple))
+                            ? people[i].getOrganization() : '',
+                'website': (people[i].getUrl() === undefined) ? {} : people[i].getUrl()
+            };
+            if(options && options.value){
+                options.value = options.value.toLowerCase();
+                if(newPerson.fullname.toLowerCase().indexOf(options.value) !== -1){
                     list.push(newPerson);
                 }
-			}
-			newPerson = null;
-			name = null;
-		}
-		return list;
-	};
+            }
+            else{
+                list.push(newPerson);
+            }
+            newPerson = null;
+            name = null;
+        }
+        return list;
+    };
 
     /** Private Function to validate Name
       * @param {String} name
@@ -442,7 +444,7 @@ var Contacts = (function() {
 		parameter = validateContact(parameter);
 		if(parameter.validate !== false){
 			delete parameter.validate;
-			Ti.Contacts.createPerson(parameter);
+			_self.tempContacts.push(Ti.Contacts.createPerson(parameter));
 		}
 		delete parameter.validate;
 		return parameter;
@@ -450,21 +452,24 @@ var Contacts = (function() {
 
 	/** Save Changes */
 	_self.saveChanges = function() {
-	    // TODO: Uncaught Error: save: Invalid number of arguments. Expected 1 but got 0
-		Ti.Contacts.save();
-	};
-
-	/** Revert Changes from last save */
-	_self.revertChanges = function() {
-	    // TODO: Uncaught TypeError: Object #<Contacts> has no method 'revert'
-		Ti.Contacts.revert();
+	    if(!Ti.App.isApple){
+	        Ti.Contacts.save(_self.tempContacts);
+	    }
+	    else{
+	        Ti.Contacts.save();
+	    }
+	    var i;
+        for(i = 0; i < _self.tempContacts.length; i++){
+            _self.tempContacts[i] = null;
+        }
+        _self.tempContacts = [];
 	};
 
 	/** Delete Contact
 	  * @param {String} parameter
 	  * @return {Number} */
 	_self.deleteContact = function(parameter) {
-		var list = _self.getContactList({'name': parameter});
+		var list = _self.getContactList({'value': parameter});
 		var result;
 		if(list.length === 0){
 			result = 1;
