@@ -9,7 +9,7 @@
  *      Return [AUTHORIZATION_AUTHORIZED | AUTHORIZATION_RESTRICTED]
  *
  *   getContactList
- *      Optional Search with parameter (name, middlename, lastname or combination)
+ *      Optional Search with Object with property 'value' like name, middlename, combination, etc
  *      Return Contact Array
  *
  *   createContact
@@ -81,30 +81,58 @@ var Contacts = (function() {
 	};
 
 	/** Get Contact List
-	  * @param {name: String} optional */
-	_self.getContactList = function(options) {
-		var list = [], i, person,
-		people = (options && options.name) ? Ti.Contacts.getPeopleWithName(options.name) : Ti.Contacts.getAllPeople();
+	  * @param {Object} optional
+	  * @return {Array} list */
+	_self.getContactList = function getContactList(options) {
+		var list = [], i, newPerson, name,
+		people = Ti.Contacts.getAllPeople();
 		for(i = 0; i < people.length; i++){
-			person = people[i];
-			list.push({
-				'address' : person.getAddress(),
-				'birthday' : person.getBirthday(),
-				'date' : person.getDate(),
-				'email' : person.getEmail(),
-				'im' : person.getInstantMessage(),
-				///'image' : Ti.Utils.base64encode(person.getImage().read()).toString(), /* TODO: undefined.read() in Android */
-				'name' : (person.getMiddleName === '') ? person.getFirstName() :
-				         person.getFirstName() + " " + person.getMiddleName(),/* TODO: fullname? */
-				'surname' : person.getLastName(),
-				//'nick' : person.getNickName(), /* TODO: method not found in Android */
-				'note' : person.getNote(),
-				'phone' : person.getPhone(),
-				'organization' : person.getOrganization(),
-				'website' : person.getUrl()
-			});
+		    if(people[i].getFirstName() === null || people[i].getFirstName() === undefined){
+		        name = people[i].getFullName();
+		    }
+		    else if((people[i].getMiddleName() !== null && Ti.App.isApple) ||
+		            (people[i].getMiddleName() !== undefined && !Ti.App.isApple)){
+		        name = people[i].getFirstName() + ' ' + people[i].getMiddleName();
+		    }
+		    else if((people[i].getMiddleName() === null && Ti.App.isApple) ||
+		            (people[i].getMiddleName() === undefined && !Ti.App.isApple)){
+		        name = people[i].getFirstName();
+			}
+			newPerson = {
+				'address': (people[i].getAddress() === undefined) ? {} : people[i].getAddress(),
+				'birthday': (people[i].getBirthday() !== null) ? people[i].getBirthday() : '',
+				'date': (people[i].getDate() === undefined) ? {} : people[i].getDate(),
+				'email': (people[i].getEmail() === undefined) ? {} : people[i].getEmail(),
+				'im': (people[i].getInstantMessage() === undefined) ? {} : people[i].getInstantMessage(),
+				'image' : (people[i].getImage()) ? 'data:image/png;base64,' +
+				          Ti.Utils.base64encode(people[i].getImage()).toString() : '',
+				'name': name,
+				'surname': ((people[i].getLastName() !== null && Ti.App.isApple) ||
+				            (people[i].getLastName() !== undefined && !Ti.App.isApple))
+				            ? people[i].getLastName() : '',
+				'fullname': people[i].getFullName(),
+				'nick': ((people[i].getNickname() !== null && Ti.App.isApple) ||
+                         (people[i].getNickname() !== undefined && !Ti.App.isApple))
+                         ? people[i].getNickname() : '',
+				'note': ((people[i].getNote() !== null && Ti.App.isApple) ||
+                         (people[i].getNote() !== undefined && !Ti.App.isApple))
+                         ? people[i].getNote() : '',
+				'phone': (people[i].getPhone() === undefined) ? {} : people[i].getPhone(),
+				'organization': ((people[i].getOrganization() !== null && Ti.App.isApple) ||
+                         (people[i].getOrganization() !== undefined && !Ti.App.isApple))
+                         ? people[i].getOrganization() : '',
+				'website': (people[i].getUrl() === undefined) ? {} : people[i].getUrl()
+			};
+			if(options && options.value){
+			    options.value = options.value.toLowerCase();
+			    if(newPerson.fullname.toLowerCase().indexOf(options.value) !== -1){
+                    Ti.API.info(newPerson);
+                    list.push(newPerson);
+                }
+			}
+			newPerson = null;
+			name = null;
 		}
-		Ti.API.info(list);
 		return list;
 	};
 
