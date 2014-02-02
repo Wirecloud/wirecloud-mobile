@@ -58,45 +58,45 @@
 
 var Contacts = (function() {
 
-	var _device = (Ti.Platform.getOsname() === 'ipad' ||
-		           Ti.Platform.getOsname() === 'iphone') ? 'ios' : 'android',
-	_version = parseInt(Ti.Platform.getVersion().split('.')[0], 10),
+    var _device = (Ti.Platform.getOsname() === 'ipad' ||
+                   Ti.Platform.getOsname() === 'iphone') ? 'ios' : 'android',
+    _version = parseInt(Ti.Platform.getVersion().split('.')[0], 10),
     _self = {
         'tempContacts': []
     };
 
-	/** Get Authorization Property
-	  * Condition AUTHORIZATION_UNKNOWN -> RequestAuthorization
-	  * @return : AUTHORIZATION_AUTHORIZED or AUTHORIZATION_RESTRICTED */
-	_self.getAuthorization = function() {
-		var auth = Ti.Contacts.getContactsAuthorization();
-		if(auth === Ti.Contacts.AUTHORIZATION_UNKNOWN){
-			Ti.Contacts.requestAuthorization(function (){
-				return 'AUTHORIZATION_AUTHORIZED';
-			});
-		}
-		auth = (auth === Ti.Contacts.AUTHORIZATION_AUTHORIZED) ?
-		         'AUTHORIZATION_AUTHORIZED' : 'AUTHORIZATION_RESTRICTED';
-		return auth;
-	};
+    /** Get Authorization Property
+     * Condition AUTHORIZATION_UNKNOWN -> RequestAuthorization
+     * @return : AUTHORIZATION_AUTHORIZED or AUTHORIZATION_RESTRICTED */
+    _self.getAuthorization = function() {
+        var auth = Ti.Contacts.getContactsAuthorization();
+        if(auth === Ti.Contacts.AUTHORIZATION_UNKNOWN){
+            Ti.Contacts.requestAuthorization(function (){
+                return 'AUTHORIZATION_AUTHORIZED';
+            });
+        }
+        auth = (auth === Ti.Contacts.AUTHORIZATION_AUTHORIZED) ?
+            'AUTHORIZATION_AUTHORIZED' : 'AUTHORIZATION_RESTRICTED';
+        return auth;
+    };
 
-	/** Get Contact List
-	  * @param {Object} optional
-	  * @return {Array} list */
-	_self.getContactList = function getContactList(options) {
-		var list = [], i, newPerson, name,
-		people = Ti.Contacts.getAllPeople();
-		for(i = 0; i < people.length; i++){
-		    if(people[i].getFirstName() === null || people[i].getFirstName() === undefined){
-		        name = people[i].getFullName();
-		    }
-		    else if((people[i].getMiddleName() !== null && Ti.App.isApple) ||
-		            (people[i].getMiddleName() !== undefined && !Ti.App.isApple)){
-		        name = people[i].getFirstName() + ' ' + people[i].getMiddleName();
-		    }
-		    else if((people[i].getMiddleName() === null && Ti.App.isApple) ||
-		            (people[i].getMiddleName() === undefined && !Ti.App.isApple)){
-		        name = people[i].getFirstName();
+    /** Get Contact List
+     * @param {Object} optional
+     * @return {Array} list */
+    _self.getContactList = function getContactList(options) {
+        var list = [], i, newPerson, name,
+        people = Ti.Contacts.getAllPeople();
+        for(i = 0; i < people.length; i++){
+            if(people[i].getFirstName() === null || people[i].getFirstName() === undefined){
+                name = people[i].getFullName();
+            }
+            else if((people[i].getMiddleName() !== null && Ti.App.isApple) ||
+                (people[i].getMiddleName() !== undefined && !Ti.App.isApple)){
+                name = people[i].getFirstName() + ' ' + people[i].getMiddleName();
+            }
+            else if((people[i].getMiddleName() === null && Ti.App.isApple) ||
+                (people[i].getMiddleName() === undefined && !Ti.App.isApple)){
+                name = people[i].getFirstName();
             }
             newPerson = {
                 'address': (people[i].getAddress() === undefined) ? {} : people[i].getAddress(),
@@ -138,10 +138,41 @@ var Contacts = (function() {
         return list;
     };
 
+    /** Private Function to Remove Single Contact
+     *  @param {String} parameter
+     *  @return {Number} state */
+    var removeContact = function removeContact(parameter){
+        var list = Ti.Contacts.getAllPeople(), i, removeList = [], result;
+        for(i = 0; i < list.length; i++){
+            if(list[i].getFullName().indexOf(parameter) !== -1){
+                removeList.push(list[i]);
+            }
+        }
+        if(removeList.length === 0){
+            result = 1;
+        }
+        else if(removeList.length === 1){
+            Ti.Contacts.removePerson(removeList[0]);
+            result = 0;
+        }
+        else{
+            removeList = list.length;
+        }
+        for(i = 0; i < removeList.length; i++){
+            removeList[i] = null;
+        }
+        for(i = 0; i < list.length; i++){
+            list[i] = null;
+        }
+        removeList = null;
+        list = null;
+        return result;
+    };
+
     /** Private Function to validate Name
       * @param {String} name
       * @return {Object} */
-    var _validateName = function _validateName(name) {
+    var validateName = function validateName(name) {
         var firstname = name, middlename = '', param, i;
         if(name.indexOf(' ') > 0) {
             param = name.split(' ');
@@ -159,7 +190,7 @@ var Contacts = (function() {
     /** Private Function to validate single Date
       * @param {String} date
       * @return {Boolean} */
-    var _validateSingleDate = function _validateSingleDate(date){
+    var validateSingleDate = function validateSingleDate(date){
         var _exprISO8601 = "([0-9]{4})(-([0-9]{2})(-([0-9]{2})" +
         "(T([0-9]{2}):([0-9]{2})(:([0-9]{2})(\.([0-9]+))?)?" +
         "(Z|(([-+])([0-9]{2}):([0-9]{2})))?)?)?)?", result;
@@ -175,7 +206,7 @@ var Contacts = (function() {
     /** Private Function to validate Multi Date
       * @param {Object} multiDate
       * @return {Object} */
-    var _validateMultiDate = function _validateMultiDate(multiDate) {
+    var validateMultiDate = function validateMultiDate(multiDate) {
         var keys = {'anniversary' : '', 'other' : ''}, key, i;
         for(key in multiDate){
             if(!keys.hasOwnProperty(key)){
@@ -188,7 +219,7 @@ var Contacts = (function() {
             }
             else{
                 for(i = 0; i < multiDate[key].length; i++){
-                    if(!_validateSingleDate(multiDate[key][i])){
+                    if(!validateSingleDate(multiDate[key][i])){
                         multiDate[key] = '[WARN] Key birthday '+key+' have not valid date or format';
                         multiDate.validate = false;
                         break;
@@ -203,7 +234,7 @@ var Contacts = (function() {
       * @param {Object} multiValue
       * @param {String} type
       * @return {Object} */
-    var _validateMultiValue = function _validateMultiValue(multiValue, type) {
+    var validateMultiValue = function validateMultiValue(multiValue, type) {
         var keys = {'home' : '', 'work' : '', 'other' : ''}, key, i;
         if(type === 'website'){
             keys.homepage = '';
@@ -241,7 +272,7 @@ var Contacts = (function() {
     /** Private Function to validate Single Instant Messaging
       * @param {Object} singleIm
       * @return {Object} */
-    var _validateSingleIM = function _validateSingleIM(singleIm){
+    var validateSingleIM = function validateSingleIM(singleIm){
         var services = {'AIM' : '', 'Facebook' : '', 'GaduGadu' : '' ,
                      'GoogleTalk' : '', 'ICQ' : '', 'MSN' : '',
                      'QQ' : '', 'Skype' : '', 'Yahoo' : ''}, key,
@@ -270,7 +301,7 @@ var Contacts = (function() {
     /** Private Function to validate Instant Messaging
       * @param {Object} multiIm
       * @return {Object} */
-    var _validateMultiIM = function _validateMultiIM(multiIm) {
+    var validateMultiIM = function validateMultiIM(multiIm) {
         var keys = {'home' : '', 'work' : '', 'other' : ''}, key, i;
         for(key in multiIm){
             if(!keys.hasOwnProperty(key)){
@@ -287,7 +318,7 @@ var Contacts = (function() {
                         multiIm[key][i] = '[WARN] Key Instant Messaging '+key+' should be Object';
                     }
                     else{
-                        multiIm[key][i] = _validateSingleIM(multiIm[key][i]);
+                        multiIm[key][i] = validateSingleIM(multiIm[key][i]);
                         if(multiIm[key][i].hasOwnProperty('validate')){
                             delete multiIm[key][i].validate;
                             multiIm.validate = false;
@@ -304,7 +335,7 @@ var Contacts = (function() {
       * @param {Number} index
       * @param {Array} array
       * @return {Boolean} */
-    var _validateSingleAddress = function _validateSingleAddress(element, index, array) {
+    var validateSingleAddress = function validateSingleAddress(element, index, array) {
         var keys = {'Street' : '', 'City' : '', 'State' : '' , 'Country' : '', 'ZIP' : ''}, key;
         if (_device === 'android'){
             keys.CountryCode = '';
@@ -322,7 +353,7 @@ var Contacts = (function() {
     /** Private Function to validate Multi Address Object
       * @param {Object} multiAddress
       * @return {Object} */
-    var _validateMultiAddress = function _validateMultiAddress(multiAddress) {
+    var validateMultiAddress = function validateMultiAddress(multiAddress) {
         var keys = {'home' : '', 'work' : '' , 'other' : ''}, key;
         for(key in multiAddress){
             if(!keys.hasOwnProperty(key)){
@@ -334,7 +365,7 @@ var Contacts = (function() {
                 multiAddress.validate = false;
             }
             else{
-                multiAddress[key].every(_validateSingleAddress);
+                multiAddress[key].every(validateSingleAddress);
             }
         }
         return multiAddress;
@@ -367,34 +398,34 @@ var Contacts = (function() {
                 parameter.validate = false;
             }
             else if(key === 'address'){
-                parameter.address = _validateMultiAddress(parameter.address);
+                parameter.address = validateMultiAddress(parameter.address);
                 if(parameter.address.validate === false){
                     delete parameter.address.validate;
                     parameter.validate = false;
                 }
             }
             else if(key === 'birthday'){
-                if(!_validateSingleDate(parameter.birthday)){
+                if(!validateSingleDate(parameter.birthday)){
                     parameter.birthday = '[WARN] Key birthday is not valid date or format';
                     parameter.validate = false;
                 }
             }
             else if(key === 'date'){
-                parameter.date = _validateMultiDate(parameter.date);
+                parameter.date = validateMultiDate(parameter.date);
                 if(parameter.date.validate === false){
                     delete parameter.date.validate;
                     parameter.validate = false;
                 }
             }
             else if(key === 'email'){
-                parameter.email = _validateMultiValue(parameter.email, 'email');
+                parameter.email = validateMultiValue(parameter.email, 'email');
                 if(parameter.email.validate === false){
                     delete parameter.email.validate;
                     parameter.validate = false;
                 }
             }
             else if(key === 'im'){
-                parameter.instantMessage = _validateMultiIM(parameter.im);
+                parameter.instantMessage = validateMultiIM(parameter.im);
                 if(parameter.instantMessage.validate === false){
                     delete parameter.instantMessage.validate;
                     parameter.validate = false;
@@ -405,10 +436,11 @@ var Contacts = (function() {
                 parameter.image = Ti.Utils.base64decode(parameter.image);
             }
             else if(key === 'name'){
-                var _objectName = _validateName(parameter.name);
-                parameter.firstname = _objectName.firstname;
-                parameter.middlename = _objectName.middlename;
+                var objectName = validateName(parameter.name);
+                parameter.firstname = objectName.firstname;
+                parameter.middlename = objectName.middlename;
                 delete parameter.name;
+                objectName = null;
             }
             else if(key === 'surname'){
                 parameter.lastname = parameter.surname;
@@ -419,14 +451,14 @@ var Contacts = (function() {
                 delete parameter.nick;
             }
             else if(key === 'phone'){
-                parameter.phone = _validateMultiValue(parameter.phone, 'phone');
+                parameter.phone = validateMultiValue(parameter.phone, 'phone');
                 if(parameter.phone.validate === false){
                     delete parameter.phone.validate;
                     parameter.validate = false;
                 }
             }
             else if(key === 'website'){
-                parameter.url = _validateMultiValue(parameter.website, 'website');
+                parameter.url = validateMultiValue(parameter.website, 'website');
                 if(parameter.url.validate === false){
                     delete parameter.url.validate;
                     parameter.validate = false;
@@ -437,54 +469,42 @@ var Contacts = (function() {
         return parameter;
     };
 
-	/** Create Contact
-	  * @param {Object} parameter
-	  * @return {Object} */
-	_self.createContact = function(parameter) {
-		parameter = validateContact(parameter);
-		if(parameter.validate !== false){
-			delete parameter.validate;
-			_self.tempContacts.push(Ti.Contacts.createPerson(parameter));
-		}
-		delete parameter.validate;
-		return parameter;
-	};
+    /** Create Contact
+      * @param {Object} parameter
+      * @return {Object} */
+    _self.createContact = function(parameter) {
+        parameter = validateContact(parameter);
+        if(parameter.validate !== false){
+            delete parameter.validate;
+            _self.tempContacts.push(Ti.Contacts.createPerson(parameter));
+        }
+        delete parameter.validate;
+        return parameter;
+    };
 
-	/** Save Changes */
-	_self.saveChanges = function() {
-	    if(!Ti.App.isApple){
-	        Ti.Contacts.save(_self.tempContacts);
-	    }
-	    else{
-	        Ti.Contacts.save();
-	    }
-	    var i;
+    /** Save Changes */
+    _self.saveChanges = function() {
+        if(!Ti.App.isApple){
+            Ti.Contacts.save(_self.tempContacts);
+        }
+        else{
+            Ti.Contacts.save();
+        }
+        var i;
         for(i = 0; i < _self.tempContacts.length; i++){
             _self.tempContacts[i] = null;
         }
         _self.tempContacts = [];
-	};
+    };
 
-	/** Delete Contact
-	  * @param {String} parameter
-	  * @return {Number} */
-	_self.deleteContact = function(parameter) {
-		var list = _self.getContactList({'value': parameter});
-		var result;
-		if(list.length === 0){
-			result = 1;
-		}
-		else if(list.length === 1){
-			Ti.Contacts.removePerson(list[0]);
-			result = 0;
-		}
-		else{
-			result = list.length;
-		}
-		return result;
-	};
+    /** Delete Contact
+      * @param {String} parameter
+      * @return {Number} */
+    _self.deleteContact = function(parameter) {
+        return removeContact(parameter);
+    };
 
-	return _self;
+    return _self;
 
 }());
 
