@@ -10,10 +10,6 @@
 /* FYI: http://docs.appcelerator.com/titanium/3.0/#!/api/Titanium.Media*/
 var Camera = (function() {
 
-    var device = (Ti.Platform.getOsname() === 'ipad' ||
-                   Ti.Platform.getOsname() === 'iphone') ? 'ios' : 'android';
-    var version = parseInt(Ti.Platform.getVersion().split('.')[0], 10);
-
     var CALL_FAILURE = "call failed: ";
 
     var returnFunctionWithoutParams = function returnFunctionWithoutParams(funcName){
@@ -189,7 +185,7 @@ var Camera = (function() {
     self.setAvailableCameraMediaTypes = function setAvailableCameraMediaTypes(availableCameraMediaTypes) {
         process("setAvailableCameraMediaTypes", [availableCameraMediaTypes]);
     };
-    
+
     /** Sets the value of the availablePhotoGalleryMediaTypes property.
      * @param {Object[]} availablePhotoGalleryMediaTypes : New value for the property.
      * @return {Object} */

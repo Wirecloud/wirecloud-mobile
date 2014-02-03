@@ -9,10 +9,6 @@
 
 var Accelerometer = (function() {
 
-    var _device = (Ti.Platform.getOsname() === 'ipad' ||
-                   Ti.Platform.getOsname() === 'iphone') ? 'ios' : 'android';
-    var _version = parseInt(Ti.Platform.getVersion().split('.')[0], 10);
-
     var _self = {};
 
     _self.events = {

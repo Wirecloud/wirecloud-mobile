@@ -58,10 +58,7 @@
 
 var Contacts = (function() {
 
-    var _device = (Ti.Platform.getOsname() === 'ipad' ||
-                   Ti.Platform.getOsname() === 'iphone') ? 'ios' : 'android',
-    _version = parseInt(Ti.Platform.getVersion().split('.')[0], 10),
-    _self = {
+    var _self = {
         'tempContacts': []
     };
 

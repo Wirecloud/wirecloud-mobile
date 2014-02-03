@@ -8,10 +8,6 @@
 
 var System = function() {
 
-    var _device = (Ti.Platform.getOsname() == 'ipad' ||
-                   Ti.Platform.getOsname() == 'iphone') ? 'ios' : 'android';
-    var _version = parseInt(Ti.Platform.getVersion().split('.')[0]);
-
     var _self = {};
 
     /** Get device platform

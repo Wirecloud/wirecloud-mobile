@@ -11,10 +11,6 @@
 /* FYI: http://docs.appcelerator.com/titanium/3.0/#!/api/Titanium.Filesystem */
 var Filesystem = (function() {
 
-    var device = (Ti.Platform.getOsname() === 'ipad' ||
-                   Ti.Platform.getOsname() === 'iphone') ? 'ios' : 'android';
-    var version = parseInt(Ti.Platform.getVersion().split('.')[0], 10);
-
     var CALL_FAILURE = "call failed: ";
 
     var self = {};
