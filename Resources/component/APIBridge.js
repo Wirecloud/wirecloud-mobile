@@ -80,15 +80,14 @@
                           * @param {function} Callback
                           * @return : AUTHORIZATION_AUTHORIZED or AUTHORIZATION_RESTRICTED */
                         getAuthorization: function(callback) {
-                            _genericMethodHandler.call(this, callback, 'API.SW.Contacts.getAuthorization');
+                            _genericMethodHandler.call(this, callback, 'API.SW.Contacts.getAuthorization', [], null, true);
                         },
                         /** Get Contact List
                             * @param {function} Callback
                             * @param {Object} {'name': String} optional
                             * @return [contact] */
-                        getContactList: function(callback, options)
-                        {
-                            if (!(options instanceof Object) || options.name == null) {
+                        getContactList: function(callback, options) {
+                            if (!(options instanceof Object) || options.value == null) {
                                 options = null;
                             }
                             _genericMethodHandler.call(this, callback, 'API.SW.Contacts.getContactList', [], options);
@@ -98,7 +97,7 @@
                           * @param {Object}
                           * @return {Object} */
                         createContact: function(callback, options) {
-                            if (!(options instanceof Object) || options.name == null) {
+                            if (!(options instanceof Object)) {
                                 options = null;
                             }
                             _genericMethodHandler.call(this, callback, 'API.SW.Contacts.createContact', [], options);
