@@ -9,6 +9,24 @@
 "use strict";
 
 // Libraries
+Ti.App.Log = function(msg, newType, error, extra){
+    var type = 'Error', _self = {
+        'name': 'AppBaseLog',
+        'message': msg
+    };
+    if(error){
+        _self.details = (extra) ? {
+            'message': error.message,
+            'info': extra
+        } : error.message;
+        _self.source = error.sourceURL;
+    }
+    if(newType){
+        type = newType;
+    }
+    Ti.API[type](_self);
+    return _self;
+};
 Ti.App.FontAwesome4 = require('fonts/FontAwesome4');
 Ti.App.FontAwesome3 = require('fonts/FontAwesome');
 Ti.App.API = require('lib/API');
