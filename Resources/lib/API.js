@@ -168,11 +168,11 @@ var API = (function() {
      * }
      **/
     _self.events.APIMethodHandler = function APIMethodHandler(data) {
+        console.log('____APIMethodHandler------ data: ' + JSON.stringify(data));
         var result;
-
-        Ti.API.info('____Evento recibido en API: ' + data);
-        Ti.API.info('____Con los parámetros:' + data.params);
-        Ti.API.info('____Con las opciones:' + data.options);
+        Ti.API.info('____Evento recibido en API: ' + JSON.stringify(data));
+        Ti.API.info('____Con los parámetros:' + JSON.stringify(data.params));
+        Ti.API.info('____Con las opciones:' + JSON.stringify(data.options));
         if (data.method !== null && data.params == null && data.options == null) {
             result = _self[data.method.type][data.method.subapi][data.method.name]();
         } else if (data.method !== null && data.params !== null) {

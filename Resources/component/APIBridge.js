@@ -21,6 +21,16 @@
     var _genericMethodHandler = function _genericMethodHandler(callback, methName, params, options, isAsync) {
         var methodInfo, data;
 
+        console.log('---callback: ' + callback);
+        console.log('---methName: ' + methName);
+        console.log('---params: ' + params);
+        console.log('---options: ' + options);
+        console.log('---isAsync: ' + isAsync);
+        console.log('---callback s: ' + JSON.stringify(callback));
+        console.log('---methName s: ' + JSON.stringify(methName));
+        console.log('---params s: ' + JSON.stringify(params));
+        console.log('---options s: ' + JSON.stringify(options));
+
         if (methodHandlers[methName] == null) {
             methodHandlers[methName] = {};
         }
@@ -46,12 +56,11 @@
         'callId': callCounter
         };
 
-
         if (!isAsync) {
-            console.log('----Fire Event in APIBridge---- event: "APIMethod". data: ' + data);
+            console.log('----Fire Event in APIBridge---- event: "APIMethod". data: ' + JSON.stringify(data));
             Ti.App.fireEvent('APIMethod', data);
         } else {
-            console.log('----Fire Event in APIBridge---- event: "APIMethodAsync". data: ' + data);
+            console.log('----Fire Event in APIBridge---- event: "APIMethodAsync". data: ' + JSON.stringify(data));
             Ti.App.fireEvent('APIMethodAsync', data);
         }
     };
