@@ -12,6 +12,9 @@ var Camera = (function() {
 
     var CALL_FAILURE = "call failed: ";
 
+    /** It will return the result of function called.
+     *  @private
+     *  @param {String} funcName : The function name. */
     var returnFunctionWithoutParams = function returnFunctionWithoutParams(funcName){
         var result;
 
@@ -25,6 +28,9 @@ var Camera = (function() {
         return result;
     };
 
+    /** It will return the result of function called.
+     *  @param {String} funcName : The function name.
+     *  @param {String} params : An array of params. */
     var returnFunctionWithParams = function returnFunctionWithParams(funcName, params){
         var result;
 
@@ -44,6 +50,7 @@ var Camera = (function() {
     };
 
     /** It returns the result of Ti.Media native call.
+     *  @private
      *  @param {String} funcName : The function name.
      *  @param {String} params : An array of params.
      *  @return Object : Native result. */
@@ -58,6 +65,10 @@ var Camera = (function() {
         return result;
     };
 
+    /** It calls Ti.Media native method.
+     *  @private
+     *  @param {String} funcName : The function name.
+     *  @param {String} params : An array of params. */
     var process = function process (funcName, params) {
         try {
             if (!params) {
