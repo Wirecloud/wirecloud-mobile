@@ -148,7 +148,31 @@
 
                     },
                     Notification : {
-
+                        /** Create Toast Notification
+                         * @param {function} Callback
+                         * @param {String} message
+                         * @param {Object} options {
+                         *          height: {Number}            -default = 100
+                         *          opacity: {Number}           -default = 1 [0 .. 1]
+                         *          borderColor: {String}       -default = #D3D3D3
+                         *          borderWidth: {Number}       -default = 1
+                         *          borderRadius: {Number}      -default = 5
+                         *          backgroundColor: {String}   -default = #E6E6E6
+                         *          fontSize: {Number}          -default = 16
+                         *          fontWeight: {String}        -default = normal ['bold', 'normal']
+                         *          textColor: {String}         -default = #000000
+                         *      }
+                         * @return {String} JSON Information of Notification created */
+                        createNotification: function (callback, msg, options) {
+                            if (typeof msg !== 'string') {
+                                // TODO definir formato de errores HTML
+                                throw new Error('createNotification ERROR. msg param must be String type');
+                            }
+                            if (!(options instanceof Object)) {
+                                options = null;
+                            }
+                            _genericMethodHandler.call(this, callback, 'API.SW.Notification.createNotification', [msg], options);
+                        },
                     },
                     Social : {
 
