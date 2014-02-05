@@ -56,6 +56,7 @@
         'callId': callCounter
         };
 
+
         if (!isAsync) {
             console.log('----Fire Event in APIBridge---- event: "APIMethod". data: ' + JSON.stringify(data));
             Ti.App.fireEvent('APIMethod', data);
@@ -147,7 +148,31 @@
 
                     },
                     Notification : {
-
+                        /** Create Toast Notification
+                         * @param {function} Callback
+                         * @param {String} message
+                         * @param {Object} options {
+                         *          height: {Number}            -default = 100
+                         *          opacity: {Number}           -default = 1 [0 .. 1]
+                         *          borderColor: {String}       -default = #D3D3D3
+                         *          borderWidth: {Number}       -default = 1
+                         *          borderRadius: {Number}      -default = 5
+                         *          backgroundColor: {String}   -default = #E6E6E6
+                         *          fontSize: {Number}          -default = 16
+                         *          fontWeight: {String}        -default = normal ['bold', 'normal']
+                         *          textColor: {String}         -default = #000000
+                         *      }
+                         * @return {String} JSON Information of Notification created */
+                        createNotification: function (callback, msg, options) {
+                            if (typeof msg !== 'string') {
+                                // TODO definir formato de errores HTML
+                                throw new Error('createNotification ERROR. msg param must be String type');
+                            }
+                            if (!(options instanceof Object)) {
+                                options = null;
+                            }
+                            _genericMethodHandler.call(this, callback, 'API.SW.Notification.createNotification', [msg], options);
+                        },
                     },
                     Social : {
 
@@ -176,7 +201,72 @@
 
                     },
                     System : {
+                        /** Get device platform
+                          * @param {function} Callback
+                          * @param {String} Contact Name
+                          * @return : String ('ios', 'android') */
+                        getDeviceOs: function(callback) {
+                            _genericMethodHandler.call(this, callback, 'API.HW.System.getDeviceOs');
+                        },
+                        /** Get System's OS version.
+                          * @param {function} Callback
+                          * @return : String */
+                        getVersion: function(callback) {
+                            _genericMethodHandler.call(this, callback, 'API.HW.System.getVersion');
+                        },
+                        /** Get device's Model.
+                          * @param {function} Callback
+                          * @return : String */
+                        getModel: function(callback) {
+                            _genericMethodHandler.call(this, callback, 'API.HW.System.getModel');
+                        },
+                        /** Get System's processor architecture.
+                          * @param {function} Callback
+                          * @return : String */
+                        getArchitecture: function(callback) {
+                            _genericMethodHandler.call(this, callback, 'API.HW.System.getArchitecture');
+                        },
+                        /** Get available memory
+                          * @param {function} Callback
+                          * @return : Int (Bytes)*/
+                        getAvailableMemory: function (callback) {
+                            _genericMethodHandler.call(this, callback, 'API.HW.System.getAvailableMemory');
+                        },
 
+                        /** Get short name of the JavaScript runtime in use.
+                          * @param {function} Callback
+                          * @return : String */
+                        getJsRuntime: function(callback) {
+                            _genericMethodHandler.call(this, callback, 'API.HW.System.getJsRuntime');
+                        },
+
+                        /** Get the manufacturer of the device.
+                          * @param {function} Callback
+                          * @return : String */
+                        getManufacturer: function(callback) {
+                            _genericMethodHandler.call(this, callback, 'API.HW.System.getManufacturer');
+                        },
+
+                        /** Get the number of processing cores.
+                          * @param {function} Callback
+                          * @return : String */
+                        getProcessorCount: function(callback) {
+                            _genericMethodHandler.call(this, callback, 'API.HW.System.getProcessorCount');
+                        },
+
+                        /** Get system name
+                          * @param {function} Callback
+                          * @return : String */
+                        getUsername: function(callback) {
+                            _genericMethodHandler.call(this, callback, 'API.HW.System.getUsername');
+                        },
+
+                        /** Get system's default language.
+                          * @param {function} Callback
+                          * @return : String */
+                        getLocale: function() {
+                            _genericMethodHandler.call(this, callback, 'API.HW.System.getLocale');
+                        },
                     },
                 }
             }

@@ -51,23 +51,10 @@ var Battery = (function() {
         return state;
     };
 
-    /** Private Function to get Battery level
-      * @return Int or String (error message)*/
-    _self.getBatteryState = function getBatteryState() {
-        var state;
-
-        if (Ti.Platform.getBatteryMonitoring()) {
-            state = Ti.Platform.getBatteryLevel();
-            // TODO establecer nuestro propio código de estado de la bateria
-        } else {
-            state = 'Error. Need to activate Batrery Monitoring';
-        }
-        return state;
-    };
-
 
     /** Events to publish
-      * @return Int or String (error message)*/
+      *
+      * */
     _self.events = {
                     'batterychange': {
                         event: 'battery',
