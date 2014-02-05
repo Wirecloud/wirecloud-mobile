@@ -56,10 +56,10 @@ var Battery = (function() {
       *
       * */
     _self.events = {
-                    'batterychange': {
-                        event: 'battery',
-                        listener: Ti.Platform
-                    }
+        'batterychange': {
+            event: 'battery',
+            listener: Ti.Platform
+        }
     };
 
     /* By the moment, battery monitoring always true.
