@@ -56,6 +56,7 @@
         'callId': callCounter
         };
 
+
         if (!isAsync) {
             console.log('----Fire Event in APIBridge---- event: "APIMethod". data: ' + JSON.stringify(data));
             Ti.App.fireEvent('APIMethod', data);
@@ -176,7 +177,72 @@
 
                     },
                     System : {
+                        /** Get device platform
+                          * @param {function} Callback
+                          * @param {String} Contact Name
+                          * @return : String ('ios', 'android') */
+                        getDeviceOs: function(callback) {
+                            _genericMethodHandler.call(this, callback, 'API.HW.System.getDeviceOs');
+                        },
+                        /** Get System's OS version.
+                          * @param {function} Callback
+                          * @return : String */
+                        getVersion: function(callback) {
+                            _genericMethodHandler.call(this, callback, 'API.HW.System.getVersion');
+                        },
+                        /** Get device's Model.
+                          * @param {function} Callback
+                          * @return : String */
+                        getModel: function(callback) {
+                            _genericMethodHandler.call(this, callback, 'API.HW.System.getModel');
+                        },
+                        /** Get System's processor architecture.
+                          * @param {function} Callback
+                          * @return : String */
+                        getArchitecture: function(callback) {
+                            _genericMethodHandler.call(this, callback, 'API.HW.System.getArchitecture');
+                        },
+                        /** Get available memory
+                          * @param {function} Callback
+                          * @return : Int (Bytes)*/
+                        getAvailableMemory: function (callback) {
+                            _genericMethodHandler.call(this, callback, 'API.HW.System.getAvailableMemory');
+                        },
 
+                        /** Get short name of the JavaScript runtime in use.
+                          * @param {function} Callback
+                          * @return : String */
+                        getJsRuntime: function(callback) {
+                            _genericMethodHandler.call(this, callback, 'API.HW.System.getJsRuntime');
+                        },
+
+                        /** Get the manufacturer of the device.
+                          * @param {function} Callback
+                          * @return : String */
+                        getManufacturer: function(callback) {
+                            _genericMethodHandler.call(this, callback, 'API.HW.System.getManufacturer');
+                        },
+
+                        /** Get the number of processing cores.
+                          * @param {function} Callback
+                          * @return : String */
+                        getProcessorCount: function(callback) {
+                            _genericMethodHandler.call(this, callback, 'API.HW.System.getProcessorCount');
+                        },
+
+                        /** Get system name
+                          * @param {function} Callback
+                          * @return : String */
+                        getUsername: function(callback) {
+                            _genericMethodHandler.call(this, callback, 'API.HW.System.getUsername');
+                        },
+
+                        /** Get system's default language.
+                          * @param {function} Callback
+                          * @return : String */
+                        getLocale: function() {
+                            _genericMethodHandler.call(this, callback, 'API.HW.System.getLocale');
+                        },
                     },
                 }
             }
