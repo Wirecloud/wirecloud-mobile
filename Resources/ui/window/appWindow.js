@@ -47,25 +47,22 @@ Ti.App.mergeObject = function (obj1, obj2){
 };
 
 // Global Variables
-Ti.App.isApple = (Ti.Platform.osname === 'ipad');
+Ti.App.isApple = (Ti.Platform.getOsname() === 'ipad' || Ti.Platform.getOsname() === 'iphone');
+Ti.App.isRetina = (Ti.App.isApple && Ti.Platform.displayCaps.getDpi() === 260) ? true : false;
+Ti.App.platformHeight = Ti.Platform.displayCaps.getPlatformHeight();
+Ti.App.platformWidth = Ti.Platform.displayCaps.getPlatformWidth();
 
 var appWindow = (function () {
 
-    var _self = Ti.UI.createWindow({
-        exitOnClose: true,
-        navBarHidden: true,
-        backgroundColor: '#FFFFFF',
-        width: Ti.Platform.displayCaps.platformWidth,
-        height: Ti.Platform.displayCaps.platformHeight,
-        orientationModes: [Ti.UI.LANDSCAPE_LEFT, Ti.UI.LANDSCAPE_RIGHT]
-    }), loginView;
+    var theme = require('ui/style/appWindowStyle'),
+     _self = Ti.UI.createWindow(theme), loginView;
 
     // Quick Start
-    if(Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory,'widgets').exists()){
-        Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory,'widgets').createDirectory();
+    if(Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory,'composition').exists()){
+        Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory,'composition').createDirectory();
     }
-    if(Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory,'operators').exists()){
-        Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory,'operators').createDirectory();
+    if(Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory,'component').exists()){
+        Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory,'component').createDirectory();
 	}
 
 	// Login HTTP Basic Cache Deleted
@@ -73,7 +70,7 @@ var appWindow = (function () {
 	Ti.App.Properties.removeProperty('cookie_sessionid');
 	Ti.App.Properties.removeProperty('cookie_oilsid');
 
-	_self.showMainView = function showMainView(data){
+	_self.showMainView = function showMainView(data) {
 
 		_self.remove(loginView.view);
 		loginView.destroy();
