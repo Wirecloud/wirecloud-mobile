@@ -52,6 +52,15 @@
             <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
         </manifest>
     </android>
+    <ios>
+        <min-ios-ver>7.0</min-ios-ver>
+        <plist>
+            <dict>
+                <key>UIStatusBarStyle</key>
+                <string>UIStatusBarStyleLightContent</string>
+            </dict>
+        </plist>
+    </ios>
     <mobileweb>0
         <precache/>
         <splash>
