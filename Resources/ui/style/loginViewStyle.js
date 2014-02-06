@@ -10,7 +10,15 @@
 
 var loginViewStyle = (function() {
 
-    var _self = {};
+    var _self = {}, topView = (Ti.App.isApple) ? 20 : 0;
+
+    _self.view = {
+        top: topView,
+        left: 0,
+        backgroundColor: '#FFFFFF',
+        width: Ti.App.platformWidth,
+        height: Ti.App.platformHeight - topView
+    };
 
     _self.logo = {
         url : Ti.Filesystem.resourcesDirectory + 'images/logo_tab.svg',

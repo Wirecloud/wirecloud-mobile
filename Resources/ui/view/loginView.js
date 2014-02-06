@@ -13,13 +13,7 @@ var loginView = function (parentWindow) {
     var theme = require('ui/style/loginViewStyle'), containerForm, userTextField, passTextField,
     activitySession, os = (Ti.App.isApple) ? "iPad" : "Android", version = "", internetLabel, internetIcon,
     _self = {
-       view : Ti.UI.createView({
-            top: 10,
-            left: 0,
-            backgroundColor: '#FFFFFF',
-            width: Ti.Platform.displayCaps.platformWidth,
-            height: Ti.Platform.displayCaps.platformHeight
-        })
+       view : Ti.UI.createView(theme.view)
     },
     heightLogo = (_self.view.getWidth()/2 !== 800) ? parseInt((500 * ((_self.view.getWidth()/2)/800)), 10) : 500;
 
@@ -188,10 +182,16 @@ var loginView = function (parentWindow) {
             checkAuthentication();
         };
         passTextField.focusPassTField = function focusPassTField(e){
+            _self.top = _self.view.getTop();
+            _self.height = _self.view.getHeight();
+            _self.view.setHeight(_self.view.getHeight() + (containerForm.height/2));
             _self.view.setTop(-(containerForm.height/2));
         };
         passTextField.blurPassTField = function blurPassTField(e){
-            _self.view.setTop(0);
+            _self.view.setTop(_self.top);
+            _self.view.setHeight(_self.height);
+            delete _self.top;
+            delete _self.height;
         };
         passTextField.addEventListener('return', passTextField.returnPassTField);
         passTextField.addEventListener('focus', passTextField.focusPassTField);
