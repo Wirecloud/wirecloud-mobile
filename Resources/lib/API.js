@@ -25,7 +25,7 @@ var API = (function() {
             Camera : require('lib/API.Camera'),
             GeoLocation : '',
             Gesture : '',
-            Media : '',
+            Media : require('lib/API.Media'),
             Network : require('lib/API.Network'),
             System : require('lib/API.System')
         }
