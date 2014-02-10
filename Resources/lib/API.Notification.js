@@ -3,30 +3,32 @@
  * Titanium Appcelerator 3.2.0GA
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
- *
- *   createNotification
- *      Parameters of visualization
- *      must have{
- *          message: {String},
- *      }
- *      optional{
- *          height: {Number}            -default = 100
- *          opacity: {Number}           -default = 1 [0 .. 1]
- *          borderColor: {String}       -default = #D3D3D3
- *          borderWidth: {Number}       -default = 1
- *          borderRadius: {Number}      -default = 5
- *          backgroundColor: {String}   -default = #E6E6E6
- *          fontSize: {Number}          -default = 16
- *          fontWeight: {String}        -default = normal ['bold', 'normal']
- *          textColor: {String}         -default = #000000
- *      }
- *      Return {String} JSON Information of Notification created
+ */
+
+/**
+ * Toast notification.
+ * @typedef {Object} Notification
+ * @property {String} message
+ * @property {Number} [height=100]
+ * @property {Number} [opacity=1] 0 or 1
+ * @property {String} [borderColor=#D3D3D3]
+ * @property {Number} [borderWidth=1]
+ * @property {Number} [borderRadius=5]
+ * @property {String} [backgroundColor=#E6E6E6]
+ * @property {Number} [fontSize=16]
+ * @property {String} [fontWeight=normal] 'bold' or 'normal'
+ * @property {String} [textColor=#000000]
  */
 
 "use strict";
 
 var Notification = (function() {
 
+    /** It contains a method to manage notifications.
+     * @author Alejandro FCarrera
+     * @version 1.0.0
+     * @alias API.Notification
+     * @namespace */
     var _self = {};
 
     /** Private Function to Validate Toast Notification info
