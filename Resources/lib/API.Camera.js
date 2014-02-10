@@ -113,10 +113,10 @@ var Camera = (function() {
         // process("openPhotoGallery", [options]);
     };
 
-    /** Shows the camera. By default, the native camera controls are displayed.
-     *  To add your own camera controls, you can add an overlay view by setting
-     *  the overlay property on the options argument.
-     * @param {Object} callback*/
+    /** Shows the camera. The native camera controls are displayed. A photo can
+     * be taken and it will returned in callback first parameter.
+     * @param {Function} callback
+     * @param {Object} [options] */
     self.showCamera = function showCamera(callback, options) {
         var key;
         var showCameraOptions = {

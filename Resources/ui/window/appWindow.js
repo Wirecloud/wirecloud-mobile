@@ -13,7 +13,7 @@
  * @param {String} msg It will be shown on console.
  * @param {String} newType message level to show on console.
  * @param {Object} error javascript exception object.
- * @param {Object} extra datails about error. */
+ * @param {Object} extra details about error. */
 Ti.App.Log = function(msg, newType, error, extra){
     var type = 'Error', _self = {
         'name': 'AppBaseLog',
