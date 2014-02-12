@@ -91,6 +91,11 @@ var Camera = (function() {
         }
     };
 
+    /** It allows to take pictures from native camera.
+     * @author Santiago Blanco
+     * @version 1.0.0
+     * @alias API.Camera
+     * @namespace */
     var self = {};
 
     /** Gets the value of the availableCameras property.
