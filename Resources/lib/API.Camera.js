@@ -7,6 +7,18 @@
 
 "use strict";
 
+/**
+ * Response indicating the operation status and result
+ * @typedef ResponseCallback
+ * @property {String} status It should be "SUCCESS" or "FAILURE"
+ * @property {String} data It should be the resulted data.
+ */
+
+/**
+ * @callback ShowCameraCallback
+ * @param {ResponseCallback} response
+ */
+
 /* FYI: http://docs.appcelerator.com/titanium/3.0/#!/api/Titanium.Media*/
 var Camera = (function() {
 
@@ -120,8 +132,9 @@ var Camera = (function() {
 
     /** Shows the camera. The native camera controls are displayed. A photo can
      * be taken and it will returned in callback first parameter.
-     * @param {Function} callback
-     * @param {Object} [options] */
+     * @param {ShowCameraCallback} callback
+     * @param {Object} [options] Aditional options that should be passed as
+     *  parameter of native call */
     self.showCamera = function showCamera(callback, options) {
         var key;
         var showCameraOptions = {
