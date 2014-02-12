@@ -18,10 +18,13 @@ var System = (function() {
 
     /** Get device platform
      * @method
-     * @return {String} ('ios', 'android')
-     * @todo _device does not exists */
+     * @return {String} It should return 'ios' or 'android' */
     _self.getDeviceOs = function getDeviceOs() {
-        return _device;
+        var osName = Ti.Platform.getOsname();
+        if (osName  === 'ipad' || osName === 'iphone') {
+            osName = 'ios';
+        }
+        return osName;
     };
 
     /** Get System's OS version.
