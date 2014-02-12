@@ -58,6 +58,11 @@
 
 var Contacts = (function() {
 
+    /** It allows to manage local contacts from device.
+     * @author Alejandro FCarrera
+     * @version 1.0.0
+     * @alias API.Contacts
+     * @namespace */
     var _self = {
         'tempContacts': []
     };
