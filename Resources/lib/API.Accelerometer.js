@@ -16,6 +16,9 @@ var Accelerometer = (function() {
      * @namespace */
     var _self = {};
 
+    /** Changes on accelerometer can be captured using this event.
+     * @event AccelerometerChange
+     */
     _self.events = {
         "AccelerometerChange": {
             event: "update",
