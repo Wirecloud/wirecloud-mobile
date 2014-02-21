@@ -9,8 +9,8 @@
 "use strict";
 
 // Libraries
-Ti.App.Log = function(msg, newType, error, extra){
-    var type = 'Error', _self = {
+Ti.App.Log = function(msg, type, error, extra){
+    var _self = {
         'name': 'AppBaseLog',
         'message': msg
     };
@@ -20,9 +20,6 @@ Ti.App.Log = function(msg, newType, error, extra){
             'info': extra
         } : error.message;
         _self.source = error.sourceURL;
-    }
-    if(newType){
-        type = newType;
     }
     Ti.API[type](_self);
     return _self;
