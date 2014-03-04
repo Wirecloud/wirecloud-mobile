@@ -11,7 +11,7 @@
 var loginView = function (parentWindow) {
 
     var theme = require('ui/style/loginViewStyle'), containerForm, userTextField, passTextField,
-    activitySession, os = (Ti.App.isApple) ? "iPad" : "Android", version = "", internetLabel, internetIcon,
+    activitySession, os = (Ti.App.API.HW.System.isApple()) ? "iPad" : "Android", version = "", internetLabel, internetIcon,
     _self = {
        view : Ti.UI.createView(theme.view)
     },
@@ -28,7 +28,7 @@ var loginView = function (parentWindow) {
     )));
 
     // Label OS , Version and Internet
-    if(!Ti.App.isApple){
+    if(!Ti.App.API.HW.System.isApple()){
         var splited = Ti.Platform.version.split('.');
         if(splited[0] === '2'){
             if(splited[1] === '2'){
@@ -89,7 +89,7 @@ var loginView = function (parentWindow) {
     var connectionError = function connectionError(string) {
         var stringSearch;
         if (Ti.Network.online){
-            stringSearch = (Ti.App.isApple) ? "error_connection_login_ios" : "error_connection_login_android";
+            stringSearch = (Ti.App.API.HW.System.isApple()) ? "error_connection_login_ios" : "error_connection_login_android";
         }
         else{
             stringSearch = "error_connection_inet";
@@ -188,10 +188,13 @@ var loginView = function (parentWindow) {
             _self.view.setTop(-(containerForm.height/2));
         };
         passTextField.blurPassTField = function blurPassTField(e){
-            _self.view.setTop(_self.top);
-            _self.view.setHeight(_self.height);
-            delete _self.top;
-            delete _self.height;
+            // Issue: https://jira.appcelerator.org/browse/TIMOB-16496
+            if(_self.top && _self.height){
+                _self.view.setTop(_self.top);
+                _self.view.setHeight(_self.height);
+                delete _self.top;
+                delete _self.height;
+            }
         };
         passTextField.addEventListener('return', passTextField.returnPassTField);
         passTextField.addEventListener('focus', passTextField.focusPassTField);

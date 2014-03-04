@@ -14,8 +14,8 @@ var appWindowStyle = (function() {
         exitOnClose: true,
         navBarHidden: true,
         backgroundColor: '#1F3346',
-        width: Ti.App.platformWidth,
-        height: Ti.App.platformHeight,
+        width: Ti.App.API.HW.System.getPlatformWidth(),
+        height: Ti.App.API.HW.System.getPlatformHeight(),
         orientationModes: [Ti.UI.LANDSCAPE_LEFT, Ti.UI.LANDSCAPE_RIGHT]
     };
 

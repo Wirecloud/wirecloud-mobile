@@ -10,14 +10,14 @@
 
 var loginViewStyle = (function() {
 
-    var _self = {}, topView = (Ti.App.isApple) ? 20 : 0;
+    var _self = {}, topView = (Ti.App.API.HW.System.isApple()) ? 20 : 0;
 
     _self.view = {
         top: topView,
         left: 0,
         backgroundColor: '#FFFFFF',
-        width: Ti.App.platformWidth,
-        height: Ti.App.platformHeight - topView
+        width: Ti.App.API.HW.System.getPlatformWidth(),
+        height: Ti.App.API.HW.System.getPlatformHeight() - topView
     };
 
     _self.logo = {
@@ -83,7 +83,7 @@ var loginViewStyle = (function() {
         borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
         autocapitalization: false,
         enableReturnKey: false,
-        softKeyboardOnFocus : (Ti.App.isApple) ? null : Ti.UI.Android.SOFT_KEYBOARD_SHOW_ON_FOCUS,
+        softKeyboardOnFocus : (Ti.App.API.HW.System.isApple()) ? null : Ti.UI.Android.SOFT_KEYBOARD_SHOW_ON_FOCUS,
         autocorrect: false,
         font: {
             fontSize: 20,
