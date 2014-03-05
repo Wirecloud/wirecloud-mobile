@@ -16,7 +16,7 @@
 
 (function() {
 
-	var osname = Ti.Platform.osname,
+	var osname = Ti.Platform.osname, Window,
         version = Ti.Platform.version,
         height = Ti.Platform.displayCaps.platformHeight,
         width = Ti.Platform.displayCaps.platformWidth,
@@ -25,14 +25,14 @@
                 (Ti.Platform.Android.getPhysicalSizeCategory() === Ti.Platform.Android.PHYSICAL_SIZE_CATEGORY_XLARGE)
             )) || Math.min(Ti.Platform.displayCaps.getPlatformHeight(), Ti.Platform.displayCaps.getPlatformWidth()) >= 400;
 
+
     if (isTablet) {
-        var Window = require('ui/window/appWindow');
+        Window = require('ui/window/appWindow');
         Window.open();
     }
-
     else {
-        //TODO Smartphone Compatibility
-        alert("Not compatible");
+        Window = require('ui/window/appSmartPhone');
+        Window.open();
     }
 
 }());
