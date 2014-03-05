@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ti:app xmlns:ti="http://ti.appcelerator.org">
-    <id>com.COM.wirecloud4tablet</id>
-    <name>wirecloud4tablet</name>
+    <id>com.COM.appbase</id>
+    <name>App Base</name>
     <version>1.0</version>
     <publisher>Alejandro F.Carrera</publisher>
-    <url>https://github.com/centeropenmiddleware/wirecloud4tablet</url>
-    <description>Wirecloud implementation for Tablets</description>
-    <copyright>2013 by Center Open Middleware</copyright>
+    <url></url>
+    <description>AppBase Build</description>
+    <copyright>2013 - 2014 by Center Open Middleware</copyright>
     <icon>appicon.png</icon>
     <persistent-wifi>false</persistent-wifi>
     <prerendered-icon>false</prerendered-icon>
