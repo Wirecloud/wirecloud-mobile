@@ -38,11 +38,6 @@ Ti.App.FontAwesome4 = require('fonts/FontAwesome4');
 Ti.App.FontAwesome3 = require('fonts/FontAwesome');
 Ti.App.API = require('lib/API');
 
-// Login HTTP Basic Cache Deleted
-Ti.App.Properties.removeProperty('cookie_csrftoken');
-Ti.App.Properties.removeProperty('cookie_sessionid');
-Ti.App.Properties.removeProperty('cookie_oilsid');
-
 // Quick Start
 if(Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory,'composition').exists()){
     Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory,'composition').createDirectory();
@@ -58,18 +53,25 @@ var appWindow = (function () {
          view: Ti.UI.createWindow(theme)
      }, loginView, mainView = null;
 
+    _self.removeCredentials = function removeCredentials() {
+        Ti.App.Properties.removeProperty('cookie_csrftoken');
+        Ti.App.Properties.removeProperty('cookie_sessionid');
+        Ti.App.Properties.removeProperty('cookie_oilsid');
+    };
+
 	_self.showMainView = function showMainView() {
-		_self.remove(loginView.view);
+		_self.view.remove(loginView.view);
 		loginView.destroy();
 		loginView = null;
 		mainView = require('ui/view/mainView')(_self);
-		_self.view.add(mainView);
+		_self.view.add(mainView.view);
 		mainView = null;
 	};
 
     _self.showLoginView = function showLoginView(){
         if(mainView !== null){
-            _self.remove(mainView);
+            _self.removeCredentials();
+            _self.view.remove(mainView.view);
             mainView.destroy();
             mainView = null;
         }
@@ -77,6 +79,7 @@ var appWindow = (function () {
         _self.view.add(loginView.view);
     };
 
+    _self.removeCredentials();
     _self.showLoginView();
 
 	return _self;
