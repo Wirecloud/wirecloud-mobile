@@ -54,20 +54,30 @@ if(Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory,'component').exi
 var appWindow = (function () {
 
     var theme = require('ui/style/appWindowStyle'),
-     _self = Ti.UI.createWindow(theme), loginView;
+     _self = {
+         view: Ti.UI.createWindow(theme)
+     }, loginView, mainView = null;
 
-	_self.showMainView = function showMainView(data) {
+	_self.showMainView = function showMainView() {
 		_self.remove(loginView.view);
 		loginView.destroy();
 		loginView = null;
-		var mainView = require('ui/view/mainView')(data);
-		_self.add(mainView);
+		mainView = require('ui/view/mainView')(_self);
+		_self.view.add(mainView);
 		mainView = null;
-		delete _self.showMainView;
 	};
 
-	loginView = require('ui/view/loginView')(_self);
-    _self.add(loginView.view);
+    _self.showLoginView = function showLoginView(){
+        if(mainView !== null){
+            _self.remove(mainView);
+            mainView.destroy();
+            mainView = null;
+        }
+        loginView = require('ui/view/loginView')(_self);
+        _self.view.add(loginView.view);
+    };
+
+    _self.showLoginView();
 
 	return _self;
 

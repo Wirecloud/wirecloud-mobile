@@ -28,11 +28,11 @@
 
     if (isTablet) {
         Window = require('ui/window/appWindow');
-        Window.open();
+        Window.view.open();
     }
     else {
         Window = require('ui/window/appSmartPhone');
-        Window.open();
+        Window.view.open();
     }
 
 }());
