@@ -51,7 +51,8 @@ var appWindow = (function () {
     var theme = require('ui/style/appWindowStyle'),
      _self = {
          view: Ti.UI.createWindow(theme)
-     }, loginView, mainView = null;
+     }, loginView = null, mainView = null,
+     storeView = null;
 
     _self.removeCredentials = function removeCredentials() {
         Ti.App.Properties.removeProperty('cookie_csrftoken');
@@ -60,12 +61,18 @@ var appWindow = (function () {
     };
 
 	_self.showMainView = function showMainView() {
-		_self.view.remove(loginView.view);
-		loginView.destroy();
-		loginView = null;
+	    if(loginView !== null){
+	        _self.view.remove(loginView.view);
+            loginView.destroy();
+            loginView = null;
+	    }
+		if(storeView !== null){
+		    _self.view.remove(storeView.view);
+            storeView.destroy();
+            storeView = null;
+		}
 		mainView = require('ui/view/mainView')(_self);
 		_self.view.add(mainView.view);
-		mainView = null;
 	};
 
     _self.showLoginView = function showLoginView(){
@@ -77,6 +84,16 @@ var appWindow = (function () {
         }
         loginView = require('ui/view/loginView')(_self);
         _self.view.add(loginView.view);
+    };
+
+    _self.showStoreView = function showStoreView(){
+        if(mainView !== null){
+            _self.view.remove(mainView.view);
+            mainView.destroy();
+            mainView = null;
+        }
+        storeView = require('ui/view/storeView')(_self);
+        _self.view.add(storeView.view);
     };
 
     _self.removeCredentials();
