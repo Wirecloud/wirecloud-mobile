@@ -39,20 +39,20 @@ Ti.App.FontAwesome3 = require('fonts/FontAwesome');
 Ti.App.API = require('lib/API');
 
 // Quick Start
-if(Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory,'composition').exists()){
+if(!Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory,'composition').exists()){
     Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory,'composition').createDirectory();
 }
-if(Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory,'component').exists()){
+if(!Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory,'component').exists()){
     Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory,'component').createDirectory();
 }
 
 var appWindow = (function () {
 
     var theme = require('ui/style/appWindowStyle'),
+     loginView = null, mainView = null, storeView = null,
      _self = {
          view: Ti.UI.createWindow(theme)
-     }, loginView = null, mainView = null,
-     storeView = null;
+     };
 
     _self.removeCredentials = function removeCredentials() {
         Ti.App.Properties.removeProperty('cookie_csrftoken');
