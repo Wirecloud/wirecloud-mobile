@@ -128,15 +128,17 @@ var mainViewStyle = (function() {
 
     _self.leftListViewNoWorkspaces = {
         left: 0,
+        top: 0,
         height: _self.leftListView.height,
-        top: _self.leftListView.top,
         width: _self.leftListView.width,
-        color: '#3F566D',
+        backgroundColor: '#2a2a2a',
+        opacity: 0.5,
+        color: '#FFFFFF',
         font: {
             fontFamily:'Default',
             fontSize: rowFontSize
         },
-        text: Ti.Locale.getString('LABEL_NOWORKSPACE'),
+        text: Ti.Locale.getString('LABEL_NOCOMPOSITION'),
         textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER
     };
 
@@ -179,7 +181,7 @@ var mainViewStyle = (function() {
         shadowOffset: {x:0, y:0},
         shadowRadius: 3,
         textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER,
-        text: 'Compositions'
+        text: Ti.Locale.getString('LABEL_COMPOSITION')
     };
 
     if(Ti.App.API.HW.System.isRetina()){

@@ -44,11 +44,11 @@ var mainView = function mainView(parentWindow) {
     topBar.add(buttonStore);
     topBar.add(Ti.UI.createLabel(Ti.App.mergeObject(theme.labelButton,{
         left: buttonLogout.getLeft() + buttonLogout.getWidth(),
-        text: ' Logout'
+        text: ' ' + Ti.Locale.getString("BUTTON_LOGOUT")
     })));
     topBar.add(Ti.UI.createLabel(Ti.App.mergeObject(theme.labelButton,{
         left: buttonStore.getLeft() + buttonStore.getWidth(),
-        text: ' Store'
+        text: ' ' + Ti.Locale.getString("BUTTON_STORE")
     })));
     _self.view.add(topBar);
 
@@ -90,7 +90,7 @@ var mainView = function mainView(parentWindow) {
         var compFolder = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'composition').getDirectoryListing(), i;
         if(compFolder.length === 0){
             leftView.setTouchEnabled(false);
-            leftView.add(Ti.UI.createView(theme.leftListViewNoWorkspaces));
+            leftView.add(Ti.UI.createLabel(theme.leftListViewNoWorkspaces));
         }
         else{
             var compositions = Ti.UI.createListSection();
@@ -106,16 +106,18 @@ var mainView = function mainView(parentWindow) {
                         text: metadataComp.name
                     },
                     icon: {
-                        text : (metadataComp.icon) ? Ti.App.FontAwesome4.getCharCode(metadataComp.icon) :
-                               Ti.App.FontAwesome4.getCharCode('fa-columns')
+                        text : (metadataComp.icon === "") ? Ti.App.FontAwesome4.getCharCode('fa-columns') :
+                               Ti.App.FontAwesome4.getCharCode(metadataComp.icon)
                     }
                 });
+                metadataComp = null;
             }
             compositions.setItems(rows);
             leftView.setSections([compositions]);
             compositions = null;
             rows = null;
         }
+        compFolder = null;
     };
 
     // Load Workspaces on ListView
@@ -129,6 +131,7 @@ var mainView = function mainView(parentWindow) {
         leftView.removeEventListener('itemclick', _self.clickRowListView);
         buttonLogout.removeEventListener('singletap', _self.clickLogoutButton);
         buttonStore.removeEventListener('singletap', _self.clickStoreButton);
+        theme = null;
     };
 
     return _self;
