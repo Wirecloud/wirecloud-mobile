@@ -22,7 +22,7 @@ var mainViewStyle = (function() {
         left: 0,
         height: heightView,
         width: Ti.App.API.HW.System.getPlatformWidth(),
-        backgroundColor: '#1F3346'
+        backgroundColor: '#4F6C88'
     };
 
     _self.line = {
@@ -157,14 +157,6 @@ var mainViewStyle = (function() {
             ]
         },
         opacity: 1
-    };
-
-    _self.rightView = {
-        left: _self.leftListView.width,
-        width: _self.view.width * 0.7,
-        height: _self.leftListView.height,
-        top: _self.leftListView.top,
-        backgroundColor: '#4F6C88'
     };
 
     _self.leftHeaderListView = {

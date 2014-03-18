@@ -14,11 +14,11 @@ var mainView = function mainView(parentWindow) {
     // Create References
     var theme = require('ui/style/mainViewStyle'),
     topBar = Ti.UI.createView(theme.topBar),
-    buttonLogout = Ti.UI.createLabel(Ti.App.mergeObject(theme.button,{
+    buttonLogout = Ti.UI.createLabel(Ti.App.mergeObject(theme.button, {
         left: (Ti.App.API.HW.System.isApple()) ? 14 : '8dp',
         text: Ti.App.FontAwesome4.getCharCode('fa-sign-out')
     })),
-    buttonStore = Ti.UI.createLabel(Ti.App.mergeObject(theme.button,{
+    buttonStore = Ti.UI.createLabel(Ti.App.mergeObject(theme.button, {
         left: (Ti.App.API.HW.System.isApple()) ? 14 : '8dp',
         text: Ti.App.FontAwesome4.getCharCode('fa-cloud')
     })),
@@ -29,24 +29,24 @@ var mainView = function mainView(parentWindow) {
         defaultItemTemplate: 'template'
     })),
     shadowView = Ti.UI.createView(theme.leftShadowView),
-    rightView = Ti.UI.createView(theme.rightView),
-    compositions = {},
     _self = {
+        compositions : {},
+        detailView : null,
         view : Ti.UI.createView(theme.view)
     };
 
     // Create Navigation Bar
-    if(Ti.App.API.HW.System.isApple()){
+    if(Ti.App.API.HW.System.isApple()) {
         _self.view.add(Ti.UI.createView(theme.line));
     }
     topBar.add(buttonLogout);
     buttonStore.setLeft(topBar.getWidth() - (buttonStore.getLeft() + buttonStore.getWidth() + 50));
     topBar.add(buttonStore);
-    topBar.add(Ti.UI.createLabel(Ti.App.mergeObject(theme.labelButton,{
+    topBar.add(Ti.UI.createLabel(Ti.App.mergeObject(theme.labelButton, {
         left: buttonLogout.getLeft() + buttonLogout.getWidth(),
         text: ' ' + Ti.Locale.getString("BUTTON_LOGOUT")
     })));
-    topBar.add(Ti.UI.createLabel(Ti.App.mergeObject(theme.labelButton,{
+    topBar.add(Ti.UI.createLabel(Ti.App.mergeObject(theme.labelButton, {
         left: buttonStore.getLeft() + buttonStore.getWidth(),
         text: ' ' + Ti.Locale.getString("BUTTON_STORE")
     })));
@@ -56,7 +56,6 @@ var mainView = function mainView(parentWindow) {
     leftView.setHeaderView(Ti.UI.createLabel(theme.leftHeaderListView));
 
     // Add Views
-    _self.view.add(rightView);
     _self.view.add(shadowView);
     _self.view.add(leftView);
 
@@ -74,19 +73,12 @@ var mainView = function mainView(parentWindow) {
 
     // Bind click ListView
     _self.clickRowListView = function clickRowListView(e) {
-        Ti.App.API.HW.Network.getWorkspaceInfo(function(result){
-            if(result === 'Error getWorkspaceInfo'){
-                alert(result);
-            }
-            else{
-                parentWindow.showCompositionView(result);
-            }
-        });
+        _self.showDetailView(e.section.getItemAt(e.itemIndex).id.text);
     };
     leftView.addEventListener('itemclick', _self.clickRowListView);
 
     // Create Connection to fill ListView
-    _self.reloadTable = function reloadTable(){
+    _self.reloadTable = function reloadTable() {
         var compFolder = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'composition').getDirectoryListing(), i;
         if(compFolder.length === 0){
             leftView.setTouchEnabled(false);
@@ -98,6 +90,7 @@ var mainView = function mainView(parentWindow) {
             for(i = 0; i < compFolder.length; i++){
                 var metadataComp = JSON.parse(Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory,
                     'composition/' + compFolder[i] + '/', '.metadata').read().toString());
+                _self.compositions[compFolder[i]] = metadataComp;
                 rows.push({
                     id: {
                         text: compFolder[i]
@@ -120,12 +113,22 @@ var mainView = function mainView(parentWindow) {
         compFolder = null;
     };
 
+    // Create Details View of Composition
+    _self.showDetailView = function showDetailView(idComposition) {
+        _self.detailView = require('ui/view/mainViewDetail')(
+            _self.compositions[idComposition]
+        );
+        _self.view.add(_self.detailView);
+    };
+
     // Load Workspaces on ListView
     _self.reloadTable();
 
     // Destroy MainView
-    _self.destroy = function destroy(){
-        _self.view.remove(rightView);
+    _self.destroy = function destroy() {
+        if(_self.detailView !== null){
+            _self.view.remove(_self.detailView);
+        }
         _self.view.remove(shadowView);
         _self.view.remove(leftView);
         leftView.removeEventListener('itemclick', _self.clickRowListView);
