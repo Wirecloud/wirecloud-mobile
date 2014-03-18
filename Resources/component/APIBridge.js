@@ -226,37 +226,11 @@
                                 // pattern only available for Android
                                 Titanium.Media.vibrate(pattern);
                             },
-                            // TODO fix comments
                             /** Create new AudioPlayer
                              * @param {audioPlayerOptions} options
-                             * @return {Number} audioPlayer ID*/
-                            createAudioPlayer : function createAudioPlayer(callback, options) {
-                                if (!(options instanceof Object)) {
-                                    options = null;
-                                }
-                                _genericMethodHandler.call(this, callback, 'API.HW.Media.createAudioPlayer', [], options);
-                            },
-                            /** Set Audio Player URL
-                             * @param {Number} playerId, the audio player ID number
-                             * @param {String} url, The Audio Player URL */
-                            setAudioPlayerURL : function getAudioPlayerURL(callback, playerId, url) {
-                                _genericMethodHandler.call(this, callback, 'API.HW.Media.setAudioPlayerURL', [playerId, url], null);
-                            },
-                            /** Pause Audio Player
-                             * @param {Number} playerId, the audio player ID number */
-                            pauseAudioPlayer : function pauseAudioPlayer(callback, playerId) {
-                                _genericMethodHandler.call(this, callback, 'API.HW.Media.pauseAudioPlayer', [playerId], null);
-                            },
-                            /** Play Audio Player
-                             * @param {Number} playerId, the audio player ID number */
-                            playAudioPlayer : function playAudioPlayer(callback, playerId) {
-                                _genericMethodHandler.call(this, callback, 'API.HW.Media.playAudioPlayer', [playerId], null);
-                            },
-
-                            /** Stop Audio Player
-                             * @param {Number} playerId, the audio player ID number */
-                            stopAudioPlayer : function stopAudioPlayer(callback, playerId) {
-                                _genericMethodHandler.call(this, callback, 'API.HW.Media.stopAudioPlayer', [playerId], null);
+                             * @return {Object} audioPlayer Dummy*/
+                            createAudioPlayer : function createAudioPlayer(options) {
+                                return new dummyAudioPlayer(options, this);
                             }
                     },
                     Network : {
@@ -378,4 +352,109 @@
 
     Object.preventExtensions(window.API.eventNotification);
 
+    /* Audio Dummy */
+    // TODO jsdoc
+    var dummyAudioPlayer = function dummyAudioPlayer(API, options) {
+        this.id = null;
+        this.pendings = [];
+        this.busy = true;
+
+        var callback = function(id) {
+            console.log('.............. Dummy available ID:' + id);
+            this.id = id;
+            genericCallback.call(this, id);
+        };
+
+        if (!(options instanceof Object)) {
+            options = null;
+        }
+        console.log('Dummy waiting for audioPlayer id ..............');
+        _genericMethodHandler.call(API, callback.bind(this), 'API.HW.Media.createAudioPlayer', [], options);
+    };
+
+    dummyAudioPlayer.prototype.addEventListener = function addEventListener(event, callback) {
+        console.log('addEventListener in Dummy: ' + event);
+        //TODO
+    };
+
+    dummyAudioPlayer.prototype.removeEventListener = function removeEventListener(event, callback) {
+        console.log('removeEventListener in Dummy: ' + event);
+        //TODO
+    };
+
+    dummyAudioPlayer.prototype.play = function play() {
+        console.log('adding Dummy play');
+        addProcess.call(this, 1);
+    };
+
+    dummyAudioPlayer.prototype.pause = function pause() {
+        console.log('adding Dummy pause');
+        addProcess.call(this, 2);
+    };
+
+    dummyAudioPlayer.prototype.stop = function stop() {
+        console.log('adding Dummy stop');
+        addProcess.call(this, 3);
+    };
+
+    dummyAudioPlayer.prototype.setURL = function setURL(url) {
+        console.log('adding Dummy seturl: ' + url);
+        console.log('this: ' + this);
+        addProcess.call(this, 4, url);
+    };
+
+    /*
+     * play   -> 1
+     * pause  -> 2
+     * stop   -> 3
+     * setURL -> 4
+     */
+    var addProcess = function addProcess(type, url) {
+        console.log('Add new order to AudioPlayer:' + type);
+        this.pendings.push({'type': type, 'options': {'url': url}});
+        process.call(this);
+    };
+
+    var process = function process() {
+        console.log('Dummy trying to process. Busy-> ' + this.busy + '; pendings: ' + this.pendings);
+        if (!this.busy && this.pendings.length > 0) {
+            var newOrder = this.pendings.shift();
+            console.log('Dummy processing ' + newOrder);
+            this.busy = true;
+            switch(newOrder.type) {
+                case 1:
+                    // PLAY
+                    _genericMethodHandler.call(API, genericCallback.bind(this), 'API.HW.Media.playAudioPlayer', [this.id], null);
+                    break;
+                case 2:
+                    // PAUSE
+                    _genericMethodHandler.call(API, genericCallback.bind(this), 'API.HW.Media.pauseAudioPlayer', [this.id], null);
+                    break;
+                case 3:
+                    // STOP
+                    _genericMethodHandler.call(API, genericCallback.bind(this), 'API.HW.Media.stopAudioPlayer', [this.id], null);
+                    break;
+                case 4:
+                    // SETURL
+                    _genericMethodHandler.call(API, genericCallback.bind(this), 'API.HW.Media.setAudioPlayerURL', [this.id, newOrder.options.url], null);
+                    break;
+                default:
+                    // ERROR
+                    console.log('Error in AudioPlayerDummy');
+                    break;
+            }
+        }
+    };
+
+    var genericCallback = function genericCallback(data) {
+        console.log(JSON.parse(data));
+        this.busy = false;
+        if (this.pendings.length > 0) {
+            console.log('Dummy busy');
+            process.call(this);
+        } else {
+            console.log('Dummy free');
+        }
+    };
+    // End Audio Dummy
 }());
