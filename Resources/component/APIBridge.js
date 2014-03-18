@@ -196,6 +196,36 @@
                     },
                     Media : {
 
+                            /* VIDEO TODO */
+                            /** Opens the photo gallery image picker.
+                              * @param {function} Callback
+                              * @param {Object} {'name': String} optional
+                              * @return {Number} */
+                            openPhotoGallery : function openPhotoGallery(callback, options) {
+                            if (!(callback instanceof Function)) {
+                                return false;
+                            }
+                            if (!(options instanceof Object)) {
+                                options = null;
+                            }
+                                _genericMethodHandler.call(this, callback, 'API.SW.Media.openPhotoGallery', [], options);
+                            },
+                            /** Takes a screen shot of the visible UI on the device. This method is
+                             *  asynchronous.
+                             * @param {screenSotCallback} callback that will receive screenshot image as Blob object */
+                            takeScreenshot : function takeScreenshot(callback) {
+                                _genericMethodHandler.call(this, callback, 'API.SW.Media.takeScreenshot', [callback], null, true);
+                            },
+                            /** Takes a screen shot of the visible UI on the device. This method is
+                             *  asynchronous.
+                             * @param {pattern} [Number[]=[100, 300, 100, 200, 100, 50]] optional vibrate pattern only available for Android.*/
+                            vibrate : function vibrate(pattern) {
+                                if (Ti.App.isApple || pattern == null || !(pattern instanceof Array)) {
+                                    Titanium.Media.vibrate();
+                                }
+                                // pattern only available for Android
+                                Titanium.Media.vibrate(pattern);
+                            },
                     },
                     Network : {
 
