@@ -226,6 +226,38 @@
                                 // pattern only available for Android
                                 Titanium.Media.vibrate(pattern);
                             },
+                            // TODO fix comments
+                            /** Create new AudioPlayer
+                             * @param {audioPlayerOptions} options
+                             * @return {Number} audioPlayer ID*/
+                            createAudioPlayer : function createAudioPlayer(callback, options) {
+                                if (!(options instanceof Object)) {
+                                    options = null;
+                                }
+                                _genericMethodHandler.call(this, callback, 'API.HW.Media.createAudioPlayer', [], options);
+                            },
+                            /** Set Audio Player URL
+                             * @param {Number} playerId, the audio player ID number
+                             * @param {String} url, The Audio Player URL */
+                            setAudioPlayerURL : function getAudioPlayerURL(callback, playerId, url) {
+                                _genericMethodHandler.call(this, callback, 'API.HW.Media.setAudioPlayerURL', [playerId, url], null);
+                            },
+                            /** Pause Audio Player
+                             * @param {Number} playerId, the audio player ID number */
+                            pauseAudioPlayer : function pauseAudioPlayer(callback, playerId) {
+                                _genericMethodHandler.call(this, callback, 'API.HW.Media.pauseAudioPlayer', [playerId], null);
+                            },
+                            /** Play Audio Player
+                             * @param {Number} playerId, the audio player ID number */
+                            playAudioPlayer : function playAudioPlayer(callback, playerId) {
+                                _genericMethodHandler.call(this, callback, 'API.HW.Media.playAudioPlayer', [playerId], null);
+                            },
+
+                            /** Stop Audio Player
+                             * @param {Number} playerId, the audio player ID number */
+                            stopAudioPlayer : function stopAudioPlayer(callback, playerId) {
+                                _genericMethodHandler.call(this, callback, 'API.HW.Media.stopAudioPlayer', [playerId], null);
+                            }
                     },
                     Network : {
 
