@@ -136,6 +136,8 @@ function workspaceManager(parameters) {
 			_dimWidgetO = null;
 		}
 		i = null;
+		Ti.App.tabView = _tabView;
+		Ti.App.componentPos = componentPos;
 		return _tabView;
 	};
 	
