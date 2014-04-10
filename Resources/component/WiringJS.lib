@@ -1,0 +1,123 @@
+/**
+ * Copyright (c) 2014 by Center Open Middleware. All Rights Reserved.
+ * Licensed under the terms of the Apache Public License
+ * Please see the LICENSE included with this distribution for details.
+ */
+
+(function () {
+
+    "use strict";
+
+    var id;
+    var type;
+    var prefs = JSON.parse("{}");
+    var prefsCallback = null;
+    var inputs = {};
+    var handlers = [];
+    var request = [];
+    var requestCallbacks = {};
+    var requestCallbacksKey = 0;
+
+    // Platform definition
+    Object.defineProperty(window, 'MashupPlatform', {value: {}});
+
+    // Wiring Module
+    Object.defineProperty(window.MashupPlatform, 'wiring', {value: {}});
+    Object.defineProperty(window.MashupPlatform.wiring, 'registerCallback', {
+        value: function registerCallback(key, callback) {
+            inputs[key] = callback;
+        }
+    });
+
+    Object.defineProperty(window.MashupPlatform.wiring, 'pushEvent', {
+        value: function pushEvent(key, data) {
+            Ti.App.fireEvent('WPushEvent', {
+                'id': id,
+                'name': key,
+                'dataEvent': data
+            });
+        }
+    });
+
+    Object.preventExtensions(window.MashupPlatform.wiring);
+
+    // HTTP Module
+    Object.defineProperty(window.MashupPlatform, 'http', {value: {}});
+     Object.defineProperty(window.MashupPlatform.http, 'makeRequest', {
+         value: function makeRequest(url, options) {
+            requestCallbacks[requestCallbacksKey] = {
+                succ: options.onSuccess,
+                fail: options.onFailure
+            };
+            Ti.App.fireEvent('WMakeRequest', {
+                'id': id,
+                'idRequest': requestCallbacksKey,
+                'typeView':type,
+                'url': url,
+                'options': options
+            });
+            requestCallbacksKey = requestCallbacksKey + 1;
+        }
+    });
+    Object.preventExtensions(window.MashupPlatform.http);
+
+    // Preferences Module
+    Object.defineProperty(window.MashupPlatform, 'prefs', {value: {}});
+
+    Object.defineProperty(window.MashupPlatform.prefs, 'get', {
+        value: function get(key) {
+            return prefs[key];
+        }
+    });
+
+    Object.defineProperty(window.MashupPlatform.prefs, 'registerCallback', {
+        value: function registerCallback(callback) {
+            prefsCallback = callback;
+        }
+    });
+
+    Object.preventExtensions(window.MashupPlatform.prefs);
+
+    // Titanium APP Connection Layer
+
+    var activateCallbackHandler = function activateCallbackHandler(wiring) {
+        inputs[wiring.key](wiring.data);
+        Ti.API.info('activateCallback input[key]: ' + id + '['+wiring.key+']');
+    };
+
+    var activateRequestCallbackHandler = function activateRequestCallbackHandler(wiring) {
+        if(wiring.state === 'Error'){
+            requestCallbacks[wiring.key].fail(wiring.data);
+            Ti.API.info('activateRequestCallback id[key]: ' + id + '['+wiring.key+'] andResult: failed');
+        }
+        else {
+            requestCallbacks[wiring.key].succ(wiring.data);
+            Ti.API.info('activateRequestCallback id[key]: ' + id + '['+wiring.key+'] andResult: success');
+        }
+        delete requestCallbacks[wiring.key];
+    };
+
+    var activatePreferenceCallbackHandler = function activatePreferenceCallbackHandler(wiring) {
+        if(prefsCallback !== null){
+            prefsCallback(wiring.data);
+            Ti.API.info('activatePreferenceCallback id[key]: ' + id + '['+wiring.key+']');
+        }
+    };
+
+    var wiringDestroyHandler = function wiringDestroyHandler() {
+        Ti.App.removeEventListener('WDestroy'+id, wiringDestroyHandler);
+        Ti.App.removeEventListener('WActivateCallback'+id, activateCallbackHandler);
+        Ti.App.removeEventListener('WActivateRequestCallback'+id, activateRequestCallbackHandler);
+        Ti.App.removeEventListener('WActivatePreferenceCallback'+id, activatePreferenceCallbackHandler);
+        activateCallbackHandler = null;
+        activateRequestCallbackHandler = null;
+        activatePreferenceCallbackHandler = null;
+        Ti.App.fireEvent('AppBaseDestroyCheck', {'name': 'wiring', 'id': id});
+    };
+
+    Ti.App.addEventListener('WActivateCallback'+id, activateCallbackHandler);
+    Ti.App.addEventListener('WActivateRequestCallback'+id, activateRequestCallbackHandler);
+    Ti.App.addEventListener('WActivatePreferenceCallback'+id, activatePreferenceCallbackHandler);
+    Ti.App.addEventListener('WDestroy'+id, wiringDestroyHandler);
+
+}());
