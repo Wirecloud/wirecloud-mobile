@@ -34,7 +34,7 @@ Ti.App.mergeObject = function (obj1, obj2){
     }
     return result;
 };
-Ti.App.FontAwesome = require('fonts/FontAwesome');
+Ti.App.FontAwesome = require('fonts/FontAwesome4');
 Ti.App.API = require('lib/API');
 
 // Quick Start
