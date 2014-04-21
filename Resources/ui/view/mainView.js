@@ -16,11 +16,11 @@ var mainView = function mainView(parentWindow) {
     topBar = Ti.UI.createView(theme.topBar),
     buttonLogout = Ti.UI.createLabel(Ti.App.mergeObject(theme.button, {
         left: (Ti.App.API.HW.System.isApple()) ? 14 : '8dp',
-        text: Ti.App.FontAwesome4.getCharCode('fa-sign-out')
+        text: Ti.App.FontAwesome.getCharCode('fa-sign-out')
     })),
     buttonStore = Ti.UI.createLabel(Ti.App.mergeObject(theme.button, {
         left: (Ti.App.API.HW.System.isApple()) ? 14 : '8dp',
-        text: Ti.App.FontAwesome4.getCharCode('fa-cloud')
+        text: Ti.App.FontAwesome.getCharCode('fa-cloud')
     })),
     leftView = Ti.UI.createListView(Ti.App.mergeObject(theme.leftListView, {
         templates: {
@@ -99,8 +99,8 @@ var mainView = function mainView(parentWindow) {
                         text: metadataComp.name
                     },
                     icon: {
-                        text : (metadataComp.icon === "") ? Ti.App.FontAwesome4.getCharCode('fa-columns') :
-                               Ti.App.FontAwesome4.getCharCode(metadataComp.icon)
+                        text : (metadataComp.icon === "") ? Ti.App.FontAwesome.getCharCode('fa-columns') :
+                               Ti.App.FontAwesome.getCharCode(metadataComp.icon)
                     }
                 });
                 metadataComp = null;

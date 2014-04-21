@@ -47,7 +47,7 @@ var mainViewStyle = (function() {
         top: (Ti.App.API.HW.System.isApple()) ? 7 : '4dp',
         font : {
             fontSize : (Ti.App.API.HW.System.isApple()) ? '28' : '18dp',
-            fontFamily : Ti.App.FontAwesome4.getFontFamily()
+            fontFamily : Ti.App.FontAwesome.getFontFamily()
         },
         color: (Ti.App.API.HW.System.isApple()) ? '#34AADC' : '#C1C1C1',
         shadowColor: '#aaa',
@@ -98,7 +98,7 @@ var mainViewStyle = (function() {
                     color: '#149F9D',
                     left: 10,
                     font: {
-                        fontFamily: 'FontAwesome',
+                        fontFamily: Ti.App.FontAwesome.getFontFamily(),
                         fontSize: rowFontSize
                     },
                     textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER

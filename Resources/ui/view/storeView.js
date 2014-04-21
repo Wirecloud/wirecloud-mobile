@@ -16,11 +16,11 @@ var storeView = function storeView(parentWindow) {
     topBar = Ti.UI.createView(theme.topBar),
     buttonLogout = Ti.UI.createLabel(Ti.App.mergeObject(theme.button,{
         left: (Ti.App.API.HW.System.isApple()) ? 14 : '8dp',
-        text: Ti.App.FontAwesome4.getCharCode('fa-sign-out')
+        text: Ti.App.FontAwesome.getCharCode('fa-sign-out')
     })),
     buttonManager = Ti.UI.createLabel(Ti.App.mergeObject(theme.button,{
         left: (Ti.App.API.HW.System.isApple()) ? 14 : '8dp',
-        text: Ti.App.FontAwesome4.getCharCode('fa-desktop')
+        text: Ti.App.FontAwesome.getCharCode('fa-desktop')
     })),
     centerView = Ti.UI.createView(theme.centerView),
     compositions = {},
