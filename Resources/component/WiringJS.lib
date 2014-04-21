@@ -2,6 +2,15 @@
  * Copyright (c) 2014 by Center Open Middleware. All Rights Reserved.
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
+ *
+ *
+ * Wirecloud Compatibility:
+ *   - wiring.registerCallback(key, callback)
+ *   - wiring.pushEvent(key, data)
+ *   - http.makeRequest(url, options)
+ *   - prefs.get(key)
+ *   - prefs.registerCallback(key, callback)
+ *
  */
 
 (function () {
@@ -79,7 +88,6 @@
     Object.preventExtensions(window.MashupPlatform.prefs);
 
     // Titanium APP Connection Layer
-
     var activateCallbackHandler = function activateCallbackHandler(wiring) {
         inputs[wiring.key](wiring.data);
         Ti.API.info('activateCallback input[key]: ' + id + '['+wiring.key+']');
@@ -105,19 +113,19 @@
     };
 
     var wiringDestroyHandler = function wiringDestroyHandler() {
-        Ti.App.removeEventListener('WDestroy'+id, wiringDestroyHandler);
-        Ti.App.removeEventListener('WActivateCallback'+id, activateCallbackHandler);
-        Ti.App.removeEventListener('WActivateRequestCallback'+id, activateRequestCallbackHandler);
-        Ti.App.removeEventListener('WActivatePreferenceCallback'+id, activatePreferenceCallbackHandler);
+        Ti.App.removeEventListener('WDestroy_'+id, wiringDestroyHandler);
+        Ti.App.removeEventListener('WActivateCallback_'+id, activateCallbackHandler);
+        Ti.App.removeEventListener('WActivateRequestCallback_'+id, activateRequestCallbackHandler);
+        Ti.App.removeEventListener('WActivatePreferenceCallback_'+id, activatePreferenceCallbackHandler);
         activateCallbackHandler = null;
         activateRequestCallbackHandler = null;
         activatePreferenceCallbackHandler = null;
         Ti.App.fireEvent('AppBaseDestroyCheck', {'name': 'wiring', 'id': id});
     };
 
-    Ti.App.addEventListener('WActivateCallback'+id, activateCallbackHandler);
-    Ti.App.addEventListener('WActivateRequestCallback'+id, activateRequestCallbackHandler);
-    Ti.App.addEventListener('WActivatePreferenceCallback'+id, activatePreferenceCallbackHandler);
-    Ti.App.addEventListener('WDestroy'+id, wiringDestroyHandler);
+    Ti.App.addEventListener('WActivateCallback_'+id, activateCallbackHandler);
+    Ti.App.addEventListener('WActivateRequestCallback_'+id, activateRequestCallbackHandler);
+    Ti.App.addEventListener('WActivatePreferenceCallback_'+id, activatePreferenceCallbackHandler);
+    Ti.App.addEventListener('WDestroy_'+id, wiringDestroyHandler);
 
 }());
