@@ -4,7 +4,7 @@
 
 function widgetGeneric(dim, parameters, idWidget) {
 
-	var _isApple = (Ti.Platform.osname === 'ipad');
+	var _isApple = Yaast.API.HW.System.isApple();
 	var _self;
 	if(parameters.name.indexOf("map-viewer") !== -1){
 		var _widgetMapClass = require("ui/widgets/widgetMap");

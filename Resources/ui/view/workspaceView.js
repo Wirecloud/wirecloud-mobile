@@ -2,14 +2,14 @@
 //workspaceManager ScrollView Component Constructor
 function workspaceManager(parameters) {
 
-	var _isApple = (Ti.Platform.osname == 'ipad');
+	var _isApple = Yaast.API.HW.System.isApple();
 	var _platformObject = require('ui/lib/platform')(parameters.data);
 	var _currentPage = 0;
 	var _scrollView;
 	var _downloadObject = null;
 	var _widgetsViewById = {};
 	var _operatorsViewById = {};
-	
+
 	// Visualization Self
 	var _self = Ti.UI.createView({
 		top : 0,
@@ -22,7 +22,7 @@ function workspaceManager(parameters) {
 		columnRatio: (_platformObject.preferences.columns) ? _platformObject.preferences.columns.value : 20,
 		rowRatio: (_platformObject.preferences["cell-height"]) ? _platformObject.preferences["cell-height"].value : 12
 	});
-	
+
 	// Visualization ScrollView Workspace Function
 	_self.funShowWorkspace = function funShowWorkspace(){
 		Ti.App.removeEventListener('showWorkspace', _self.funShowWorkspace);
@@ -42,13 +42,13 @@ function workspaceManager(parameters) {
 				_self.tabLabel.text = ' / ' + _self.platform.tabs[e.currentPage].name;
 				_currentPage = e.currentPage;
 			}
-		};		
+		};
 		_scrollView.addEventListener('scrollend', _self.funEndScrollView);
 		_self.add(_scrollView);
 		_scrollView.setViews(createGlobalView());
 		delete _self['funShowWorkspace'];
 	};
-	
+
 	// Check Dependencies
 	var _widgets = new Array();
 	for (var i in _self.platform.widgetsInUseById){
@@ -84,7 +84,7 @@ function workspaceManager(parameters) {
 		var _downloadObject = require('ui/lib/downloadsPlatform')(parameters.heightView, _widgetsToDownload, _operatorsToDownload, _self.platform.name);
 		_self.add(_downloadObject);
 	}
-	
+
 	/** @title: createGlobalView (Function)
 	 *  @usage: create view for ScrollableView
 	 *  @extras: performance */
@@ -104,7 +104,7 @@ function workspaceManager(parameters) {
 		i = null;
 		return _aViews;
 	};
-	
+
 	/** @title: createTabView (Function)
 	 *  @parameters: data (Tab Information (Widgets))
 	 *  @usage: create Tab
@@ -140,7 +140,7 @@ function workspaceManager(parameters) {
 		Ti.App.componentPos = componentPos;
 		return _tabView;
 	};
-	
+
 	/** @title: getDimensionWidget (Function)
 	 *  @parameters: dim (tabView size) data (JSON iWidget)
 	 *  @usage: return dimensions and position of Widget */
@@ -174,7 +174,7 @@ function workspaceManager(parameters) {
 		else{
 			_t = 30;
 		}
-		
+
 		return{
 			width: _w,
 			height: _h,
@@ -182,7 +182,7 @@ function workspaceManager(parameters) {
 			top: _t
 		};
 	};
-	
+
 	// Handler that take each event launched by any widget or operator
 	_self.funPushEvent = function funPushEvent(data){
 		var _theEntity, _target;
@@ -214,7 +214,7 @@ function workspaceManager(parameters) {
 		_eventData = null;
 	};
 	Ti.App.addEventListener('pushEvent', _self.funPushEvent);
-	
+
 	// Handler that take each make request HTTP launched by any widget or operator
 	_self.funMakeRequest = function funMakeRequest(data){
 		Ti.API.info('makeRequest from id: '+data.id+' with url: '+data.url);
@@ -245,7 +245,7 @@ function workspaceManager(parameters) {
 		_conObject = null;
 	};
 	Ti.App.addEventListener('makeRequest', _self.funMakeRequest);
-	
+
 	// Handler that take each petition of preferences value
 	_self.funGetPreferences = function funGetPreferences(data){
 		Ti.API.info('getPreferences from id: '+data.id);
@@ -266,7 +266,7 @@ function workspaceManager(parameters) {
 		_preferences = null;
 	};
 	Ti.App.addEventListener('getPrefs', _self.funGetPreferences);
-	
+
 	/** @title: showShortcutTab (Function)
 	 *  @parameters: mode (scrollable or not) and start index
 	 *  @usage: create view with buttons
@@ -294,7 +294,7 @@ function workspaceManager(parameters) {
 				_len = (_start + _len <= _self.platform.tabs.length) ? 6 : _self.platform.tabs.length - _start;
 				_optArray.push('...');
 				for(var i = _start; i < _start + _len; i++){
-					if(_self.platform.tabs[i]) _optArray.push(_self.platform.tabs[i].name); 
+					if(_self.platform.tabs[i]) _optArray.push(_self.platform.tabs[i].name);
 				}
 				if(_start + _len < _self.platform.tabs.length) _optArray.push('...');
 			}
@@ -323,7 +323,7 @@ function workspaceManager(parameters) {
 						_alertError.show();
 						_stringSearch = null;
 						_alertError = null;
-					} 
+					}
 					else _self.clearObjectTab();
 				});
 			}
@@ -350,7 +350,7 @@ function workspaceManager(parameters) {
 						}
 						break;
 					default:
-						break;			
+						break;
 				}
 			}
 			_optionDialogTab.hide();
@@ -362,7 +362,7 @@ function workspaceManager(parameters) {
 		_start = null;
 		_len = null;
 	};
-	
+
 	/** @title: clearObjectTab (Function)
 	 *  @usage: destroy all variables of Tab
 	 *  @extras: memory management (null) */
@@ -391,8 +391,8 @@ function workspaceManager(parameters) {
 			j = null;
 			_scrollView.removeView(_scrollView.views[0]);
 		}
-	};	
-		
+	};
+
 	/** @title: clearObject (Function)
 	 *  @usage: destroy all variables of WorkspaceManager
 	 *  @extras: memory management (null) */
@@ -439,9 +439,9 @@ function workspaceManager(parameters) {
 		_platformObject = null;
 		_currentPage = null;
 	};
-	
+
 	return _self;
-	
+
 }
 
 module.exports = workspaceManager;

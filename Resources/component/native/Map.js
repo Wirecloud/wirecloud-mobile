@@ -2,11 +2,11 @@
 //Widget Map Component Constructor
 
 function widgetMap(dimensions, id) {
-	
-	var _isApple = (Ti.Platform.osname == 'ipad');
+
+	var _isApple = Yaast.API.HW.System.isApple();
 	var _routeShowed = null;
 	var _annotationClicked = null;
-		
+
 	// Visualization _self
 	var _self = Ti.Map.createView({
 		height: dimensions.height,
@@ -17,7 +17,7 @@ function widgetMap(dimensions, id) {
 	// Event click on Annotation
 	// fireEvent poiOutput
 	_self.funClickMap = function funClickMap(e){
-		if(e.clicksource == 'pin' && e.clicksource != null){	
+		if(e.clicksource == 'pin' && e.clicksource != null){
 			Ti.App.fireEvent("poiOutput",JSON.stringify({
 				id: e.annotation.idPoi,
 				data: {title: e.annotation.title, subtitle: e.annotation.subtitle},
@@ -39,7 +39,7 @@ function widgetMap(dimensions, id) {
 					lat: e.annotation.latitude,
 					lng: e.annotation.longitude
 				}
-			}));	
+			}));
 		}
 		// TODO REMOVE AFTER DEMO
 		else if (e.clicksource == 'rightButton') {
@@ -47,7 +47,7 @@ function widgetMap(dimensions, id) {
         }
 	};
 	_self.addEventListener('click', _self.funClickMap);
-	
+
 	// Event change viewport of Map
 	// fireEvent boundsOutput | poiListOutput
 	/*_self.funChangeMap = function funChangeMap(e){
@@ -55,7 +55,7 @@ function widgetMap(dimensions, id) {
 			_self.selectAnnotation(_annotationClicked);
 			_annotationClicked = null;
 		}
-		
+
 		if(_isApple){
 			// SendBounds
 			var _mapRegion = _self.getRegion();
@@ -103,7 +103,7 @@ function widgetMap(dimensions, id) {
 		}
 	};
 	_self.addEventListener('regionChanged', _self.funChangeMap);*/
-		
+
 	_self.activateCallback = function activateCallback(input, data){
 		_self.inputs[input](data);
 	};
@@ -131,13 +131,13 @@ function widgetMap(dimensions, id) {
 	  * @parameters: routeString (JSON data {from: poiIdOrigin, to: poiIdDestiny})
 	  *              mode = [ walking | transit | driving ]
 	  * @usage: remove current route if exist
-	  * 		represent route between two annotations 
+	  * 		represent route between two annotations
 	  *         fireEvent routeDescriptionOutput */
 	_self.handlerInputRoute = function handlerInputRoute (routeString, mode){
 		var _pOrigin;
 		var _pDestiny;
 		if(routeString.from === "MKUSERLOCATION") _pOrigin = getUserLocation();
-		else _pOrigin = checkAnnotation(routeString.from); 
+		else _pOrigin = checkAnnotation(routeString.from);
 		if(routeString.to === "MKUSERLOCATION") _pDestiny = getUserLocation();
 		else _pDestiny = checkAnnotation(routeString.to);
 		if(_pOrigin != null && _pOrigin != null){
@@ -153,8 +153,8 @@ function widgetMap(dimensions, id) {
                 		for(var _i in _leg){
                 			var _allPoints = new Array();
  	              			for(var step = 0; step < _leg[_i].steps.length; step++){
- 	              				_allPoints.push(decodePolyline(_leg[_i].steps[step].polyline.points));	
- 	              			} 
+ 	              				_allPoints.push(decodePolyline(_leg[_i].steps[step].polyline.points));
+ 	              			}
  	              			var _pointsRoute = new Array();
  	              			for (var _j = 0; _j < _allPoints.length; _j++){
  	              				_pointsRoute = _pointsRoute.concat(_allPoints[_j]);
@@ -182,24 +182,24 @@ function widgetMap(dimensions, id) {
 		_pDestiny = null;
 		_pOrigin = null;
 	};
-	
+
 	/** @title: handlerInputRouteStep (Function)
 	  * @parameters: stepNum (number step of routeShowed)
 	  * @usage: show alert with information of route */
 	_self.handlerInputRouteStep = function handlerInputRouteStep (stepNum){
 		if(_routeShowed != null){
-			var _step = _routeShowed.legs[0].steps[stepNum];	
+			var _step = _routeShowed.legs[0].steps[stepNum];
 			_self.setLocation({latitude:_step.start_location.lat, longitude:_step.start_location.lng, animate:true,
     		 	latitudeDelta:0.001953125, longitudeDelta:0.001953125});
 		}
 	};
 
 	/** @title: handlerInputPoi (Function)
-	  * @parameters: poiString (JSON data POI) 
+	  * @parameters: poiString (JSON data POI)
 	  * @usage: add POI to Map */
 	_self.handlerInputPoi = function handlerInputPoi(poiString){
 		var _poi = createPOI(JSON.parse(poiString));
-		var _pA = checkAnnotation(_poi.id); 
+		var _pA = checkAnnotation(_poi.id);
 		if(_pA !== null) _self.removeAnnotation(_pA);
 		_pA = Ti.Map.createAnnotation({
 			title: _poi.title,
@@ -218,10 +218,10 @@ function widgetMap(dimensions, id) {
 		_pA = null;
 		_poi = null;
 	};
-	
+
 	/** @title: handlerInputPoi (Function)
-	  * @parameters: poiListString (JSON data Array POI) 
-	  * @usage: add POI List to Map 
+	  * @parameters: poiListString (JSON data Array POI)
+	  * @usage: add POI List to Map
 	  * @extras: remove All annotations */
 	_self.handlerInputListPoi = function handlerInputListPoi(poiListString){
 		_self.removeAllAnnotations();
@@ -249,12 +249,12 @@ function widgetMap(dimensions, id) {
 	  * @usage: delete POI in Map */
 	_self.handlerInputDeletePoi = function handlerInputDeletePoi(poiString){
 		var _poi = createPOI(JSON.parse(poiString));
-		var _pA = checkAnnotation(_poi.id); 
+		var _pA = checkAnnotation(_poi.id);
 		if(_pA !== null) _self.removeAnnotation(_pA);
 		_poi = null;
 		_pA = null;
 	};
-	
+
 	/** @title: handlerInputPoiCenter (Function)
 	  * @parameters: poiString (JSON data POI)
 	  * @usage: usage POI for center Map */
@@ -262,7 +262,7 @@ function widgetMap(dimensions, id) {
 		_self.handlerInputPoi(poiString);
 		_self.handlerInputSelectPoi(poiString);
 	};
-	
+
 	/** @title: handlerInputSelectPoi (Function)
 	  * @parameters: poiString (JSON data POI)
 	  * @usage: center Map with poi */
@@ -277,9 +277,9 @@ function widgetMap(dimensions, id) {
     	}
 		_pA = null;
 		_poi = null;
-		_aAnnotations = null;		
-	}; 
-	
+		_aAnnotations = null;
+	};
+
 	/** @title: handlerCleanRoute (Function)
 	  * @usage: remove Route of the Map */
 	_self.handlerCleanRoute = function handlerCleanRoute(){
@@ -288,7 +288,7 @@ function widgetMap(dimensions, id) {
 			_routeShowed = null;
 		}
 	};
-	
+
 	/** @title: handlerInputCoords (Function)
 	  * @parameters: decimalCoords ("Latitude, Longitude")
 	  * @usage: create POI from decimal coordinates */
@@ -305,7 +305,7 @@ function widgetMap(dimensions, id) {
     	}
     	else alert("Error decimal Coords");
  	};
-	
+
 	/** @title: handlerInputAddress (Function)
 	 *  @parameters: addrString ("Zip, City, Country")
 	 *  @usage: create POI from address for add to Map */
@@ -319,7 +319,7 @@ function widgetMap(dimensions, id) {
     	_self.addAnnotation(_poi);
 		});
 	};
-	
+
 	/** @title: handlerInputChangeStatus (Function)
 	 *  @parameters: list of Status
 	 *  @usage: change Annotation Image */
@@ -334,13 +334,13 @@ function widgetMap(dimensions, id) {
 					_p.setImage(_p.image.replace("open", "close"));
 				}
 			}
-		} 
+		}
 	};
-	
+
 	// Private Functions
-	
+
 	/** @title: decodePolyline (Function)
-	  * @parameters: pl (Encoded String Route) 
+	  * @parameters: pl (Encoded String Route)
 	  * @usage: return Array of Coordinates */
 	function decodePolyline(pl){
 			var encoded = pl;
@@ -369,8 +369,8 @@ function widgetMap(dimensions, id) {
         		array.push({latitude:lat * 0.00001,longitude:lng * 0.00001});
     		}
     		return array;
-		};		
-		
+		};
+
 	/** @title: getUserLocation (Function)
 	  * @usage: return Coordinates of User Location */
 	function getUserLocation(){
@@ -384,9 +384,9 @@ function widgetMap(dimensions, id) {
 		});
 		return _r;
 	};
-	
+
 	/** @title: createPOI (Function)
-	  * @parameters: dataPOI (object) 
+	  * @parameters: dataPOI (object)
 	  * @usage: return POI */
 	function createPOI(dataPOI){
 		return {
@@ -402,9 +402,9 @@ function widgetMap(dimensions, id) {
             }
        };
 	};
-	
+
 	/** @title: checkAnnotation (Function)
-	  * @parameters: id of poiToCheck (createPOI) 
+	  * @parameters: id of poiToCheck (createPOI)
 	  * @usage: return Annotation into the map or null if not exist */
 	function checkAnnotation(poiToCheckID){
 		var _aAnnotations = _self.getAnnotations();
@@ -415,7 +415,7 @@ function widgetMap(dimensions, id) {
 		_aAnnotations = null;
 		return null;
 	};
-	
+
 	_self.inputs = {
 		'changeStatus': _self.handlerInputChangeStatus,
 		'routeInput': _self.handlerInputRoute,
@@ -428,7 +428,7 @@ function widgetMap(dimensions, id) {
         'poiInputCenter': _self.handlerInputPoiCenter,
         'selectPoiInput': _self.handlerInputSelectPoi
    	};
-	
+
 	_self.clearObject = function clearObject(){
 		_self.removeEventListener('regionChanged', _self.funChangeMap);
 		_self.removeEventListener('click', _self.funClickMap);
@@ -449,11 +449,11 @@ function widgetMap(dimensions, id) {
 		delete _self['handlerInputAddress'];
 		delete _self['handlerInputChangeStatus'];
 	};
-	
+
 	// TODO REMOVE AFTER DEMO
 	_self.setLocation({latitude:'40.441287', longitude:'-3.692637', animate:true,
     		 latitudeDelta:0.001, longitudeDelta:0.001});
-    		 	
+
 	return _self;
 }
 

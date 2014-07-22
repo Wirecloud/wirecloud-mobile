@@ -2,12 +2,12 @@
 //Operator GPS Component Constructor
 
 function operatorGPS(id) {
-	
-	var _isApple = (Ti.Platform.osname == 'ipad');
+
+	var _isApple = Yaast.API.HW.System.isApple();
 	var _routeShowed = null;
 	var _annotationClicked = null;
 	var _idOperator = id;
-		
+
 	// Visualization _self
 	var _self = Ti.UI.createView({
 		height: 0,
@@ -17,14 +17,14 @@ function operatorGPS(id) {
 		backgroundColor: 'transparent'
 	});
 
-    // Geolocation Service 
+    // Geolocation Service
 	Ti.Geolocation.purpose = "Map Viewer GPS Geolocation";
 	Ti.Geolocation.accuracy = Titanium.Geolocation.ACCURACY_BEST;
     Ti.Geolocation.distanceFilter = 10;
-    
+
 	// Update Bounding Box Native GPS and push event this data
 	_self.outputBoundingGPS = function outputBoundingGPS(coordinateGPS){
-		Ti.API.info('geo bounding -> ' + coordinateGPS[0] + ' ' + coordinateGPS[1]);		
+		Ti.API.info('geo bounding -> ' + coordinateGPS[0] + ' ' + coordinateGPS[1]);
 		var bBox = {
             'lng0': coordinateGPS[0]+0.00075,
             'lng1': coordinateGPS[0]-0.00075,
@@ -32,12 +32,12 @@ function operatorGPS(id) {
             'lat1': coordinateGPS[1]+0.00075
         };
         Ti.App.fireEvent('pushEvent', {
-        	'id': _idOperator, 
-        	'name': 'outputBoundingGPS', 
+        	'id': _idOperator,
+        	'name': 'outputBoundingGPS',
         	'dataEvent': '(('+bBox.lng1+','+bBox.lat0+'),('+bBox.lng0+','+bBox.lat1+'))'
         });
 	};
-	
+
 	// Update Coordinate Native GPS and push event this data
 	_self.outputPositionGPS = function outputPositionGPS(e){
 		if(!e.success){
@@ -49,8 +49,8 @@ function operatorGPS(id) {
         Ti.API.info('geo location -> long: ' + longitude + ' lat: ' + latitude);
         _self.outputBoundingGPS([longitude, latitude]);
         Ti.App.fireEvent('pushEvent', {
-        	'id': _idOperator, 
-        	'name': 'outputPositionGPS', 
+        	'id': _idOperator,
+        	'name': 'outputPositionGPS',
         	'dataEvent': JSON.stringify({
                 "id": "locationUser",
                 "icon": "",
@@ -69,8 +69,8 @@ function operatorGPS(id) {
         });
 	};
 	Ti.Geolocation.addEventListener('location', _self.outputPositionGPS);
-		
-	// Geolocation Service 
+
+	// Geolocation Service
 	Ti.Geolocation.purpose = "GPS Geolocation Service - Wirecloud";
 	Ti.Geolocation.accuracy = Titanium.Geolocation.ACCURACY_BEST;
     Ti.Geolocation.distanceFilter = 10;
@@ -85,12 +85,12 @@ function operatorGPS(id) {
         var altitudeAccuracy = e.coords.altitudeAccuracy;
         Ti.API.info('geo - current location: ' + new Date(timestamp) + ' long ' + longitude + ' lat ' + latitude + ' accuracy ' + accuracy);
     });
-            
+
 	_self.clearObject = function clearObject(){
 		delete _self['outputCoordinateGPS'];
 		delete _self['outputBoundingGPS'];
 	};
-		
+
 	return _self;
 }
 

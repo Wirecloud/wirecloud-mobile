@@ -2,7 +2,7 @@
 
 function operatorGeneric(parameters, idOperator) {
 
-	var _isApple = (Ti.Platform.osname == 'ipad');
+	var _isApple = Yaast.API.HW.System.isApple();
 	var _self;
 	if (parameters.name.indexOf("GPS-Simulator") !== -1) {
 		var _operatorGPSClass = require("ui/widgets/operatorGPS");

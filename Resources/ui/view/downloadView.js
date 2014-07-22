@@ -2,7 +2,7 @@
 
 function downloadsPlatform(h, listWidgets, listOperators, workspaceName) {
 
-	var _isApple = (Ti.Platform.osname == 'ipad');
+	var _isApple = Yaast.API.HW.System.isApple();
 	var _self = Ti.UI.createView({
 		top : 0,
 		left : 0,
@@ -10,7 +10,7 @@ function downloadsPlatform(h, listWidgets, listOperators, workspaceName) {
 		width : Ti.Platform.displayCaps.platformWidth,
 		fontAw : require('fonts/FontAwesome')()
 	});
-	
+
 	var _widgetsToDownload = listWidgets;
 	var _operatorsToDownload = listOperators;
     var _description;
@@ -20,7 +20,7 @@ function downloadsPlatform(h, listWidgets, listOperators, workspaceName) {
     var _downWidgetsIcon;
     var _buildWidgetsIcon;
     var _footer;
-    
+
 	/** @title: createDescriptionLabel (Function)
 	 *  @param: height and text
 	 *  @usage: create Label for Description View */
@@ -128,31 +128,44 @@ function downloadsPlatform(h, listWidgets, listOperators, workspaceName) {
 		}));
 		return _view;
 	};
-	
-	/** @title: createHTMLOperators (Function)
-	 *  @parameters: list of operators and files js
-	 *  @usage: create HTML view */ 
-	function createHTMLOperators(operators){
-		for(var i in operators){
-			var _fileMashupPlatform = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'operators/' + i + '/mashupPlatform.js');
-			var _textMashupOriginal = Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory, 'ui/lib/mashupPlatform.js').read().toString();
-			_fileMashupPlatform.write(_textMashupOriginal, false);
-			_textMashupOriginal = null;
-			_fileMashupPlatform = null;
-			var _routeHTML = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'operators/' + i + '/index.html');
-			var _textHTML = '<!DOCTYPE html>\n<html>\n\t<head>\n';
-			_textHTML = _textHTML + '\t\t<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n';
-			_textHTML = _textHTML + '\t\t<script type="text/javascript" src="mashupPlatform.js"></script>\n';
-			var _files = JSON.parse(operators[i]);
-			for(var j in _files){
-				if(_files[j].indexOf('.js') != -1) _textHTML = _textHTML + '\t\t<script type="text/javascript" src="' + _files[j] + '"></script>\n';
-			};
-			_textHTML = _textHTML + '\t</head>\n\t<body>\n\t</body>\n</html>';
-			_routeHTML.write(_textHTML, false);
-			_textHTML = null;
-			_configOperator = null;
-		}
-	};
+
+    /** @title: createHTMLOperators (Function)
+     *  @parameters: list of operators and files js
+     *  @usage: create HTML view */
+    function createHTMLOperators(operators){
+        for(var i in operators){
+            var _fileMashupPlatform = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'operators/' + i + '/mashupPlatform.js');
+            var _textMashupOriginal = Ti.Filesystem.getFile(Ti.Filesystem.getResourcesDirectory(), 'lib/mashupPlatform.js').read().toString();
+            var _fileBridge = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'operators/'+i+'/APIBridge.js');
+            // TODO JS.lib o .js?    getResourcesDirectory() or .resourcesDirectory??
+            var _textBridgeOriginal = Ti.Filesystem.getFile(Ti.Filesystem.getResourcesDirectory(), 'ui/lib/APIBridgeJS.lib').read().toString();
+
+            // Set Android/iOS var in the bridge. appleOS
+            var res = _textBridgeOriginal.split("// ChangeMeYaaST!! appleOS bool");
+            _textBridgeOriginal = res[0] + "var appleOS = " + _isApple + ";" + res[1];
+            Ti.API.info("var appleOS = " + _isApple + ";");
+
+            _fileMashupPlatform.write(_textMashupOriginal, false);
+            _fileBridge.write(_textBridgeOriginal, false);
+            _textMashupOriginal = null;
+            _fileMashupPlatform = null;
+            _fileBridge = null;
+            _fileMashupPlatform = null;
+            var _routeHTML = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'operators/' + i + '/index.html');
+            var _textHTML = '<!DOCTYPE html>\n<html>\n\t<head>\n';
+            _textHTML = _textHTML + '\t\t<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n';
+            _textHTML = _textHTML + '\t\t<script type="text/javascript" src="mashupPlatform.js"></script>\n';
+            _textHTML = _textHTML + '\t\t<script type="text/javascript" src="APIBridge.js"></script>\n';
+            var _files = JSON.parse(operators[i]);
+            for(var j in _files){
+                if(_files[j].indexOf('.js') != -1) _textHTML = _textHTML + '\t\t<script type="text/javascript" src="' + _files[j] + '"></script>\n';
+            };
+            _textHTML = _textHTML + '\t</head>\n\t<body>\n\t</body>\n</html>';
+            _routeHTML.write(_textHTML, false);
+            _textHTML = null;
+            _configOperator = null;
+        }
+    };
 
 	/** @title: clearObject (Function)
 	 *  @usage: destroy all variables of downloadsPlatform
@@ -175,19 +188,19 @@ function downloadsPlatform(h, listWidgets, listOperators, workspaceName) {
 		delete _self['funShowWorkspace'];
 		delete _self['downloadHandler'];
 	};
-	
+
 	/** @title: downloadLaterHandler (Function)
 	 *  @usage: clean view and show workspace without widgets */
 	_self.downloadLaterHandler = function downloadLaterHandler(){
-		
+
 	};
-	
+
 	/** @title: funShowWorkspace (Function)
 	 *  @usage: fireEvent showWorkspace (workspaceManager.js) */
 	_self.funShowWorkspace = function funShowWorkspace(){
 		Ti.App.fireEvent('showWorkspace');
 	};
-						
+
 	/** @title: downloadHandler (Function)
 	 *  @usage: call to download dependencies and verify files */
 	_self.downloadHandler = function downloadHandler() {
@@ -216,7 +229,7 @@ function downloadsPlatform(h, listWidgets, listOperators, workspaceName) {
 		_footer = createDescriptionLabel(100, L('label_downloader_row_wait'));
 		_footer.setTop(525);
 		_self.add(_footer);
-		
+
 		// Check List Resource from Wirecloud Desktop
 		var _conObject = require('/connections/appConnection');
 		var _conA = _conObject.checkListResource(_widgetsToDownload.concat(_operatorsToDownload), function(checkResult) {
@@ -226,7 +239,7 @@ function downloadsPlatform(h, listWidgets, listOperators, workspaceName) {
 				_checkURLIcon.setColor("#610000");
 			} else {
 				_checkURLIcon.setColor("#006100");
-				_conA = _conObject.downloadListResource(_widgetsToDownload.concat(_operatorsToDownload), _widgetsToDownload.length, 
+				_conA = _conObject.downloadListResource(_widgetsToDownload.concat(_operatorsToDownload), _widgetsToDownload.length,
 				    function(downResult) {
 					if (downResult.value == true) {
 						_footer.setText(L('label_downloader_footer_error_down') + ' ' + downResult.uri);
@@ -243,20 +256,20 @@ function downloadsPlatform(h, listWidgets, listOperators, workspaceName) {
 				});
 			}
 		});
-	
+
 	};
-	
+
 	_description = createDescriptionLabel(350, L('label_downloader_desc_main_fl') + ' ' + workspaceName + L('label_downloader_desc_main_ol'));
 	_self.add(_description);
-	
+
 	_downloadIcon = createBigIcon("icon-download-alt", L('label_downloader_down'), true);
 	_downloadIcon.addEventListener('click', _self.downloadHandler);
 	_self.add(_downloadIcon);
-	
+
 	_removeIcon = createBigIcon("icon-remove", L('label_downloader_later'), false);
 	_removeIcon.addEventListener('click', _self.downloadLaterHandler);
 	_self.add(_removeIcon);
-	
+
 	return _self;
 
 }
