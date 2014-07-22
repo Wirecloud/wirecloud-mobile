@@ -21,7 +21,7 @@ var loginViewStyle = (function() {
     };
 
     _self.logo = {
-        url:Ti.Filesystem.resourcesDirectory + 'images/logo_tab.svg',
+        url: '../../images/logo_tab.svg',
         enableZoomControls : false,
         showScrollbars : false,
         touchEnabled : false

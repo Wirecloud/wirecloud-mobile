@@ -28,6 +28,11 @@ var appWindow = (function () {
      _self = {
          view: Ti.UI.createWindow(theme)
      };
+     
+     // Compatibility 3.3.0GA or above
+     _self.view.addEventListener('open', function() {
+        _self.view.activity.actionBar.hide();
+     });
 
     _self.removeCredentials = function removeCredentials() {
         Ti.App.Properties.removeProperty('cookie_csrftoken');

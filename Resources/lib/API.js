@@ -19,28 +19,27 @@ var API = (function() {
     //TODO: only for debug
     var eventcounter = {};
 
-    var self = {
-        SW : {
-            Contacts : require('lib/API.Contacts'),
-            Calendar : '',
-            FileSystem : require('lib/API.FileSystem'),
-            DataBase : '',
-            Log : '',
-            //Map : require('lib/API.Map'),
-            Notification : require('lib/API.Notification'),
-            Social : ''
-        },
-        HW : {
-            Acceloremeter : require('lib/API.Accelerometer'),
-            Battery : require('lib/API.Battery'),
-            Camera : require('lib/API.Camera'),
-            GeoLocation : '',
-            Gesture : '',
-            Media : require('lib/API.Media'),
-            Network : require('lib/API.Network'),
-            System : require('lib/API.System')
-        }
+    Yaast.API = {
+        SW: {},
+        HW: {}
     };
+    
+    Yaast.API.HW.System = require('lib/API.System');
+    Yaast.API.HW.Network = require('lib/API.Network');
+    Yaast.API.SW.FileSystem = require('lib/API.FileSystem');
+    
+    Yaast.API.SW.Contacts = require('lib/API.Contacts');
+    Yaast.API.SW.Calendar = '';
+    Yaast.API.SW.DataBase = '';
+    Yaast.API.SW.Map = require('lib/API.Map');
+    Yaast.API.SW.Notification = require('lib/API.Notification');
+    Yaast.API.SW.Social = '';
+    Yaast.API.HW.Acceloremeter = require('lib/API.Accelerometer');
+    Yaast.API.HW.Battery = require('lib/API.Battery');
+    Yaast.API.HW.Camera = require('lib/API.Camera');
+    Yaast.API.HW.GeoLocation = '';
+    Yaast.API.HW.Gesture = '';
+    Yaast.API.HW.Media = require('lib/API.Media');
 
     var events = {
         activeHandlers: {},
@@ -60,19 +59,19 @@ var API = (function() {
          * };
          */
 
-        for (key in self.SW) {
-            if (self.SW[key].events) {
-                for (eventId in self.SW[key].events) {
-                    eventData = self.SW[key].events[eventId];
+        for (key in Yaast.API.SW) {
+            if (Yaast.API.SW[key].events) {
+                for (eventId in Yaast.API.SW[key].events) {
+                    eventData = Yaast.API.SW[key].events[eventId];
                     if (typeof eventData.source === 'undefined') {
-                        Ti.API.info('[API._initEvents] Error. event source undefined. self.SW.' + key + '.events.' + eventId + ' = ' + JSON.stringify(eventData));
+                        Ti.API.info('[API._initEvents] Error. event source undefined. Yaast.API.SW.' + key + '.events.' + eventId + ' = ' + JSON.stringify(eventData));
                         continue;
                     } else {
                         if (eventData.dummy) {
                             events.availableEvents[eventId] = {
                                 keylist: eventData.keylist,
                                 event: eventData.event,
-                                listener: self.SW[key],
+                                listener: Yaast.API.SW[key],
                                 source: eventData.source,
                                 dummy: true
                             };
@@ -93,19 +92,19 @@ var API = (function() {
                 }
             }
         }
-        for (key in self.HW) {
-            if (self.HW[key].events) {
-                for (eventId in self.HW[key].events) {
-                    eventData = self.HW[key].events[eventId];
+        for (key in Yaast.API.HW) {
+            if (Yaast.API.HW[key].events) {
+                for (eventId in Yaast.API.HW[key].events) {
+                    eventData = Yaast.API.HW[key].events[eventId];
                     if (typeof eventData.source === 'undefined') {
-                        Ti.API.info('[API._initEvents] Error. event source undefined. self.HW.' + key + '.events.' + eventId + ' = ' + JSON.stringify(eventData));
+                        Ti.API.info('[API._initEvents] Error. event source undefined. Yaast.API.HW.' + key + '.events.' + eventId + ' = ' + JSON.stringify(eventData));
                         continue;
                     } else {
                         if (eventData.dummy) {
                             events.availableEvents[eventId] = {
                                 keylist: eventData.keylist,
                                 event: eventData.event,
-                                listener: self.HW[key],
+                                listener: Yaast.API.HW[key],
                                 source: eventData.source,
                                 dummy: true
                             };
@@ -331,8 +330,6 @@ var API = (function() {
     };
 
     init();
-
-	return self;
 	
 }());
 

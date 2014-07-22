@@ -42,8 +42,9 @@ var Yaast = {
         return result;
     },
     "FontAwesome" : require('fonts/FontAwesome4'),
-    "API" : require('lib/API')
+    "API" : {}
 };
+require('lib/API');
 
 (function() {
 
