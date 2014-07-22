@@ -134,11 +134,10 @@ function downloadsPlatform(h, listWidgets, listOperators, workspaceName) {
      *  @usage: create HTML view */
     function createHTMLOperators(operators){
         for(var i in operators){
-            var _fileMashupPlatform = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'operators/' + i + '/mashupPlatform.js');
-            var _textMashupOriginal = Ti.Filesystem.getFile(Ti.Filesystem.getResourcesDirectory(), 'lib/mashupPlatform.js').read().toString();
-            var _fileBridge = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'operators/'+i+'/APIBridge.js');
-            // TODO JS.lib o .js?    getResourcesDirectory() or .resourcesDirectory??
-            var _textBridgeOriginal = Ti.Filesystem.getFile(Ti.Filesystem.getResourcesDirectory(), 'ui/lib/APIBridgeJS.lib').read().toString();
+            var _fileMashupPlatform = Ti.Filesystem.getFile(Ti.Filesystem.getApplicationDataDirectory(), 'operators/' + i + '/mashupPlatform.js');
+            var _textMashupOriginal = Ti.Filesystem.getFile(Ti.Filesystem.getResourcesDirectory(), 'component/mashupPlatform.lib').read().toString();
+            var _fileBridge = Ti.Filesystem.getFile(Ti.Filesystem.getApplicationDataDirectory(), 'operators/'+i+'/APIBridge.js');
+            var _textBridgeOriginal = Ti.Filesystem.getFile(Ti.Filesystem.getResourcesDirectory(), 'component/APIBridgeJS.lib').read().toString();
 
             // Set Android/iOS var in the bridge. appleOS
             var res = _textBridgeOriginal.split("// ChangeMeYaaST!! appleOS bool");
