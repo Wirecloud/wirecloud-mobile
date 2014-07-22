@@ -8,35 +8,6 @@
 
 "use strict";
 
-// Libraries
-Ti.App.Log = function(msg, type, error, extra){
-    var _self = {
-        'name': 'AppBaseLog',
-        'message': msg
-    };
-    if(error){
-        _self.details = (extra) ? {
-            'message': error.message,
-            'info': extra
-        } : error.message;
-        _self.source = error.sourceURL;
-    }
-    Ti.API[type](_self);
-    return _self;
-};
-Ti.App.mergeObject = function (obj1, obj2){
-    var result = null, key;
-    if (obj1 !== null && obj2 !== null){
-        for (key in obj2){
-            obj1[key] = obj2[key];
-        }
-        result = obj1;
-    }
-    return result;
-};
-Ti.App.FontAwesome = require('fonts/FontAwesome4');
-Ti.App.API = require('lib/API');
-
 // Quick Start
 if(!Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory,'composition').exists()){
     Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory,'composition').createDirectory();
