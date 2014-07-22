@@ -15,11 +15,11 @@ var mainView = function mainView(parentWindow) {
     var theme = require('ui/style/mainViewStyle'),
     topBar = Ti.UI.createView(theme.topBar),
     buttonLogout = Ti.UI.createLabel(Ti.App.mergeObject(theme.button, {
-        left: (Ti.App.API.HW.System.isApple()) ? 14 : '8dp',
+        left: (Yaast.API.HW.System.isApple()) ? 14 : '8dp',
         text: Ti.App.FontAwesome.getCharCode('fa-sign-out')
     })),
     buttonStore = Ti.UI.createLabel(Ti.App.mergeObject(theme.button, {
-        left: (Ti.App.API.HW.System.isApple()) ? 14 : '8dp',
+        left: (Yaast.API.HW.System.isApple()) ? 14 : '8dp',
         text: Ti.App.FontAwesome.getCharCode('fa-cloud')
     })),
     leftView = Ti.UI.createListView(Ti.App.mergeObject(theme.leftListView, {
@@ -36,7 +36,7 @@ var mainView = function mainView(parentWindow) {
     };
 
     // Create Navigation Bar
-    if(Ti.App.API.HW.System.isApple()) {
+    if(Yaast.API.HW.System.isApple()) {
         _self.view.add(Ti.UI.createView(theme.line));
     }
     topBar.add(buttonLogout);
@@ -53,7 +53,7 @@ var mainView = function mainView(parentWindow) {
     _self.view.add(topBar);
 
     // Create Left Header ListView
-    leftView.setHeaderView(Ti.UI.createLabel(theme.leftHeaderListView));
+    //leftView.setHeaderView(Ti.UI.createLabel(theme.leftHeaderListView));
 
     // Add Views
     _self.view.add(shadowView);

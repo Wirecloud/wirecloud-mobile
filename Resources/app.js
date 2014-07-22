@@ -14,6 +14,37 @@
 
 "use strict";
 
+// Yaast Framework Init (Global Scope)
+var Yaast = {
+    "Log" : function(msg, type, error, extra){
+        var self = {
+            'name': 'W4TLog',
+            'message': msg
+        };
+        if(error){
+            self.details = (extra) ? {
+                'message': error.message,
+                'info': extra
+            } : error.message;
+            self.source = error.sourceURL;
+        }
+        Ti.API[type](self);
+        return self;
+    },
+    "MergeObject" : function (obj1, obj2){
+        var result = null, key;
+        if (obj1 !== null && obj2 !== null){
+            for (key in obj2){
+                obj1[key] = obj2[key];
+            }
+            result = obj1;
+        }
+        return result;
+    },
+    "FontAwesome" : require('fonts/FontAwesome4'),
+    "API" : require('lib/API')
+};
+
 (function() {
 
 	var osname = Ti.Platform.osname, Window,

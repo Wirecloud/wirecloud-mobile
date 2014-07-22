@@ -11,7 +11,7 @@
 var loginView = function (parentWindow) {
 
     var theme = require('ui/style/loginViewStyle'), containerForm, userTextField, passTextField,
-    activitySession, os = (Ti.App.API.HW.System.isApple()) ? "iPad" : "Android", version = "", internetLabel, internetIcon,
+    activitySession, os = (Yaast.API.HW.System.isApple()) ? "iPad" : "Android", version = "", internetLabel, internetIcon,
     _self = {
        view : Ti.UI.createView(theme.view)
     },
@@ -28,7 +28,7 @@ var loginView = function (parentWindow) {
     )));
 
     // Label OS , Version and Internet
-    if(!Ti.App.API.HW.System.isApple()){
+    if(!Yaast.API.HW.System.isApple()){
         var splited = Ti.Platform.version.split('.');
         if(splited[0] === '2'){
             if(splited[1] === '2'){
@@ -89,7 +89,7 @@ var loginView = function (parentWindow) {
     var connectionError = function connectionError(string) {
         var stringSearch;
         if (Ti.Network.online){
-            stringSearch = (Ti.App.API.HW.System.isApple()) ? "error_connection_login_ios" : "error_connection_login_android";
+            stringSearch = (Yaast.API.HW.System.isApple()) ? "error_connection_login_ios" : "error_connection_login_android";
         }
         else{
             stringSearch = "error_connection_inet";
@@ -127,7 +127,7 @@ var loginView = function (parentWindow) {
                     }
                 ));
                 _self.view.add(activitySession);
-                Ti.App.API.HW.Network.login(userTextField.value, passTextField.value, function(response){
+                Yaast.API.HW.Network.login(userTextField.value, passTextField.value, function(response){
                     if(response === 'Error Credential'){
                         connectionError('login');
                     }

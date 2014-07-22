@@ -10,18 +10,18 @@
 
 var loginViewStyle = (function() {
 
-    var _self = {}, topView = (Ti.App.API.HW.System.isApple()) ? 20 : 0;
+    var _self = {}, topView = (Yaast.API.HW.System.isApple()) ? 20 : 0;
 
     _self.view = {
         top: topView,
         left: 0,
         backgroundColor: '#FFFFFF',
-        width: Ti.App.API.HW.System.getPlatformWidth(),
-        height: Ti.App.API.HW.System.getPlatformHeight() - topView
+        width: Yaast.API.HW.System.getPlatformWidth(),
+        height: Yaast.API.HW.System.getPlatformHeight() - topView
     };
 
     _self.logo = {
-        url : Ti.Filesystem.resourcesDirectory + 'images/logo_tab.svg',
+        url:Ti.Filesystem.resourcesDirectory + 'images/logo_tab.svg',
         enableZoomControls : false,
         showScrollbars : false,
         touchEnabled : false
@@ -83,7 +83,7 @@ var loginViewStyle = (function() {
         borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
         autocapitalization: false,
         enableReturnKey: false,
-        softKeyboardOnFocus : (Ti.App.API.HW.System.isApple()) ? null : Ti.UI.Android.SOFT_KEYBOARD_SHOW_ON_FOCUS,
+        softKeyboardOnFocus : (Yaast.API.HW.System.isApple()) ? null : Ti.UI.Android.SOFT_KEYBOARD_SHOW_ON_FOCUS,
         autocorrect: false,
         font: {
             fontSize: 20,

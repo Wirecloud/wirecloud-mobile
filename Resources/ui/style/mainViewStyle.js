@@ -11,17 +11,17 @@
 var mainViewStyle = (function() {
 
     var _self = {},
-    heightView = (Ti.App.API.HW.System.isApple()) ?
-                  Ti.App.API.HW.System.getPlatformHeight() - 20 :
-                  Ti.App.API.HW.System.getPlatformHeight(),
-    rowHeight =  (Ti.App.API.HW.System.isApple()) ? 44 : '48dp',
-    rowFontSize = (Ti.App.API.HW.System.isApple()) ? '20' : '18dp';
+    heightView = (Yaast.API.HW.System.isApple()) ?
+                  Yaast.API.HW.System.getPlatformHeight() - 20 :
+                  Yaast.API.HW.System.getPlatformHeight(),
+    rowHeight =  (Yaast.API.HW.System.isApple()) ? 44 : '48dp',
+    rowFontSize = (Yaast.API.HW.System.isApple()) ? '20' : '18dp';
 
     _self.view = {
-        top: (Ti.App.API.HW.System.isApple()) ? 20 : 0,
+        top: (Yaast.API.HW.System.isApple()) ? 20 : 0,
         left: 0,
         height: heightView,
-        width: Ti.App.API.HW.System.getPlatformWidth(),
+        width: Yaast.API.HW.System.getPlatformWidth(),
         backgroundColor: '#4F6C88'
     };
 
@@ -34,7 +34,7 @@ var mainViewStyle = (function() {
     };
 
     _self.topBar = {
-        top: (Ti.App.API.HW.System.isApple()) ? 1 : 0,
+        top: (Yaast.API.HW.System.isApple()) ? 1 : 0,
         left: 0,
         height: rowHeight,
         width: _self.view.width,
@@ -42,14 +42,14 @@ var mainViewStyle = (function() {
     };
 
     _self.button = {
-        height: (Ti.App.API.HW.System.isApple()) ? 30 : '40dp',
-        width: (Ti.App.API.HW.System.isApple()) ? 30 : '40dp',
-        top: (Ti.App.API.HW.System.isApple()) ? 7 : '4dp',
+        height: (Yaast.API.HW.System.isApple()) ? 30 : '40dp',
+        width: (Yaast.API.HW.System.isApple()) ? 30 : '40dp',
+        top: (Yaast.API.HW.System.isApple()) ? 7 : '4dp',
         font : {
-            fontSize : (Ti.App.API.HW.System.isApple()) ? '28' : '18dp',
+            fontSize : (Yaast.API.HW.System.isApple()) ? '28' : '18dp',
             fontFamily : Ti.App.FontAwesome.getFontFamily()
         },
-        color: (Ti.App.API.HW.System.isApple()) ? '#34AADC' : '#C1C1C1',
+        color: (Yaast.API.HW.System.isApple()) ? '#34AADC' : '#C1C1C1',
         shadowColor: '#aaa',
         shadowOffset: {x:0, y:0},
         shadowRadius: 3,
@@ -57,13 +57,13 @@ var mainViewStyle = (function() {
     };
 
     _self.labelButton = {
-        height: (Ti.App.API.HW.System.isApple()) ? 30 : '40dp',
-        top: (Ti.App.API.HW.System.isApple()) ? 7 : '4dp',
+        height: (Yaast.API.HW.System.isApple()) ? 30 : '40dp',
+        top: (Yaast.API.HW.System.isApple()) ? 7 : '4dp',
         font : {
-            fontSize : (Ti.App.API.HW.System.isApple()) ? '20' : '18dp',
+            fontSize : (Yaast.API.HW.System.isApple()) ? '20' : '18dp',
             fontFamily : 'Default'
         },
-        color: (Ti.App.API.HW.System.isApple()) ? '#34AADC' : '#C1C1C1',
+        color: (Yaast.API.HW.System.isApple()) ? '#34AADC' : '#C1C1C1',
         shadowColor: '#aaa',
         shadowOffset: {x:0, y:0},
         shadowRadius: 3,
@@ -168,7 +168,7 @@ var mainViewStyle = (function() {
             fontSize : rowFontSize,
             fontFamily : 'Default'
         },
-        color: (Ti.App.API.HW.System.isApple()) ? '#34AADC' : '#C1C1C1',
+        color: (Yaast.API.HW.System.isApple()) ? '#34AADC' : '#C1C1C1',
         shadowColor: '#aaa',
         shadowOffset: {x:0, y:0},
         shadowRadius: 3,
@@ -176,7 +176,7 @@ var mainViewStyle = (function() {
         text: Ti.Locale.getString('LABEL_COMPOSITION')
     };
 
-    if(Ti.App.API.HW.System.isRetina()){
+    if(Yaast.API.HW.System.isRetina()){
         _self.topBar.height *= 2;
         _self.button.height *= 2;
         _self.button.width *= 2;
