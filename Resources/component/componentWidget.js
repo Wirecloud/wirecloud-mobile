@@ -12,19 +12,26 @@ function widgetGeneric(dim, parameters, idWidget) {
 		_widgetMapClass = null;
 	}
 	else{
-		var _routeHTML = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'widgets/'+parameters.uri+'/TIWebView');
+		var _routeHTML = Ti.Filesystem.getFile(Ti.Filesystem.getApplicationDataDirectory(), 'widgets/'+parameters.uri+'/TIWebView');
 		_routeHTML = _routeHTML.read().toString();
-		_routeHTML = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'widgets/'+parameters.uri+'/'+_routeHTML);
+		_routeHTML = Ti.Filesystem.getFile(Ti.Filesystem.getApplicationDataDirectory(), 'widgets/'+parameters.uri+'/'+_routeHTML);
 		var _textHTML = _routeHTML.read().toString();
 		if(_textHTML.search('mashupPlatform.js') < 0){
-			var _fileMashupPlatform = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'widgets/'+parameters.uri+'/mashupPlatform.js');
-			var _textMashupOriginal = Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory, 'ui/lib/mashupPlatform.js').read().toString();
-			_fileMashupPlatform.write(_textMashupOriginal, false);
-            var _textAPIOriginal = Ti.Filesystem.getFile(Ti.Filesystem.resourcesDirectory, 'ui/lib/APIBridge.js').read().toString();
-            _fileMashupPlatform.write(_textAPIOriginal, false);
+            var _fileBridge = Ti.Filesystem.getFile(Ti.Filesystem.getApplicationDataDirectory(), 'widgets/'+parameters.uri+'/APIBridge.js');
+			var _fileMashupPlatform = Ti.Filesystem.getFile(Ti.Filesystem.getApplicationDataDirectory(), 'widgets/'+parameters.uri+'/mashupPlatform.js');
+			var _textMashupOriginal = Ti.Filesystem.getFile(Ti.Filesystem.getResourcesDirectory(), 'component/mashupPlatform.lib').read().toString();
+            var _textBridgeOriginal = Ti.Filesystem.getFile(Ti.Filesystem.getResourcesDirectory(), 'component/APIBridgeJS.lib').read().toString();
+
+            // Set Android/iOS var in the bridge. appleOS
+            var res = _textBridgeOriginal.split("// ChangeMeYaaST!! appleOS bool");
+            _textBridgeOriginal = res[0] + "var appleOS = " + _isApple + ";" + res[1];
+
+            _fileMashupPlatform.write(_textMashupOriginal, false);
+            _fileBridge.write(_textBridgeOriginal, false);
 			_textMashupOriginal = null;
-			_textAPIOriginal = null;
+			_textBridgeOriginal = null;
 			_fileMashupPlatform = null;
+			_fileBridge = null;
 			var _routeMashup = '\t\t<script type="text/javascript" src="mashupPlatform.js"></script>';
 			var _routeAPI = '\t\t<script type="text/javascript" src="APIBridge.js"></script>';
 			_routeMashup = '<head>\n' + _routeMashup + '\n' + _routeAPI;
@@ -33,6 +40,8 @@ function widgetGeneric(dim, parameters, idWidget) {
 			_routeMashup = null;
 			_routeAPI = null;
 		}
+
+
 		_textHTML = null;
 		_self = Ti.UI.createWebView({
 			url:_routeHTML.nativePath,

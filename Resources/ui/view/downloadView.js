@@ -142,7 +142,6 @@ function downloadsPlatform(h, listWidgets, listOperators, workspaceName) {
             // Set Android/iOS var in the bridge. appleOS
             var res = _textBridgeOriginal.split("// ChangeMeYaaST!! appleOS bool");
             _textBridgeOriginal = res[0] + "var appleOS = " + _isApple + ";" + res[1];
-            Ti.API.info("var appleOS = " + _isApple + ";");
 
             _fileMashupPlatform.write(_textMashupOriginal, false);
             _fileBridge.write(_textBridgeOriginal, false);
