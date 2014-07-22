@@ -42,7 +42,7 @@ var Media = (function() {
      *  asynchronous.
      * @param {pattern} [Number[]=[100, 300, 100, 200, 100, 50]] optional vibrate pattern only available for Android.*/
     self.vibrate = function vibrate(pattern) {
-        if (Ti.App.isApple || pattern == null || !(pattern instanceof Array)) {
+        if (Yaast.API.HW.System.isApple() || pattern == null || !(pattern instanceof Array)) {
             Titanium.Media.vibrate();
         }
         // pattern only available for Android
@@ -219,7 +219,7 @@ var Media = (function() {
         if (!audioPlayerList[playerId].playing && !audioPlayerList[playerId].paused) {
             Ti.API.info('[API.Media.stopAudioPlayer] Audio player ' + playerId + '. Is stopped yet');
             /*// Only for AudioPlayer. not for Sound
-            if(Ti.App.isApple){
+            if(Yaast.API.HW.System.isApple()){
                 audioPlayerList[playerId].stop();
             }
             else {*/
@@ -231,7 +231,7 @@ var Media = (function() {
         }
         audioPlayerList[playerId].release();
         /*// Only for AudioPlayer. not for Sound
-        if (Ti.App.isApple) {
+        if (Yaast.API.HW.System.isApple()) {
             audioPlayerList[playerId].stop();
         } else {
             Ti.API.info('[API.Media.stopAudioPlayer] release() for Android ');
@@ -590,7 +590,7 @@ var Media = (function() {
             APHandlers[id][event].push(handler);
             APHandlersinfo[id][event][APHandlers[id][event].indexOf(handler)] = {'handler_aux': handler_aux};
             audioPlayerList[id].addEventListener(event, handler_aux);
-            Ti.API.info('[API.Media.addEventListener] event: ' + event + ', isApple: ' + Ti.App.isApple);
+            Ti.API.info('[API.Media.addEventListener] event: ' + event + ', isApple: ' + Yaast.API.HW.System.isApple());
             if (event == 'change') {
                 Ti.API.info('[API.Media.addEventListener] event change and complete!!');
                 APHandlers[id]['complete'].push(handler);

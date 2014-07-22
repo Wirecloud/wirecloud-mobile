@@ -10,27 +10,26 @@
 var Map = (function() {
 
     var _self = {
-        Map: require('ti.map')
-    }, mapsId = 0, mapsList = {};
+        mapList: {}
+    }, mapsId = 0,
+    mapModule = require('ti.map');
 
     _self.createMap = function createMap(options){
+        var r = mapsId;
+        _self.mapList[r] = mapModule.createView(options);
         mapsId++;
-        mapsList[mapsId] = _self.Map.createView({
-            width: options.width,
-            height: options.height
-        });
-        return mapsId;
+        return r;
     };
 
     _self.createAnnotation = function createAnnotation(mapId, options){
-        if(typeof mapsList[mapId] === 'undefined'){
+        if(typeof _self.mapList[mapId] === 'undefined'){
             //TODO: Error Unknown Map Id
             return;
         }
         //options = validateAnnotation(options);
         if(options.validate === true){
-            var anon = _self.Map.createAnnotation(options);
-            mapsList[mapId].addAnnotation(anon);
+            var anon = mapModule.createAnnotation(options);
+            _self.mapList[mapId].addAnnotation(anon);
             anon = null;
         }
         else{
@@ -39,11 +38,11 @@ var Map = (function() {
     };
 
     _self.selectAnnotation = function selectAnnotation(mapId, options){
-        if(typeof mapsList[mapId] === 'undefined'){
+        if(typeof _self.mapList[mapId] === 'undefined'){
             //TODO: Error Unknown Map Id
             return;
         }
-        var annon = mapsList[mapId].getAnnotations(), i;
+        var annon = _self.mapList[mapId].getAnnotations(), i;
         var annotation = null;
         for(i = 0; i < annon.length; i++){
             if(annon[i].id === options.id){
@@ -56,17 +55,17 @@ var Map = (function() {
             return;
         }
         else{
-            mapsList[mapId].selectAnnotation(annotation);
+            _self.mapList[mapId].selectAnnotation(annotation);
             annotation = null;
         }
     };
 
     _self.deselectAnnotation = function deselectAnnotation(mapId, options){
-        if(typeof mapsList[mapId] === 'undefined'){
+        if(typeof _self.mapList[mapId] === 'undefined'){
             //TODO: Error Unknown Map Id
             return;
         }
-        var annon = mapsList[mapId].getAnnotations(), i;
+        var annon = _self.mapList[mapId].getAnnotations(), i;
         var annotation = null;
         for(i = 0; i < annon.length; i++){
             if(annon[i].id === options.id){
@@ -79,17 +78,17 @@ var Map = (function() {
             return;
         }
         else{
-            mapsList[mapId].deselectAnnotation(annotation);
+            _self.mapList[mapId].deselectAnnotation(annotation);
             annotation = null;
         }
     };
 
     _self.removeAnnotation = function removeAnnotation(mapId, options){
-        if(typeof mapsList[mapId] === 'undefined'){
+        if(typeof _self.mapList[mapId] === 'undefined'){
             //TODO: Error Unknown Map Id
             return;
         }
-        var annon = mapsList[mapId].getAnnotations(), i;
+        var annon = _self.mapList[mapId].getAnnotations(), i;
         var annotation = null;
         for(i = 0; i < annon.length; i++){
             if(annon[i].id === options.id){
@@ -102,18 +101,18 @@ var Map = (function() {
             return;
         }
         else{
-            mapsList[mapId].removeAnnotation(annotation);
+            _self.mapList[mapId].removeAnnotation(annotation);
             annotation = null;
         }
     };
 
     _self.removeAnnotations = function removeAnnotations(mapId, options){
-        if(typeof mapsList[mapId] === 'undefined'){
+        if(typeof _self.mapList[mapId] === 'undefined'){
             //TODO: Error Unknown Map Id
             return;
         }
         var annonToRemove = [], i, j;
-        var annon = mapsList[mapId].getAnnotations();
+        var annon = _self.mapList[mapId].getAnnotations();
         while(options.annotations.length > 0){
             var annId = options.annotations.pop();
             var found = false;
@@ -128,28 +127,28 @@ var Map = (function() {
                 //TODO: Warning Unknown Annotation Id
             }
         }
-        mapsList[mapId].removeAnnotations(annonToRemove);
+        _self.mapList[mapId].removeAnnotations(annonToRemove);
         annon = null;
         annonToRemove = null;
     };
 
     _self.removeAllAnnotations = function removeAllAnnotations(mapId){
-        if(typeof mapsList[mapId] === 'undefined'){
+        if(typeof _self.mapList[mapId] === 'undefined'){
             //TODO: Error Unknown Map Id
             return;
         }
-        mapsList[mapId].removeAllAnnotations();
+        _self.mapList[mapId].removeAllAnnotations();
     };
 
     _self.createRoute = function createRoute(mapId, options){
-        if(typeof mapsList[mapId] === 'undefined'){
+        if(typeof _self.mapList[mapId] === 'undefined'){
             //TODO: Error Unknown Map Id
             return;
         }
         //options = validateRoute(options);
         if(options.validate === true){
-            var route = _self.Map.createRoute(options);
-            mapsList[mapId].addRoute(route);
+            var route = mapModule.createRoute(options);
+            _self.mapList[mapId].addRoute(route);
             route = null;
         }
         else{

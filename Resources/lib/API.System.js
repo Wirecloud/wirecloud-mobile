@@ -10,7 +10,6 @@
 var System = (function() {
 
     /** It provides several useful methods to collect information about current device.
-     * @author Carlos Blanco
      * @version 1.0.0
      * @alias API.System
      * @namespace */
@@ -20,28 +19,28 @@ var System = (function() {
      * @method
      * @return {Boolean} */
     _self.isApple = function isApple(){
-        return Ti.App.isApple;
+        return (Ti.Platform.getOsname() === 'ipad' || Ti.Platform.getOsname() === 'iphone');
     };
 
     /** Check Apple Retina Display
      * @method
      * @return {Boolean} */
     _self.isRetina = function isRetina(){
-        return Ti.App.isRetina;
+        return (Yaast.API.HW.System.isApple() && Ti.Platform.displayCaps.getDpi() === 260) ? true : false;
     };
 
     /** Get Display Platform Width
      * @method
      * @return {Number} */
     _self.getPlatformWidth = function getPlatformWidth() {
-        return Ti.App.platformWidth;
+        return Ti.Platform.displayCaps.getPlatformWidth();
     };
 
     /** Get Display Platform Height
      * @method
      * @return {Number} */
     _self.getPlatformHeight = function getPlatformHeight() {
-        return Ti.App.platformHeight;
+        return Ti.Platform.displayCaps.getPlatformHeight();
     };
 
     /** Get device platform
