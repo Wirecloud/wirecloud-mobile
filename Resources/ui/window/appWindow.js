@@ -18,6 +18,11 @@ if(!Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory,'component').ex
 
 var appWindow = (function () {
 
+    Yaast.Sandbox = {
+        'tabView': null,
+        'componentPos': null
+    };
+
     var theme = require('ui/style/appWindowStyle'),
      loginView = null, mainView = null, storeView = null,
      _self = {

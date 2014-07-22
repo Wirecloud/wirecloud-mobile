@@ -352,10 +352,10 @@ var Media = (function() {
 
         // Size
         if (typeof options.width === 'undefined' || typeof options.height === 'undefined') {
-            options.width = parseInt(Ti.App.tabView.rect.width * 0.7);
-            options.height = parseInt(Ti.App.tabView.rect.height * 0.5);
-            options.top = parseInt((Ti.App.tabView.rect.height * 0.5) / 2);
-            options.left = parseInt((Ti.App.tabView.rect.width * 0.3) / 2);
+            options.width = parseInt(Yaast.Sandbox.tabView.rect.width * 0.7);
+            options.height = parseInt(Yaast.Sandbox.tabView.rect.height * 0.5);
+            options.top = parseInt((Yaast.Sandbox.tabView.rect.height * 0.5) / 2);
+            options.left = parseInt((Yaast.Sandbox.tabView.rect.width * 0.3) / 2);
         } else {
             // Position
             if (typeof options.top !== 'undefined' || typeof options.bottom !== 'undefined') {
@@ -393,7 +393,7 @@ var Media = (function() {
             scalingMode : Titanium.Media.VIDEO_SCALING_ASPECT_FIT
         });
 
-        Ti.App.tabView.add(tiVideoPlayer);
+        Yaast.Sandbox.tabView.add(tiVideoPlayer);
         videoPlayerList[videoPlayerId] = tiVideoPlayer;
         return videoPlayerId;
     };
@@ -428,8 +428,8 @@ var Media = (function() {
             return false;
         }
         if (typeof options.width === 'undefined' || typeof options.height === 'undefined') {
-            options.width = parseInt(Ti.App.tabView.rect.width * 0.7);
-            options.height = parseInt(Ti.App.tabView.rect.height * 0.5);
+            options.width = parseInt(Yaast.Sandbox.tabView.rect.width * 0.7);
+            options.height = parseInt(Yaast.Sandbox.tabView.rect.height * 0.5);
             options.top = 'undefined';
             options.left = 'undefined';
         } else {
@@ -546,7 +546,7 @@ var Media = (function() {
 
         videoPlayerList[playerId].hide();
         videoPlayerList[playerId].release();
-        Ti.App.tabView.remove(videoPlayerList[playerId]);
+        Yaast.Sandbox.tabView.remove(videoPlayerList[playerId]);
         videoPlayerList[playerId] = null;
         Ti.API.info('[API.Media.destroyVideoPlayer] playerId: ' + playerId);
         return true;

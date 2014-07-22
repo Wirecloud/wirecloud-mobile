@@ -49,9 +49,9 @@ var loginViewStyle = (function() {
         textAlign : Ti.UI.TEXT_ALIGNMENT_RIGHT,
         font : {
             fontSize : 25,
-            fontFamily : Ti.App.FontAwesome.getFontFamily()
+            fontFamily : Yaast.FontAwesome.getFontFamily()
         },
-        text : Ti.App.FontAwesome.getCharCode('fa-signal')
+        text : Yaast.FontAwesome.getCharCode('fa-signal')
     };
 
     _self.activityLabel = {

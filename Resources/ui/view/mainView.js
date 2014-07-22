@@ -14,15 +14,15 @@ var mainView = function mainView(parentWindow) {
     // Create References
     var theme = require('ui/style/mainViewStyle'),
     topBar = Ti.UI.createView(theme.topBar),
-    buttonLogout = Ti.UI.createLabel(Ti.App.mergeObject(theme.button, {
+    buttonLogout = Ti.UI.createLabel(Yaast.MergeObject(theme.button, {
         left: (Yaast.API.HW.System.isApple()) ? 14 : '8dp',
-        text: Ti.App.FontAwesome.getCharCode('fa-sign-out')
+        text: Yaast.FontAwesome.getCharCode('fa-sign-out')
     })),
-    buttonStore = Ti.UI.createLabel(Ti.App.mergeObject(theme.button, {
+    buttonStore = Ti.UI.createLabel(Yaast.MergeObject(theme.button, {
         left: (Yaast.API.HW.System.isApple()) ? 14 : '8dp',
-        text: Ti.App.FontAwesome.getCharCode('fa-cloud')
+        text: Yaast.FontAwesome.getCharCode('fa-cloud')
     })),
-    leftView = Ti.UI.createListView(Ti.App.mergeObject(theme.leftListView, {
+    leftView = Ti.UI.createListView(Yaast.MergeObject(theme.leftListView, {
         templates: {
             'template': theme.leftListViewTemplate
         },
@@ -42,11 +42,11 @@ var mainView = function mainView(parentWindow) {
     topBar.add(buttonLogout);
     buttonStore.setLeft(topBar.getWidth() - (buttonStore.getLeft() + buttonStore.getWidth() + 50));
     topBar.add(buttonStore);
-    topBar.add(Ti.UI.createLabel(Ti.App.mergeObject(theme.labelButton, {
+    topBar.add(Ti.UI.createLabel(Yaast.MergeObject(theme.labelButton, {
         left: buttonLogout.getLeft() + buttonLogout.getWidth(),
         text: ' ' + Ti.Locale.getString("BUTTON_LOGOUT")
     })));
-    topBar.add(Ti.UI.createLabel(Ti.App.mergeObject(theme.labelButton, {
+    topBar.add(Ti.UI.createLabel(Yaast.MergeObject(theme.labelButton, {
         left: buttonStore.getLeft() + buttonStore.getWidth(),
         text: ' ' + Ti.Locale.getString("BUTTON_STORE")
     })));
@@ -99,8 +99,8 @@ var mainView = function mainView(parentWindow) {
                         text: metadataComp.name
                     },
                     icon: {
-                        text : (metadataComp.icon === "") ? Ti.App.FontAwesome.getCharCode('fa-columns') :
-                               Ti.App.FontAwesome.getCharCode(metadataComp.icon)
+                        text : (metadataComp.icon === "") ? Yaast.FontAwesome.getCharCode('fa-columns') :
+                               Yaast.FontAwesome.getCharCode(metadataComp.icon)
                     }
                 });
                 metadataComp = null;

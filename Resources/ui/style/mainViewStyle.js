@@ -47,7 +47,7 @@ var mainViewStyle = (function() {
         top: (Yaast.API.HW.System.isApple()) ? 7 : '4dp',
         font : {
             fontSize : (Yaast.API.HW.System.isApple()) ? '28' : '18dp',
-            fontFamily : Ti.App.FontAwesome.getFontFamily()
+            fontFamily : Yaast.FontAwesome.getFontFamily()
         },
         color: (Yaast.API.HW.System.isApple()) ? '#34AADC' : '#C1C1C1',
         shadowColor: '#aaa',
@@ -98,7 +98,7 @@ var mainViewStyle = (function() {
                     color: '#149F9D',
                     left: 10,
                     font: {
-                        fontFamily: Ti.App.FontAwesome.getFontFamily(),
+                        fontFamily: Yaast.FontAwesome.getFontFamily(),
                         fontSize: rowFontSize
                     },
                     textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER

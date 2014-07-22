@@ -18,7 +18,7 @@ var loginView = function (parentWindow) {
     heightLogo = (_self.view.getWidth()/2 !== 800) ? parseInt((500 * ((_self.view.getWidth()/2)/800)), 10) : 500;
 
     // Enterprise Logo
-    _self.view.add(Ti.UI.createWebView(Ti.App.mergeObject(
+    _self.view.add(Ti.UI.createWebView(Yaast.MergeObject(
         theme.logo, {
             height: heightLogo,
             width: _self.view.getWidth() / 2,
@@ -51,7 +51,7 @@ var loginView = function (parentWindow) {
         }
         splited = null;
     }
-    _self.view.add(Ti.UI.createLabel(Ti.App.mergeObject(
+    _self.view.add(Ti.UI.createLabel(Yaast.MergeObject(
         theme.systemLabel, {
             text: Ti.Locale.getString('label_system') + ': ' + os + ' ' + Ti.Platform.version + version,
             top: parseInt(_self.view.getHeight() * 0.075, 10),
@@ -60,7 +60,7 @@ var loginView = function (parentWindow) {
     )));
     os = null;
     version = null;
-    internetLabel = Ti.UI.createLabel(Ti.App.mergeObject(
+    internetLabel = Ti.UI.createLabel(Yaast.MergeObject(
         theme.internetLabel, {
             text: (Ti.Network.online) ? Ti.Locale.getString('label_inet_connected') :
                                          Ti.Locale.getString('label_inet_noconnected'),
@@ -69,7 +69,7 @@ var loginView = function (parentWindow) {
         }
     ));
     _self.view.add(internetLabel);
-    internetIcon = Ti.UI.createLabel(Ti.App.mergeObject(
+    internetIcon = Ti.UI.createLabel(Yaast.MergeObject(
         theme.internetIcon, {
             color: (Ti.Network.online) ? "#00FF00" : "#FF0000",
             top: parseInt(_self.view.getHeight() * 0.175, 10),
@@ -118,7 +118,7 @@ var loginView = function (parentWindow) {
         else{
             containerForm.borderWidth = 0;
             containerForm.animate({duration : 1000, delay : 0, opacity : 0},function(){
-                activitySession = Ti.UI.createLabel(Ti.App.mergeObject(
+                activitySession = Ti.UI.createLabel(Yaast.MergeObject(
                     theme.activityLabel, {
                         text: Ti.Locale.getString("label_login_wait"),
                         left: parseInt(_self.view.getWidth()/2+(_self.view.getWidth()/2 * 0.15), 10),
@@ -144,7 +144,7 @@ var loginView = function (parentWindow) {
 
     /** Private Function to create Form Login */
     var createForm = function createForm() {
-        containerForm = Ti.UI.createView(Ti.App.mergeObject(
+        containerForm = Ti.UI.createView(Yaast.MergeObject(
             theme.containerView, {
                 height : heightLogo / 2,
                 width : parseInt(_self.view.getWidth()/2 * 0.7,10),
@@ -153,7 +153,7 @@ var loginView = function (parentWindow) {
             }
         ));
 
-        userTextField = Ti.UI.createTextField(Ti.App.mergeObject(
+        userTextField = Ti.UI.createTextField(Yaast.MergeObject(
             theme.inputTextField, {
                 top: '15%',
                 clearOnEdit: false,
@@ -168,7 +168,7 @@ var loginView = function (parentWindow) {
         userTextField.addEventListener('return', userTextField.returnUserTField);
         containerForm.add(userTextField);
 
-        passTextField = Ti.UI.createTextField(Ti.App.mergeObject(
+        passTextField = Ti.UI.createTextField(Yaast.MergeObject(
             theme.inputTextField, {
                 top: '60%',
                 passwordMask: true,
