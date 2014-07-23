@@ -9,68 +9,110 @@
 "use strict";
 
 // Quick Start
-if(!Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory,'composition').exists()){
-    Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory,'composition').createDirectory();
+if (!Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'composition').exists()) {
+    Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'composition').createDirectory();
 }
-if(!Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory,'component').exists()){
-    Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory,'component').createDirectory();
+if (!Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'component').exists()) {
+    Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'component').createDirectory();
 }
 
-var appWindow = (function () {
+var appWindow = ( function() {
 
-    Yaast.Sandbox = {
-        'tabView': null,
-        'componentPos': null
-    };
+        Yaast.Sandbox = {
+            'activeView' : null,
+            'tabView' : null,
+            'componentPos' : null
+        };
 
-    var theme = require('ui/style/appWindowStyle'),
-     loginView = null, mainView = null, storeView = null,
-     _self = {
-         view: Ti.UI.createWindow(theme)
-     };
-     
-     // Compatibility 3.3.0GA or above
-     _self.view.addEventListener('open', function() {
-        _self.view.activity.actionBar.hide();
-     });
+        var theme = require('ui/style/appWindowStyle'), loginView = null, mainView = null, storeView = null, 
+        self = {
+            window : Ti.UI.createWindow(theme)
+        };
 
-    _self.removeCredentials = function removeCredentials() {
-        Ti.App.Properties.removeProperty('cookie_csrftoken');
-        Ti.App.Properties.removeProperty('cookie_sessionid');
-        Ti.App.Properties.removeProperty('cookie_oilsid');
-    };
+        // Compatibility 3.3.0GA or above
+        self.window.addEventListener('open', function() {
+            self.window.activity.actionBar.hide();
+        });
 
-	_self.showMainView = function showMainView() {
-	    if(loginView !== null){
-	        _self.view.remove(loginView.view);
-            loginView.destroy();
-            loginView = null;
-	    }
-		if(storeView !== null){
-		    _self.view.remove(storeView.view);
-            storeView.destroy();
-            storeView = null;
-		}
-		mainView = require('ui/view/mainView')(_self);
-		_self.view.add(mainView.view);
-	};
-
-    _self.showLoginView = function showLoginView(){
-        if(mainView !== null){
-            _self.removeCredentials();
-            _self.view.remove(mainView.view);
-            mainView.destroy();
-            mainView = null;
+        // Quit Function
+        var quitFunction = function quitFunction() {
+            var dialog = Ti.UI.createAlertDialog({
+                cancel : 1,
+                buttonNames : ['Aceptar', 'Cancelar'],
+                message : '¿Quieres salir de la App?',
+                title : 'Aviso'
+            });
+            dialog.addEventListener('click', function(e) {
+                if (e.index === 0) {
+                    Ti.Android.currentActivity.finish();
+                }
+                dialog.hide();
+                dialog = null;
+            });
+            dialog.show();
+        };
+        if(!Yaast.API.HW.System.isApple()){
+            self.window.addEventListener('android:back', quitFunction);
         }
-        loginView = require('ui/view/loginView')(_self);
-        _self.view.add(loginView.view);
-    };
 
-    _self.removeCredentials();
-    _self.showLoginView();
+        // Logout Function
+        var logoutFunction = function logoutFunction() {
+            var dialog = Ti.UI.createAlertDialog({
+                cancel : 1,
+                buttonNames : ['Logout', 'Cancelar'],
+                message : '¿Quieres desloguearte?',
+                title : 'Aviso'
+            });
+            dialog.addEventListener('click', function(e) {
+                if (e.index === 0) {                    
+                    closeCurrentView();
+                    self.window.removeEventListener('android:back', logoutFunction);
+                    self.window.addEventListener('android:back', quitFunction);
+                    showLoginView();
+                }
+                dialog.hide();
+                dialog = null;
+            });
+            dialog.show();
+        };
 
-	return _self;
+        // Remove Credentials of Login
+        var removeCredentials = function removeCredentials() {
+            Ti.App.Properties.removeProperty('cookie_csrftoken');
+            Ti.App.Properties.removeProperty('cookie_sessionid');
+            Ti.App.Properties.removeProperty('cookie_oilsid');
+        };
 
-}());
+        // Show Main View
+        var showMainView = function showMainView() {
+            if (loginView !== null) {
+                self.window.remove(loginView.view);
+                loginView.destroy();
+                loginView = null;
+            }
+            self.window.removeEventListener('android:back', quitFunction);
+            self.window.addEventListener('android:back', logoutFunction);
+            mainView = require('ui/view/mainView')(self);
+            self.window.add(mainView.view);
+        };
+
+        // Show Login View
+        var showLoginView = function showLoginView() {
+            if (mainView !== null) {
+                removeCredentials();
+                self.window.remove(mainView.view);
+                mainView.destroy();
+                mainView = null;
+            }
+            loginView = require('ui/view/loginView')(self);
+            self.window.add(loginView.view);
+        };
+
+        removeCredentials();
+        showLoginView();
+
+        return self;
+
+    }());
 
 module.exports = appWindow;

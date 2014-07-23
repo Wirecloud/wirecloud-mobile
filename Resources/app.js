@@ -60,11 +60,10 @@ require('lib/API');
 
     if (isTablet) {
         Window = require('ui/window/appWindow');
-        Window.view.open();
+        Window.window.open();
     }
     else {
-        Window = require('ui/window/appSmartPhone');
-        Window.view.open();
+        alert("Wirecloud4Tablet has not compatibility with Smartphone's'");
     }
 
 }());
