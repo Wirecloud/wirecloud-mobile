@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2014 by Center Open Middleware. All Rights Reserved.
- * Titanium Appcelerator 3.2.2GA
+ * Titanium Appcelerator 3.3.0GA
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  *
@@ -128,15 +128,9 @@ var loginView = function (parentWindow) {
                 ));
                 _self.view.add(activitySession);
                 Yaast.API.HW.Network.login(userTextField.value, passTextField.value, function(response){
-                    if(response === 'Error Credential'){
-                        connectionError('login');
-                    }
-                    else if(response === 'Error Server'){
-                        connectionError('server');
-                    }
-                    else if(response === 'Success Credential'){
-                        parentWindow.showMainView();
-                    }
+                    if(response === 'Error Credential') connectionError('login');
+                    else if(response === 'Error Server') connectionError('server');
+                    else parentWindow.showMainView();
                 });
             });
 		}

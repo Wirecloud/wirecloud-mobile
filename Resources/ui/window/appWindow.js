@@ -1,6 +1,6 @@
 /**
  * Copyright (c) 2014 by Center Open Middleware. All Rights Reserved.
- * Titanium Appcelerator 3.2.2GA
+ * Titanium Appcelerator 3.3.0GA
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  *
@@ -64,16 +64,6 @@ var appWindow = (function () {
         }
         loginView = require('ui/view/loginView')(_self);
         _self.view.add(loginView.view);
-    };
-
-    _self.showStoreView = function showStoreView(){
-        if(mainView !== null){
-            _self.view.remove(mainView.view);
-            mainView.destroy();
-            mainView = null;
-        }
-        storeView = require('ui/view/storeView')(_self);
-        _self.view.add(storeView.view);
     };
 
     _self.removeCredentials();
