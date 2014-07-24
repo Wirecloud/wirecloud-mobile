@@ -48,22 +48,10 @@ require('lib/API');
 
 (function() {
 
-	var osname = Ti.Platform.osname, Window,
-        version = Ti.Platform.version,
-        height = Ti.Platform.displayCaps.platformHeight,
-        width = Ti.Platform.displayCaps.platformWidth,
-        isTablet = (osname === 'ipad') || (osname === 'android' && (
-                (Ti.Platform.Android.getPhysicalSizeCategory() === Ti.Platform.Android.PHYSICAL_SIZE_CATEGORY_LARGE) ||
-                (Ti.Platform.Android.getPhysicalSizeCategory() === Ti.Platform.Android.PHYSICAL_SIZE_CATEGORY_XLARGE)
-            )) || Math.min(Ti.Platform.displayCaps.getPlatformHeight(), Ti.Platform.displayCaps.getPlatformWidth()) >= 400;
-
-
-    if (isTablet) {
-        Window = require('ui/window/appWindow');
+    if (Yaast.API.HW.isTablet()) {
+        var Window = require('ui/window/appWindow');
         Window.window.open();
     }
-    else {
-        alert("Wirecloud4Tablet has not compatibility with Smartphone's'");
-    }
-
+    else  alert("Wirecloud4Tablet has not compatibility with Smartphone's'");
+    
 }());

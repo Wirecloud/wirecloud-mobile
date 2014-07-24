@@ -40,6 +40,16 @@ var System = (function() {
         return (Yaast.API.HW.System.isApple() && Ti.Platform.displayCaps.getDpi() === 260) ? true : false;
     };
 
+    /** Check Tablet Display
+     * @method
+     * @return {Boolean} */
+    _self.isTablet = function isTablet() {
+        return (Ti.Platform.getOsname() === 'ipad') || (Ti.Platform.getOsname() === 'android' && (
+           (Ti.Platform.Android.getPhysicalSizeCategory() === Ti.Platform.Android.PHYSICAL_SIZE_CATEGORY_LARGE) ||
+           (Ti.Platform.Android.getPhysicalSizeCategory() === Ti.Platform.Android.PHYSICAL_SIZE_CATEGORY_XLARGE))
+        ) || Math.min(_self.getPlatformHeight(), _self.getPlatformWidth()) >= 400;
+    };
+
     /** Get Display Platform Width.
      * @method
      * @return {Number} */
