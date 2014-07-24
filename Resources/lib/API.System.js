@@ -15,35 +15,46 @@ var System = (function() {
      * @namespace */
     var _self = {};
 
-    /** Check Apple platform
+    /** Check Apple platform.
      * @method
      * @return {Boolean} */
     _self.isApple = function isApple(){
         return (Ti.Platform.getOsname() === 'ipad' || Ti.Platform.getOsname() === 'iphone');
     };
+    
+    /** Get Padding Top of Platform.
+     * @method
+     * @return {Number} */
+    _self.getTopGlobalWindow = function getTopGlobalWindow() {
+         var vers = parseFloat(_self.getVersion(), 10);
+         var appleBool = _self.isApple();
+         if(appleBool && vers < 7.0) return 0;
+         else if(appleBool && vers >= 7.0) return 20;
+         else return 12;
+    };
 
-    /** Check Apple Retina Display
+    /** Check Apple Retina Display.
      * @method
      * @return {Boolean} */
     _self.isRetina = function isRetina(){
         return (Yaast.API.HW.System.isApple() && Ti.Platform.displayCaps.getDpi() === 260) ? true : false;
     };
 
-    /** Get Display Platform Width
+    /** Get Display Platform Width.
      * @method
      * @return {Number} */
     _self.getPlatformWidth = function getPlatformWidth() {
         return Ti.Platform.displayCaps.getPlatformWidth();
     };
 
-    /** Get Display Platform Height
+    /** Get Display Platform Height.
      * @method
      * @return {Number} */
     _self.getPlatformHeight = function getPlatformHeight() {
         return Ti.Platform.displayCaps.getPlatformHeight();
     };
 
-    /** Get device platform
+    /** Get device platform.
      * @method
      * @return {String} It should return 'ios' or 'android' */
     _self.getDeviceOs = function getDeviceOs() {
@@ -59,6 +70,19 @@ var System = (function() {
      * @return {String} */
     _self.getVersion = function getVersion() {
         return Ti.Platform.getVersion();
+    };
+
+    /** Get System's OS version String.
+     * @method
+     * @return {String} Android => Version Name. iOS = Version Number */
+    _self.getVersionString = function getVersionString() {
+        var splited = _self.getVersion().split('.');
+        if(splited[0] === '2' && splited[1] === '2') return "Froyo";
+        else if(splited[0] === '2' && splited[1] !== '2') return "Gingerbread";
+        else if(splited[0] === '3') return "Honeycomb";
+        else if(splited[0] === '4' && splited[1] === '0') return "Ice Cream Sandwich";
+        else if(splited[0] === '4' && splited[1] !== '0') return "Jelly Bean";
+        else return splited[0]+"."+splited[1];
     };
 
     /** Get device's Model.
