@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2014 by Center Open Middleware. All Rights Reserved.
- * Titanium Appcelerator 3.2.1GA
+ * Titanium Appcelerator 3.3.0GA
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
@@ -10,7 +10,6 @@
 var System = (function() {
 
     /** It provides several useful methods to collect information about current device.
-     * @version 1.0.0
      * @alias API.System
      * @namespace */
     var _self = {};
@@ -37,7 +36,11 @@ var System = (function() {
      * @method
      * @return {Boolean} */
     _self.isRetina = function isRetina(){
-        return (Yaast.API.HW.System.isApple() && Ti.Platform.displayCaps.getDpi() === 260) ? true : false;
+        if(_self.isApple()){
+            if(_self.isTablet()) return Ti.Platform.displayCaps.getDpi() === 260;
+            else return Ti.Platform.displayCaps.getDpi() === 320;
+        }
+        else return false;
     };
 
     /** Check Tablet Display
@@ -114,7 +117,7 @@ var System = (function() {
      * @return {Number} an integer (Bytes) */
     _self.getAvailableMemory = function getAvailableMemory() {
         var mem = Ti.Platform.getAvailableMemory();
-        if (_self.isApple) {
+        if (_self.isApple()) {
             mem = mem * 1024; // Megabytes to bytes
         }
         return mem;
@@ -150,7 +153,7 @@ var System = (function() {
 
     /** Get system's default language.
      * @method
-     * @return {String} ISO639-1 + - + ISO3166-1Alpha2 */
+     * @return {String} ISO639-1 or ISO3166-1Alpha2 */
     _self.getLocale = function getLocale() {
         return Ti.Platform.getLocale();
     };
