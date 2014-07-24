@@ -20,20 +20,6 @@ var System = (function() {
     _self.isApple = function isApple(){
         return (Ti.Platform.getOsname() === 'ipad' || Ti.Platform.getOsname() === 'iphone');
     };
-    
-    /** Get Padding Top of Platform.
-     * @method
-     * @return {Number} */
-    _self.getTopGlobalWindow = function getTopGlobalWindow() {
-         var vers = parseFloat(_self.getVersion(), 10);
-         var appleBool = _self.isApple();
-         if(appleBool && vers < 7.0) return 0;
-         if(appleBool && vers >= 7.0) {
-             if(_self.isRetina()) return 40;
-             else return 20;
-         }
-         else return 12;
-    };
 
     /** Check Apple Retina Display.
      * @method
@@ -53,21 +39,7 @@ var System = (function() {
         return (Ti.Platform.getOsname() === 'ipad') || (Ti.Platform.getOsname() === 'android' && (
            (Ti.Platform.Android.getPhysicalSizeCategory() === Ti.Platform.Android.PHYSICAL_SIZE_CATEGORY_LARGE) ||
            (Ti.Platform.Android.getPhysicalSizeCategory() === Ti.Platform.Android.PHYSICAL_SIZE_CATEGORY_XLARGE))
-        ) || Math.min(_self.getPlatformHeight(), _self.getPlatformWidth()) >= 400;
-    };
-
-    /** Get Display Platform Width.
-     * @method
-     * @return {Number} */
-    _self.getPlatformWidth = function getPlatformWidth() {
-        return Ti.Platform.displayCaps.getPlatformWidth();
-    };
-
-    /** Get Display Platform Height.
-     * @method
-     * @return {Number} */
-    _self.getPlatformHeight = function getPlatformHeight() {
-        return Ti.Platform.displayCaps.getPlatformHeight();
+        ) || Math.min(Ti.Platform.displayCaps.getPlatformHeight(), Ti.Platform.displayCaps.getPlatformWidth()) >= 400;
     };
 
     /** Get device platform.

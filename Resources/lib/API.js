@@ -19,6 +19,10 @@ var API = (function() {
     //TODO: only for debug
     var eventcounter = {};
 
+    /** YaaST API.
+     * @version 1.0.0
+     * @alias API
+     * @namespace */
     Yaast.API = {
         SW: {},
         HW: {}
@@ -40,6 +44,7 @@ var API = (function() {
     Yaast.API.HW.GeoLocation = '';
     Yaast.API.HW.Gesture = '';
     Yaast.API.HW.Media = require('lib/API.Media');
+    Yaast.API.HW.UI = require('lib/API.UI');
 
     var events = {
         activeHandlers: {},
