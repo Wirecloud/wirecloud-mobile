@@ -28,7 +28,10 @@ var System = (function() {
          var vers = parseFloat(_self.getVersion(), 10);
          var appleBool = _self.isApple();
          if(appleBool && vers < 7.0) return 0;
-         else if(appleBool && vers >= 7.0) return 20;
+         if(appleBool && vers >= 7.0) {
+             if(_self.isRetina()) return 40;
+             else return 20;
+         }
          else return 12;
     };
 
