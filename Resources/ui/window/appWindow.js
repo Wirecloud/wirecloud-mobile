@@ -84,7 +84,7 @@ var appWindow = ( function() {
         };
 
         // Show Main View
-        var showMainView = function showMainView() {
+        self.showMainView = function showMainView() {
             if (loginView !== null) {
                 self.window.remove(loginView.view);
                 loginView.destroy();
@@ -97,7 +97,7 @@ var appWindow = ( function() {
         };
 
         // Show Login View
-        var showLoginView = function showLoginView() {
+        self.showLoginView = function showLoginView() {
             if (mainView !== null) {
                 removeCredentials();
                 self.window.remove(mainView.view);
@@ -109,7 +109,7 @@ var appWindow = ( function() {
         };
 
         removeCredentials();
-        showLoginView();
+        self.showLoginView();
 
         return self;
 
