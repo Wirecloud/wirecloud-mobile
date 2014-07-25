@@ -15,8 +15,10 @@
     // Dont remove the next line.
     // ChangeMeYaaST!! appleOS bool
 
-    // TODO auto. 58 is the id for media audio/video Player in wirecloud
-    var id = 58;
+    // ChangeMeYaaST!! MagicID
+    var id;
+    // ChangeMeYaaST!! MagicID
+
     var prefs = null;
     var inputs = {};
     var callCounter = 0;
