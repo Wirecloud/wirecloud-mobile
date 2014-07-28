@@ -16,8 +16,9 @@
 (function () {
 
     "use strict";
-
+    // ChangeMeYaaST!! MagicID
     var id;
+    // ChangeMeYaaST!! MagicID
     var type;
     var prefs = JSON.parse("{}");
     var prefsCallback = null;
