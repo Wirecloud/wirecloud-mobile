@@ -22,10 +22,12 @@ var UI = (function() {
       else if(Yaast.API.HW.System.isApple()) return 44;
       else {
           var density = _self.getDensityScreen();
-          if(density === 'ldpi') return 33;
-          else if(density === 'mdpi') return 44;
-          else if(density === 'hdpi') return 66;
-          else return 88;
+          if(density === 'low') return 33;
+          else if(density === 'medium') return 44;
+          else if(density === 'high') return 72;
+          else if(density === 'xhigh') return 96;
+          else if(density === 'xxhigh') return 144;
+          else if(density === 'xxxhigh') return 192;
       }
     };
 
