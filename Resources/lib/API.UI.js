@@ -16,11 +16,24 @@ var UI = (function() {
 
     /** Get constant Row Height on Android or iOS Table.
      * @method
-     * @return {String} */
+     * @return {Number} */
     _self.getDefaultRowHeight = function getDefaultRowHeight() {
-      if(Yaast.API.HW.System.isRetina()) return '88px';
-      else if(Yaast.API.HW.System.isApple()) return '44px';
-      else return '48dp';
+      if(Yaast.API.HW.System.isRetina()) return 88;
+      else if(Yaast.API.HW.System.isApple()) return 44;
+      else {
+          var density = _self.getDensityScreen();
+          if(density === 'ldpi') return 33;
+          else if(density === 'mdpi') return 44;
+          else if(density === 'hdpi') return 66;
+          else return 88;
+      }
+    };
+
+    /** Get Screen Type of Android Device
+     * @method
+     * @return {String} */
+    _self.getDensityScreen = function getDensityScreen() {
+        return Ti.Platform.displayCaps.getDensity();
     };
 
     /** Get Padding Top of Application Window.

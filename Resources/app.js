@@ -48,7 +48,7 @@ require('lib/API');
 
 (function() {
 
-    if (Yaast.API.HW.isTablet()) {
+    if (Yaast.API.HW.System.isTablet()) {
         var Window = require('ui/window/appWindow');
         Window.window.open();
     }
