@@ -14,8 +14,8 @@ var appWindowStyle = (function() {
         exitOnClose: true,
         navBarHidden: true,
         backgroundColor: '#1F3346',
-        width: Yaast.API.HW.System.getPlatformWidth(),
-        height: Yaast.API.HW.System.getPlatformHeight(),
+        width: Yaast.API.HW.UI.getPlatformWidth(),
+        height: Yaast.API.HW.UI.getPlatformHeight(),
         orientationModes: [Ti.UI.LANDSCAPE_LEFT, Ti.UI.LANDSCAPE_RIGHT]
     };
 

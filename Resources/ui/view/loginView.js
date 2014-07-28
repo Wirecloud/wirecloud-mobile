@@ -10,126 +10,76 @@
 
 var loginView = function (parentWindow) {
 
-    var theme = require('ui/style/loginViewStyle'), containerForm, userTextField, passTextField,
-    activitySession, os = (Yaast.API.HW.System.isApple()) ? "iPad" : "Android", version = "", internetLabel, internetIcon,
-    _self = {
+    var theme = require('ui/style/loginViewStyle'), containerForm, userTextField,
+    passTextField, activitySession, internetLabel, internetIcon, _self = {
        view : Ti.UI.createView(theme.view)
-    },
-    heightLogo = (_self.view.getWidth()/2 !== 800) ? parseInt((500 * ((_self.view.getWidth()/2)/800)), 10) : 500;
+    };
 
     // Enterprise Logo
-    _self.view.add(Ti.UI.createWebView(Yaast.MergeObject(
-        theme.logo, {
-            height: heightLogo,
-            width: _self.view.getWidth() / 2,
-            left: parseInt(((_self.view.getWidth()/2) * 0.05), 10),
-            top: parseInt((_self.view.getHeight()-heightLogo)/2, 10)
-        }
-    )));
+    _self.view.add(Ti.UI.createWebView(theme.logo));
 
-    // Label OS , Version and Internet
-    if(!Yaast.API.HW.System.isApple()){
-        var splited = Ti.Platform.version.split('.');
-        if(splited[0] === '2'){
-            if(splited[1] === '2'){
-                version = " ~ Froyo";
-            }
-            else{
-                version = " ~ Gingerbread";
-            }
-        }
-        else if(splited[0] === '3'){
-            version = " ~ Honeycomb";
-        }
-        else if(splited[0] === '4'){
-            if(splited[1] === '0'){
-                version = " ~ Ice Cream Sandwich";
-            }
-            else{
-                version = " ~ Jelly Bean";
-            }
-        }
-        splited = null;
-    }
-    _self.view.add(Ti.UI.createLabel(Yaast.MergeObject(
-        theme.systemLabel, {
-            text: Ti.Locale.getString('label_system') + ': ' + os + ' ' + Ti.Platform.version + version,
-            top: parseInt(_self.view.getHeight() * 0.075, 10),
-            right: parseInt((_self.view.getWidth()/2 * 0.15), 10)
-        }
-    )));
-    os = null;
-    version = null;
-    internetLabel = Ti.UI.createLabel(Yaast.MergeObject(
-        theme.internetLabel, {
-            text: (Ti.Network.online) ? Ti.Locale.getString('label_inet_connected') :
-                                         Ti.Locale.getString('label_inet_noconnected'),
-            top: parseInt(_self.view.getHeight() * 0.17, 10),
-            right: parseInt((_self.view.getWidth()/2 * 0.22), 10)
-        }
-    ));
+    // System Version
+    _self.view.add(Ti.UI.createLabel(theme.systemLabel));
+
+    // Internet Label
+    internetLabel = Ti.UI.createLabel(theme.internetLabel);
     _self.view.add(internetLabel);
-    internetIcon = Ti.UI.createLabel(Yaast.MergeObject(
-        theme.internetIcon, {
-            color: (Ti.Network.online) ? "#00FF00" : "#FF0000",
-            top: parseInt(_self.view.getHeight() * 0.175, 10),
-            right: parseInt((_self.view.getWidth()/2 * 0.15), 10)
-        }
-    ));
+
+    // Internet Icon
+    internetIcon = Ti.UI.createLabel(theme.internetIcon);
     _self.view.add(internetIcon);
+
+    // Handler change Connection
     _self.onChangeConnection = function onChangeConnection(){
-        internetLabel.text = (Ti.Network.online) ? Ti.Locale.getString('label_inet_connected') :
-                              Ti.Locale.getString('label_inet_noconnected');
-        internetIcon.color = (Ti.Network.online) ? "#00FF00" : "#FF0000";
+        if(Yaast.API.HW.Network.isOnline()){
+            internetLabel.text = 'Conectado';
+            internetIcon.color = '#00FF00';
+        }
+        else {
+            internetLabel.text = 'Desconectado';
+            internetIcon.color = '#FF0000';
+        }
     };
     Ti.Network.addEventListener('change', _self.onChangeConnection);
 
-    /** Private function to show connection errors
-     *  @param {String} identifier */
-    var connectionError = function connectionError(string) {
-        var stringSearch;
-        if (Ti.Network.online){
-            stringSearch = (Yaast.API.HW.System.isApple()) ? "error_connection_login_ios" : "error_connection_login_android";
-        }
-        else{
-            stringSearch = "error_connection_inet";
-        }
-        var alertError = Ti.UI.createAlertDialog({
-            title: "AppBase",
-            message: Ti.Locale.getString(stringSearch),
-            buttonNames: [Ti.Locale.getString("alert_button_accept")]
+    // Handler show Connection Error
+    var showMessageError = function showMessageError(string) {
+        var dialog = Ti.UI.createAlertDialog({
+            cancel : 0,
+            buttonNames : ['Aceptar'],
+            message : string,
+            title : 'AppBase W4T - Aviso'
         });
-        alertError.show();
-        stringSearch = null;
-        alertError = null;
-        _self.view.remove(activitySession);
-        activitySession = null;
-        containerForm.setOpacity(1);
+        dialog.addEventListener('click', function(e) {
+            dialog.hide();
+            dialog = null;
+        });
+        dialog.show();
+        if(activitySession !== null){
+            activitySession.hide();
+            _self.view.remove(activitySession);
+            activitySession = null;
+            containerForm.setOpacity(1);
+        }
     };
 
-	/** Private function to do HTTP Basic Auth */
+	// Check Authentication Login
 	var checkAuthentication = function checkAuthentication() {
-        if(userTextField.value.length === 0){
-            alert(Ti.Locale.getString('error_login_username'));
-        }
-        else if(passTextField.value.length === 0){
-            alert(Ti.Locale.getString('error_login_password'));
-        }
+        if(userTextField.value.length === 0) showMessageError('El usuario no puede estar vacío');
+        else if(passTextField.value.length === 0) showMessageError('La contraseña no puede estar vacía');
         else{
             containerForm.borderWidth = 0;
-            containerForm.animate({duration : 1000, delay : 0, opacity : 0},function(){
-                activitySession = Ti.UI.createLabel(Yaast.MergeObject(
-                    theme.activityLabel, {
-                        text: Ti.Locale.getString("label_login_wait"),
-                        left: parseInt(_self.view.getWidth()/2+(_self.view.getWidth()/2 * 0.15), 10),
-                        width: parseInt((_self.view.getWidth()/2 * 0.7), 10),
-                        top: parseInt(((_self.view.getHeight()-heightLogo)/2)+(heightLogo/2),10)
-                    }
-                ));
+            containerForm.animate({duration : 1000, delay : 0, opacity : 0}, function() {
+                activitySession = Ti.UI.createLabel(theme.activityLabel);
                 _self.view.add(activitySession);
+                activitySession.show();
                 Yaast.API.HW.Network.login(userTextField.value, passTextField.value, function(response){
-                    if(response === 'Error Credential') connectionError('login');
-                    else if(response === 'Error Server') connectionError('server');
+                    if(response === 'Error Credential') showMessageError('Se ha producido un error con sus credenciales');
+                    else if(response === 'Error Server') {
+                        if(Yaast.API.HW.Network.isOnline())
+                            showMessageError('Se ha producido un error con el servidor. Inténtelo más tarde');
+                        else showMessageError('Verifique su conexión a Internet');
+                    }
                     else parentWindow.showMainView();
                 });
             });
@@ -138,25 +88,18 @@ var loginView = function (parentWindow) {
 
     /** Private Function to create Form Login */
     var createForm = function createForm() {
-        containerForm = Ti.UI.createView(Yaast.MergeObject(
-            theme.containerView, {
-                height : heightLogo / 2,
-                width : parseInt(_self.view.getWidth()/2 * 0.7,10),
-                left : parseInt(_self.view.getWidth()/2+(_self.view.getWidth()/2 * 0.15), 10),
-                top : parseInt(((_self.view.getHeight()-heightLogo)/2)+(heightLogo/4), 10)
-            }
-        ));
+
+        containerForm = Ti.UI.createView(theme.containerView);
 
         userTextField = Ti.UI.createTextField(Yaast.MergeObject(
             theme.inputTextField, {
-                top: '15%',
-                clearOnEdit: false,
-                keyboardType : Ti.UI.KEYBOARD_EMAIL,
-                returnKeyType : Ti.UI.RETURNKEY_DONE,
-                hintText : Ti.Locale.getString('label_username')
+                top: parseInt(containerForm.getHeight() * 0.15, 10),
+                keyboardType: Ti.UI.KEYBOARD_EMAIL,
+                returnKeyType: Ti.UI.RETURNKEY_DONE,
+                hintText: "Nombre de usuario"
             }
         ));
-        userTextField.returnUserTField = function (e){
+        userTextField.returnUserTField = function returnUserTField() {
             userTextField.blur();
         };
         userTextField.addEventListener('return', userTextField.returnUserTField);
@@ -164,35 +107,37 @@ var loginView = function (parentWindow) {
 
         passTextField = Ti.UI.createTextField(Yaast.MergeObject(
             theme.inputTextField, {
-                top: '60%',
+                top: parseInt(containerForm.getHeight() * 0.6, 10),
                 passwordMask: true,
-                clearOnEdit: true,
                 keyboardType: Ti.UI.KEYBOARD_DEFAULT,
                 returnKeyType: Ti.UI.RETURNKEY_GO,
-                hintText: Ti.Locale.getString('label_password')
+                hintText: "Contraseña"
             }
         ));
-        passTextField.returnPassTField = function (e){
+        passTextField.returnPassTField = function returnPassTField() {
+            passTextField.blur();
             checkAuthentication();
         };
-        passTextField.focusPassTField = function focusPassTField(e){
-            _self.top = _self.view.getTop();
-            _self.height = _self.view.getHeight();
-            _self.view.setHeight(_self.view.getHeight() + (containerForm.height/2));
-            _self.view.setTop(-(containerForm.height/2));
-        };
-        passTextField.blurPassTField = function blurPassTField(e){
-            // Issue: https://jira.appcelerator.org/browse/TIMOB-16496
-            if(_self.top && _self.height){
-                _self.view.setTop(_self.top);
-                _self.view.setHeight(_self.height);
-                delete _self.top;
-                delete _self.height;
-            }
-        };
+
+        if(Yaast.API.HW.System.isApple()) {
+            passTextField.focusPassTField = function focusPassTField() {
+                _self.top = _self.view.getTop();
+                _self.height = _self.view.getHeight();
+                _self.view.setHeight(_self.view.getHeight() + (containerForm.height/2));
+                _self.view.setTop(-(containerForm.height/2));
+            };
+            passTextField.blurPassTField = function blurPassTField() {
+                if(_self.top && _self.height){
+                    _self.view.setTop(_self.top);
+                    _self.view.setHeight(_self.height);
+                    delete _self.top;
+                    delete _self.height;
+                }
+            };
+            passTextField.addEventListener('focus', passTextField.focusPassTField);
+            passTextField.addEventListener('blur', passTextField.blurPassTField);
+        }
         passTextField.addEventListener('return', passTextField.returnPassTField);
-        passTextField.addEventListener('focus', passTextField.focusPassTField);
-        passTextField.addEventListener('blur', passTextField.blurPassTField);
 		containerForm.add(passTextField);
 		_self.view.add(containerForm);
 	};
@@ -201,22 +146,27 @@ var loginView = function (parentWindow) {
 
 	/** Destroy LoginView and Objects inside */
 	_self.destroy = function destroy() {
+	    if(activitySession !== null){
+	        activitySession.hide();
+            _self.view.remove(activitySession);
+            activitySession = null;
+	    }
         userTextField.removeEventListener('return', userTextField.returnUserTField);
         delete userTextField.returnUserTField;
         containerForm.remove(userTextField);
         userTextField = null;
+        if(Yaast.API.HW.System.isApple()) {
+            passTextField.removeEventListener('focus', passTextField.focusPassTField);
+            passTextField.removeEventListener('blur', passTextField.blurPassTField);
+            delete passTextField.focusPassTField;
+            delete passTextField.blurPassTField;
+        }
         passTextField.removeEventListener('return', passTextField.returnPassTField);
-        passTextField.removeEventListener('focus', passTextField.focusPassTField);
-        passTextField.removeEventListener('blur', passTextField.blurPassTField);
         delete passTextField.returnPassTField;
-        delete passTextField.focusPassTField;
-        delete passTextField.blurPassTField;
         containerForm.remove(passTextField);
         passTextField = null;
         _self.view.remove(containerForm);
         containerForm = null;
-		_self.view.remove(activitySession);
-		activitySession = null;
 		_self.view.remove(internetLabel);
 		internetLabel = null;
 		_self.view.remove(internetIcon);
