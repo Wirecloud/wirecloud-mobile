@@ -18,21 +18,17 @@ if (!Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'component').
 
 var appWindow = ( function() {
 
-        Yaast.Sandbox = {
-            'activeView' : null,
-            'tabView' : null,
-            'componentPos' : null
-        };
-
-        var theme = require('ui/style/appWindowStyle'), loginView = null, mainView = null, storeView = null, 
-        self = {
+        var theme = require('ui/style/appWindowStyle'), loginView = null,
+        mainView = null, storeView = null, self = {
             window : Ti.UI.createWindow(theme)
         };
 
-        // Compatibility 3.3.0GA or above
-        self.window.addEventListener('open', function() {
-            self.window.activity.actionBar.hide();
-        });
+        // Compatibility 3.3.0GA or above (Android)
+        if(!Yaast.API.HW.System.isApple()) {
+            self.window.addEventListener('open', function() {
+                self.window.activity.actionBar.hide();
+            });
+        }
 
         // Quit Function
         var quitFunction = function quitFunction() {
@@ -40,7 +36,7 @@ var appWindow = ( function() {
                 cancel : 1,
                 buttonNames : ['Aceptar', 'Cancelar'],
                 message : '¿Quieres salir de la App?',
-                title : 'Aviso'
+                title : 'AppBase W4T - Aviso'
             });
             dialog.addEventListener('click', function(e) {
                 if (e.index === 0) {
@@ -59,16 +55,15 @@ var appWindow = ( function() {
         var logoutFunction = function logoutFunction() {
             var dialog = Ti.UI.createAlertDialog({
                 cancel : 1,
-                buttonNames : ['Logout', 'Cancelar'],
-                message : '¿Quieres desloguearte?',
-                title : 'Aviso'
+                buttonNames : ['Cerrar', 'Cancelar'],
+                message : '¿Quieres cerrar sesión?',
+                title : 'AppBase W4T - Aviso'
             });
             dialog.addEventListener('click', function(e) {
                 if (e.index === 0) {                    
-                    closeCurrentView();
                     self.window.removeEventListener('android:back', logoutFunction);
                     self.window.addEventListener('android:back', quitFunction);
-                    showLoginView();
+                    self.showLoginView();
                 }
                 dialog.hide();
                 dialog = null;
