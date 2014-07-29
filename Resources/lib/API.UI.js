@@ -31,6 +31,40 @@ var UI = (function() {
       }
     };
 
+    /** Get constant Size Button (Square - width = height) on Android or iOS.
+     * @method
+     * @return {Number} */
+    _self.getDefaultSizeButton = function getDefaultSizeButton() {
+      if(Yaast.API.HW.System.isRetina()) return 60;
+      else if(Yaast.API.HW.System.isApple()) return 30;
+      else {
+          var density = _self.getDensityScreen();
+          if(density === 'low') return 33;
+          else if(density === 'medium') return 30;
+          else if(density === 'high') return 45;
+          else if(density === 'xhigh') return 60;
+          else if(density === 'xxhigh') return 90;
+          else if(density === 'xxxhigh') return 120;
+      }
+    };
+    
+    /** Get constant Padding Button (Square - top = bottom) on Android or iOS.
+     * @method
+     * @return {Number} */
+    _self.getDefaultPaddingButton = function getDefaultPaddingButton() {
+      if(Yaast.API.HW.System.isRetina()) return 14;
+      else if(Yaast.API.HW.System.isApple()) return 7;
+      else {
+          var density = _self.getDensityScreen();
+          if(density === 'low') return 33;
+          else if(density === 'medium') return 7;
+          else if(density === 'high') return 10.5;
+          else if(density === 'xhigh') return 14;
+          else if(density === 'xxhigh') return 21;
+          else if(density === 'xxxhigh') return 28;
+      }
+    };
+
     /** Get Screen Type of Android Device
      * @method
      * @return {String} */
