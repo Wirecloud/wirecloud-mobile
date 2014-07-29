@@ -132,6 +132,8 @@ var Network = function (APIReferences) {
         "API" : APIReferences
     };
 
+    var isApple = Yaast.API.HW.System.isApple();
+
     /** It contains several useful methods to manage network.
      * @author Alejandro FCarrera
      * @version 1.0.0
@@ -149,7 +151,7 @@ var Network = function (APIReferences) {
      *  @param {Object} data: username, password, cookie
      *  @param {Function} callback */
     var loginWirecloud = function loginWirecloud(data, callback){
-        var boundary = Yaast.API.HW.System.isApple() ? {
+        var boundary = isApple ? {
                "csrfmiddlewaretoken": data.csrf,
                "username": data.user,
                "password": data.pass
@@ -161,20 +163,23 @@ var Network = function (APIReferences) {
             onload: function(e) {
                 if(this.responseText.indexOf('CSRF verification failed') > -1 ||
                   this.responseText.indexOf('Retrieving wirecloud code: 0%') < 0){
-                    Ti.Network.removeAllHTTPCookies();
+                    if(isApple) Ti.Network.removeAllHTTPCookies();
+                    else Ti.Network.removeAllSystemCookies();
                     callback('Error Credential');
                 }
                 else {
                     Ti.App.Properties.setString('cookie_csrftoken', data.csrf);
-                    var session = Yaast.API.HW.System.isApple() ? Ti.Network.getAllHTTPCookies()[1].value :
+                    var session = isApple ? Ti.Network.getAllHTTPCookies()[1].value :
                         this.getResponseHeader('Set-Cookie').substr(10, 32);
                     Ti.App.Properties.setString('cookie_sessionid', session);
-                    Ti.Network.removeAllHTTPCookies();
+                    if(isApple) Ti.Network.removeAllHTTPCookies();
+                    else Ti.Network.removeAllSystemCookies();
                     callback('Success Credential');
                 }
             },
             onerror: function(e) {
-                Ti.Network.removeAllHTTPCookies();
+                if(isApple) Ti.Network.removeAllHTTPCookies();
+                else Ti.Network.removeAllSystemCookies();
                 callback('Error Server');
             },
             timeout: tim
