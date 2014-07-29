@@ -19,6 +19,10 @@ var appWindowStyle = (function() {
         orientationModes: [Ti.UI.LANDSCAPE_LEFT, Ti.UI.LANDSCAPE_RIGHT]
     };
 
+    if(Yaast.API.HW.System.isApple() && parseFloat(Yaast.API.HW.System.getVersion(), 10) >= 7.0){
+        _self.statusBarStyle = Ti.UI.iPhone.StatusBar.LIGHT_CONTENT;
+    }
+
     return _self;
 
 }());
