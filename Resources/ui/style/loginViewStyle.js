@@ -23,7 +23,7 @@ var loginViewStyle = (function() {
     _self.view.height = Yaast.API.HW.UI.getPlatformHeight() - _self.view.top;
 
     _self.logo = {
-        url: '../../images/logo_tab.svg',
+        url: (Yaast.API.HW.System.isApple()) ? Ti.Filesystem.getResourcesDirectory()  + 'images/logo_tab.svg' : '../../images/logo_tab.svg',
         height: (_self.view.width/2 !== 800) ? parseInt((500 * ((_self.view.width/2)/800)), 10) : 500,
         width: _self.view.width/2,
         left: parseInt(((_self.view.width/2) * 0.05), 10),
