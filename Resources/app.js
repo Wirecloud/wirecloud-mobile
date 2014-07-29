@@ -16,7 +16,7 @@
 
 // Yaast Framework Init (Global Scope)
 var Yaast = {
-    "Log" : function(msg, type, error, extra){
+    "Log": function(msg, type, error, extra){
         var self = {
             'name': 'W4TLog',
             'message': msg
@@ -31,7 +31,7 @@ var Yaast = {
         Ti.API[type](self);
         return self;
     },
-    "MergeObject" : function (obj1, obj2){
+    "MergeObject": function (obj1, obj2){
         var result = null, key;
         if (obj1 !== null && obj2 !== null){
             for (key in obj2){
@@ -41,10 +41,10 @@ var Yaast = {
         }
         return result;
     },
-    "FontAwesome" : require('fonts/FontAwesome4'),
-    "API" : {}
+    "FontAwesome": require('fonts/FontAwesome4'),
+    "API": require('lib/API'),
+    "Sandbox": {}
 };
-require('lib/API');
 
 (function() {
 

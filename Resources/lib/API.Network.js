@@ -126,7 +126,11 @@
 
 "use strict";
 
-var Network = (function () {
+var Network = function (APIReferences) {
+
+    var Yaast = {
+        "API" : APIReferences
+    };
 
     /** It contains several useful methods to manage network.
      * @author Alejandro FCarrera
@@ -611,6 +615,6 @@ var Network = (function () {
 
     return _self;
 
-}());
+};
 
 module.exports = Network;

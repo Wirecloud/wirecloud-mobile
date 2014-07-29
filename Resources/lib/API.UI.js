@@ -7,7 +7,11 @@
 
 'use strict';
 
-var UI = (function() {
+var UI = function (APIReferences) {
+
+    var Yaast = {
+        "API" : APIReferences
+    };
 
     /** It provides several useful methods to get or create User Interface.
      * @alias API.UI
@@ -102,6 +106,6 @@ var UI = (function() {
 
     return _self;
 
-}());
+};
 
 module.exports = UI;
