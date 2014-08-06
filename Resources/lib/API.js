@@ -42,7 +42,7 @@ var API = (function() {
     self.SW.Social = '';
     self.HW.Acceloremeter = require('lib/API.Accelerometer');
     self.HW.Battery = require('lib/API.Battery');
-    self.HW.Camera = require('lib/API.Camera');
+    self.HW.Camera = require('lib/API.Camera')(self);
     self.HW.GeoLocation = '';
     self.HW.Gesture = '';
 
@@ -274,7 +274,7 @@ var API = (function() {
         Ti.API.info('[API.APIMethodHandler] Options:' + JSON.stringify(data.options));
         if (data.method !== null && data.params == null && data.options == null) {
             try {
-                result = _self[data.method.type][data.method.subapi][data.method.name]();
+                result = self[data.method.type][data.method.subapi][data.method.name]();
             } catch (e) {
                 // TODO
                 Ti.API.info('[----- ¡¡API METHOD ERROR!!] ' + e);
@@ -284,7 +284,7 @@ var API = (function() {
                 data.params.push(data.options);
             }
             try {
-                result = _self[data.method.type][data.method.subapi][data.method.name].apply(null, data.params);
+                result = self[data.method.type][data.method.subapi][data.method.name].apply(null, data.params);
             } catch (e) {
                 // TODO
                 Ti.API.info('[----- ¡¡API METHOD ERROR!!] ' + e);
@@ -309,7 +309,7 @@ var API = (function() {
         };
 
         if (data.method !== null && data.params.length === 0) {
-            _self[data.method.type][data.method.subapi][data.method.name](function(result) {
+            self[data.method.type][data.method.subapi][data.method.name](function(result) {
                 Ti.API.info('[API.APIMethodAsyncHandler] Setting method event from aPI to Bridge: :' + data.method.eventName + '_' + data.viewId + '_' + data.callId);
                 Ti.App.fireEvent(data.method.eventName + '_' + data.viewId + '_' + data.callId, result);
             });
@@ -317,7 +317,7 @@ var API = (function() {
             if (data.options !== null) {
                 data.params.push(data.options);
             }
-            _self[data.method.type][data.method.subapi][data.method.name](function(result) {
+            self[data.method.type][data.method.subapi][data.method.name](function(result) {
                 Ti.API.info('[API.APIMethodAsyncHandler] Setting method event from aPI to Bridge: :' + data.method.eventName + '_' + data.viewId + '_' + data.callId);
                 Ti.App.fireEvent(data.method.eventName + '_' + data.viewId + '_' + data.callId, result);
             }, data.params);
@@ -337,7 +337,7 @@ var API = (function() {
     init();
 
     return self;
-	
+
 }());
 
 module.exports = API;
