@@ -79,7 +79,7 @@ var appWindow = ( function() {
         };
 
         // Show Main View
-        self.showMainView = function showMainView() {
+        self.showMainView = function showMainView(userName) {
             if (loginView !== null) {
                 self.window.remove(loginView.view);
                 loginView.destroy();
@@ -87,7 +87,7 @@ var appWindow = ( function() {
             }
             self.window.removeEventListener('android:back', quitFunction);
             self.window.addEventListener('android:back', logoutFunction);
-            mainView = require('ui/view/mainView')(self);
+            mainView = require('ui/view/mainView')(self, userName);
             self.window.add(mainView.view);
         };
 

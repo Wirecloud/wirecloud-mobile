@@ -10,19 +10,21 @@
 
 var mainViewStyle = (function() {
 
+	var _isApple = Yaast.API.HW.System.isApple();
+
     var _self = {},
-    heightView = (Yaast.API.HW.System.isApple()) ?
-                  Yaast.API.HW.System.getPlatformHeight() - 20 :
-                  Yaast.API.HW.System.getPlatformHeight(),
-    rowHeight =  (Yaast.API.HW.System.isApple()) ? 44 : '48dp',
-    rowFontSize = (Yaast.API.HW.System.isApple()) ? '20' : '18dp';
+    heightView = (_isApple) ?
+                  Yaast.API.HW.UI.getPlatformHeight() - 20 :
+                  Yaast.API.HW.UI.getPlatformHeight(),
+    rowHeight =  (_isApple) ? 44 : '48dp',
+    rowFontSize = (_isApple) ? '22' : '20dp';
 
     _self.view = {
-        top: (Yaast.API.HW.System.isApple()) ? 20 : 0,
+        top: (_isApple) ? 20 : 0,
         left: 0,
         height: heightView,
-        width: Yaast.API.HW.System.getPlatformWidth(),
-        backgroundColor: '#4F6C88'
+        width: Yaast.API.HW.UI.getPlatformWidth(),
+        backgroundColor: '#5F5F5F'
     };
 
     _self.line = {
@@ -34,53 +36,91 @@ var mainViewStyle = (function() {
     };
 
     _self.topBar = {
-        top: (Yaast.API.HW.System.isApple()) ? 1 : 0,
+        top: (_isApple) ? 1 : 14,
         left: 0,
-        height: rowHeight,
+        height: 50,
         width: _self.view.width,
-        backgroundColor: '#EAEAEA'
+        backgroundColor: '#FFFFFF',
+        verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
+        zIndex: 10000
     };
 
     _self.button = {
-        height: (Yaast.API.HW.System.isApple()) ? 30 : '40dp',
-        width: (Yaast.API.HW.System.isApple()) ? 30 : '40dp',
-        top: (Yaast.API.HW.System.isApple()) ? 7 : '4dp',
+        height: (_isApple) ? 30 : '40dp',
+        width: (_isApple) ? 30 : '40dp',
+        top: (_isApple) ? 7 : '4dp',
         font : {
-            fontSize : (Yaast.API.HW.System.isApple()) ? '28' : '18dp',
+            fontSize : parseInt(rowFontSize) * 2,
             fontFamily : Yaast.FontAwesome.getFontFamily()
         },
-        color: (Yaast.API.HW.System.isApple()) ? '#34AADC' : '#C1C1C1',
+        color: (_isApple) ? '#34AADC' : '#969696',
         shadowColor: '#aaa',
         shadowOffset: {x:0, y:0},
         shadowRadius: 3,
-        textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER
+        textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER,
     };
 
     _self.labelButton = {
-        height: (Yaast.API.HW.System.isApple()) ? 30 : '40dp',
-        top: (Yaast.API.HW.System.isApple()) ? 7 : '4dp',
+        height: (_isApple) ? 30 : '40dp',
+        top: (_isApple) ? 7 : '4dp',
         font : {
-            fontSize : (Yaast.API.HW.System.isApple()) ? '20' : '18dp',
+            fontSize : (_isApple) ? '20' : '18dp',
             fontFamily : 'Default'
         },
-        color: (Yaast.API.HW.System.isApple()) ? '#34AADC' : '#C1C1C1',
+        color: (_isApple) ? '#34AADC' : '#969696',
         shadowColor: '#aaa',
         shadowOffset: {x:0, y:0},
         shadowRadius: 3,
         textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER
     };
 
-    _self.leftListView = {
-        left: 0,
-        height: _self.view.height - (_self.topBar.top + _self.topBar.height),
-        width: _self.view.width * 0.3,
-        top: _self.topBar.top + _self.topBar.height,
-        separatorColor: '#8EAECC',
-        separatorInsets:{
-            right: 20
-        },
-        backgroundColor: '#3F566D'
+    _self.logo = {
+        url: (Yaast.API.HW.System.isApple()) ? Ti.Filesystem.getResourcesDirectory()  + 'images/logo_tab.svg' : '../../images/logo_tab.svg',
+        height: (_isApple) ? 30 : '40dp',
+        width: '60dp',
+        left: 15,
+        enableZoomControls: false,
+        showScrollbars: false,
+        touchEnabled: false,
+        disableBounce: false
     };
+
+    _self.leftView = {
+        top: _self.topBar.top + _self.topBar.height,
+        left: 0,
+        backgroundColor: '#3F566D',
+        width : Yaast.API.HW.UI.getPlatformWidth() / 2
+    };
+
+    _self.rightView = {
+        top: _self.topBar.top + _self.topBar.height,
+        left: Yaast.API.HW.UI.getPlatformWidth() / 2,
+        width : Yaast.API.HW.UI.getPlatformWidth() / 2,
+        borderColor: "#C0C0C0",
+        borderWidth: 3,
+        backgroundColor: "#FF0000",
+    };
+
+	_self.welcomeLabel = {
+		color: '#3F566D',
+		height: rowHeight,
+        font: {
+            fontFamily: Yaast.FontAwesome.getFontFamily(),
+            fontSize: parseInt(rowFontSize) * 1.5
+        },
+        shadowColor: '#aaa',
+        shadowOffset: {x:0, y:0},
+        shadowRadius: 3,
+	};
+
+	_self.headerlabelView = {
+		height: rowHeight,
+        font: {
+            fontFamily: Yaast.FontAwesome.getFontFamily(),
+            fontSize: rowFontSize
+        },
+        text: 'Available Workspaces'
+	};
 
     _self.leftListViewTemplate = {
         childTemplates: [
@@ -89,13 +129,8 @@ var mainViewStyle = (function() {
                 bindId: 'icon',
                 properties: {
                     layout: 'horizontal',
-                    width:  rowHeight - 10,
-                    height:  rowHeight - 10,
-                    borderRadius: '10',
-                    borderWidth: '1',
-                    borderColor: '#0E171F',
-                    backgroundColor: '#D4D4D4',
-                    color: '#149F9D',
+                    height:  rowHeight,
+                    color: '#5679a4',
                     left: 10,
                     font: {
                         fontFamily: Yaast.FontAwesome.getFontFamily(),
@@ -107,30 +142,36 @@ var mainViewStyle = (function() {
                 type: 'Ti.UI.Label',
                 bindId: 'title',
                 properties: {
-                    width:  _self.leftListView.width - (20 + (rowHeight - 10)),
                     layout: 'horizontal',
                     color: '#FFFFFF',
                     font: {
                         fontFamily:'Default',
                         fontSize: rowFontSize
                     },
-                    left: 20 + (rowHeight - 10),
+                    left: 40,
                     height: rowHeight,
                     textAlign: Ti.UI.TEXT_ALIGNMENT_LEFT
+                }
+            }, {
+                type: 'Ti.UI.Label',
+                bindId: 'id',
+                properties: {
+                	visible: false
                 }
             }
         ],
         properties: {
-            selectedBackgroundColor: '#4F6C88',
-            backgroundColor: '#3F566D'
-        }
+        	backgroundColor: '#2B3E50',
+        	selectedBackgroundColor: 858585
+        },
+        events: {}
     };
 
-    _self.leftListViewNoWorkspaces = {
+    /*_self.leftListViewNoWorkspaces = {
         left: 0,
         top: 0,
-        height: _self.leftListView.height,
-        width: _self.leftListView.width,
+        height: '200dp',
+        width: '200dp',
         backgroundColor: '#2a2a2a',
         opacity: 0.5,
         color: '#FFFFFF',
@@ -143,10 +184,10 @@ var mainViewStyle = (function() {
     };
 
     _self.leftShadowView = {
-        left: _self.leftListView.width,
-        height: _self.leftListView.height,
+        left: _self.leftView.width,
+        height: _self.leftView.height,
         width: 15,
-        top: _self.leftListView.top,
+        top: _self.leftView.top,
         backgroundGradient: {
             type: 'linear',
             startPoint: { x: 0, y: 0 },
@@ -157,18 +198,18 @@ var mainViewStyle = (function() {
             ]
         },
         opacity: 1
-    };
+    };*/
 
     _self.leftHeaderListView = {
         left: 0,
         backgroundColor: '#3F566D',
-        width: _self.leftListView.width,
+        width: _self.leftView.width,
         height: rowHeight,
         font : {
             fontSize : rowFontSize,
             fontFamily : 'Default'
         },
-        color: (Yaast.API.HW.System.isApple()) ? '#34AADC' : '#C1C1C1',
+        color: (_isApple) ? '#34AADC' : '#C1C1C1',
         shadowColor: '#aaa',
         shadowOffset: {x:0, y:0},
         shadowRadius: 3,

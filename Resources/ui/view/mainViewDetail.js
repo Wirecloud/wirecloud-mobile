@@ -11,8 +11,14 @@
 
 var mainViewDetail = function mainViewDetail(compData) {
 
+	var theme = require('ui/style/mainViewDetailStyle');
+
     // Create References
-    var _self = {};
+    var _self = Ti.UI.createView(theme.view);
+    
+    _self.destroy = function destroy() {
+    	theme = null;
+    };
     return _self;
 
 };

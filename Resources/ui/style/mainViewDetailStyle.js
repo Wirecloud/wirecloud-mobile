@@ -12,14 +12,14 @@ var mainViewDetailStyle = (function() {
 
     var _self = {},
     heightView = (Yaast.API.HW.System.isApple()) ?
-                  Yaast.API.HW.System.getPlatformHeight() - 20 :
-                  Yaast.API.HW.System.getPlatformHeight(),
+                  Yaast.API.HW.UI.getPlatformHeight() - 20 :
+                  Yaast.API.HW.UI.getPlatformHeight(),
     rowHeight =  (Yaast.API.HW.System.isApple()) ? 44 : '48dp',
     rowFontSize = (Yaast.API.HW.System.isApple()) ? '20' : '18dp';
 
     _self.view = {
-        left: Yaast.API.HW.System.getPlatformWidth() * 0.3,
-        width: Yaast.API.HW.System.getPlatformWidth() * 0.7,
+        left: Yaast.API.HW.UI.getPlatformWidth() * 0.5,
+        width: Yaast.API.HW.UI.getPlatformWidth() * 0.4,
         height: heightView,
         top: rowHeight,
         backgroundColor: '#4F6C88'

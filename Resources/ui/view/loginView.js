@@ -80,7 +80,7 @@ var loginView = function (parentWindow) {
                             showMessageError('Se ha producido un error con el servidor. Inténtelo más tarde');
                         else showMessageError('Verifique su conexión a Internet');
                     }
-                    else parentWindow.showMainView();
+                    else parentWindow.showMainView(userTextField.value);
                 });
             });
 		}
