@@ -46,8 +46,6 @@ var mainViewStyle = (function() {
     };
 
     _self.button = {
-        height: (_isApple) ? 30 : '40dp',
-        width: (_isApple) ? 30 : '40dp',
         top: (_isApple) ? 7 : '4dp',
         font : {
             fontSize : parseInt(rowFontSize) * 2,
@@ -96,9 +94,7 @@ var mainViewStyle = (function() {
         top: _self.topBar.top + _self.topBar.height,
         left: Yaast.API.HW.UI.getPlatformWidth() / 2,
         width : Yaast.API.HW.UI.getPlatformWidth() / 2,
-        borderColor: "#C0C0C0",
-        borderWidth: 3,
-        backgroundColor: "#FF0000",
+        backgroundColor: "#4F6C88",
     };
 
 	_self.welcomeLabel = {
@@ -119,7 +115,8 @@ var mainViewStyle = (function() {
             fontFamily: Yaast.FontAwesome.getFontFamily(),
             fontSize: rowFontSize
         },
-        text: 'Available Workspaces'
+        text: 'Available Workspaces',
+        color: '#FFFFFF',
 	};
 
     _self.leftListViewTemplate = {

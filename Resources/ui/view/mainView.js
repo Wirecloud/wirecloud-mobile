@@ -18,23 +18,24 @@ var mainView = function mainView(parentWindow, userName) {
     var wirecloudLogo = Ti.UI.createWebView(theme.logo);
     var buttonLogout = Ti.UI.createLabel(Yaast.MergeObject(theme.button, {
         left: (_isApple) ? 14 : 12,
-        text: Yaast.FontAwesome.getCharCode('fa-sign-out') + ' logOut'
+        text: Yaast.FontAwesome.getCharCode('fa-sign-out')
     }));
     var buttonStore = Ti.UI.createLabel(Yaast.MergeObject(theme.button, {
         left: (_isApple) ? 14 : 12,
-        text: Yaast.FontAwesome.getCharCode('fa-cloud') + ' Store'
+        text: Yaast.FontAwesome.getCharCode('fa-cloud')
     }));
     var leftView = Ti.UI.createView(theme.leftView);
     var rightView = Ti.UI.createView(theme.rightView);
 
+	// TODO no se usa esta view... supongo que era para el spinner
     var shadowView = Ti.UI.createView(theme.leftShadowView);
     var _self = {
         compositions : {},
         detailView : null,
-        view : Ti.UI.createView(theme.view)
+        view : Ti.UI.createView(theme.view),
+        parentView: parentWindow
     };
 
-	// Exception Zone 26-8-14
     // Bind click ListView
     _self.clickRowListView = function clickRowListView(e) {
     	Ti.API.info('e.section.getItemAt(e.itemIndex).id.text: ' + e.section.getItemAt(e.itemIndex).id.text);
@@ -83,7 +84,7 @@ var mainView = function mainView(parentWindow, userName) {
 	};
 
 	_self.setWorkspaces = function setWorkspaces(values) {
-			if (values == "Error") {
+		if (values == "Error") {
 			// getWirecloud error
 			var _stringSearch;
 			if (Ti.Network.online) _stringSearch = (_isApple) ? "error_connection_login_ios" : "error_connection_login_android";
@@ -108,6 +109,7 @@ var mainView = function mainView(parentWindow, userName) {
 			for (var i = 0; i < parsedValues.length; i ++) {
 				newLink = _self.createWorkspaceLink(parsedValues[i]);
 				rows.push(newLink);
+				_self.compositions[parsedValues[i].id] = parsedValues[i];
 			}
 			grainSection.setItems(rows);
 			leftListView.setSections([grainSection]);
@@ -127,9 +129,6 @@ var mainView = function mainView(parentWindow, userName) {
 		_conObject = null;
 		_conA = null;
 	};
-
-	// End exception zone
-
 
     // Create Navigation Bar
     if(_isApple) {
@@ -153,13 +152,6 @@ var mainView = function mainView(parentWindow, userName) {
         text: 'Welcome to Wirecloud 4 Tablet ' + userName
     })));
     _self.view.add(topBar);
-
-    // Create Left Header ListView
-    //leftView.setHeaderView(Ti.UI.createLabel(theme.leftHeaderListView));
-
-    // Add Views
-    //_self.view.add(shadowView);
-    //_self.view.add(leftView);
 
     // Bind click Logout Button
     _self.clickLogoutButton = function clickLogoutButton() {
@@ -186,6 +178,7 @@ var mainView = function mainView(parentWindow, userName) {
             _self.getWirecloudInfo();
         }
         else {
+        	// TODO entrar con cosas guardadas en los meta (antes hay que crear los metadatos.. los defino en la detailView)
             var compositions = Ti.UI.createListSection();
             var rows = [];
             for(i = 0; i < compFolder.length; i++){
@@ -218,10 +211,12 @@ var mainView = function mainView(parentWindow, userName) {
     // Create Details View of Composition
     _self.showDetailView = function showDetailView(idComposition) {
     	if (_self.detailView !== null) {
+    		_self.view.remove(_self.detailView);
     		_self.detailView.destroy();
     	}
         _self.detailView = require('ui/view/mainViewDetail')(
-            _self.compositions[idComposition]
+            _self.compositions[idComposition],
+            _self
         );
         _self.view.add(_self.detailView);
     };
@@ -232,11 +227,16 @@ var mainView = function mainView(parentWindow, userName) {
 
     // Destroy MainView
     _self.destroy = function destroy() {
-        if(_self.detailView !== null){
-            _self.view.remove(_self.detailView);
-        }
+    	if (_self.detailView !== null) {
+    		_self.view.remove(_self.detailView);
+    		_self.detailView.destroy();
+    	}
         _self.view.remove(shadowView);
+        shadowView = null;
         _self.view.remove(leftView);
+        leftView = null;
+        _self.view.remove(rightView);
+        rightView = null;
         buttonLogout.removeEventListener('singletap', _self.clickLogoutButton);
         buttonStore.removeEventListener('singletap', _self.clickStoreButton);
         theme = null;

@@ -9,8 +9,8 @@
 	/** @title: getWirecloud (Function)
 	 *  @param: csrftoken, sessionid, callback_function
 	 *  @usage: get Information Wirecloud Account */
-	function getWirecloud(callback_function) {
-		getWorkspaces(function(wValues) {
+	function getWirecloud(callback_function, id) {
+		var handler = function handler(wValues) {
 			var _error = false;
 			for (var i = 0; i < wValues.length; i++) {
 				if (wValues[i] == "Error") {
@@ -29,22 +29,33 @@
 					}
 				});
 			}
-		});
-	}
+		};
+		if (id !== undefined) {
+			getWorkspacesGeneric(handler, id);
+		} else {
+			getWorkspaces(handler);
+		}
+		
+	};
 
 	/** @title: getWorkspaces (Function)
 	 *  @param: csrftoken, sessionid, callback_function
 	 *  @usage: create HTTP client for Wirecloud API */
 	function getWorkspaces(callback_function) {
+		getWorkspacesGeneric(callback_function);
+	};
+	function getWorkspacesGeneric(callback_function, id) {
 		var url = _mainUrl + "api/workspaces";
 		var response;
 		var client = Ti.Network.createHTTPClient({
 			onload : function(e) {
 				response = this.responseText;
-				/*getWorkspacesData(JSON.parse(response)[0].id, function(e) {
-					callback_function([response, e]);
-				});*/
-				callback_function(response);
+				if (id !== undefined) {
+					var parsedResponse = JSON.parse(response);
+					getWorkspacesData(id, function(e) { callback_function([response, e]);});
+				} else {
+					callback_function(response);
+				}
 			},
 			onerror : function(e) {
 				response = "Error";
@@ -510,6 +521,7 @@
 	// Wirecloud API Fi-WARE
 	module.exports.getWirecloud = getWirecloud;
 	module.exports.getWorkspaces = getWorkspaces;
+	module.exports.getWorkspacesGeneric = getWorkspacesGeneric;
 	module.exports.getResources = getResources;
 	module.exports.deleteWorkspaceTab = deleteWorkspaceTab;
 	module.exports.getWorkspacesData = getWorkspacesData;
