@@ -1,14 +1,14 @@
 //downloadsPlatform Window Component Constructor
 
-function downloadsPlatform(h, listWidgets, listOperators, workspaceName) {
+function downloadView(h, listWidgets, listOperators, workspaceName, userName) {
 
 	var _isApple = Yaast.API.HW.System.isApple();
 	var _self = Ti.UI.createView({
 		top : 0,
 		left : 0,
 		height : h,
-		width : Ti.Platform.displayCaps.platformWidth,
-		fontAw : require('fonts/FontAwesome')()
+		width : Yaast.API.HW.UI.getPlatformWidth(),
+		fontAw : Yaast.FontAwesome
 	});
 
 	var _widgetsToDownload = listWidgets;
@@ -32,10 +32,10 @@ function downloadsPlatform(h, listWidgets, listOperators, workspaceName) {
 			height : h,
 			touchEnabled : false,
 			font : {
-				fontSize : (_isApple) ? 20 : '18sp',
+				fontSize : (_isApple) ? 20 : '20dp',
 				fontFamily : 'Comfortaa'
 			},
-			color : "#0D5861",
+			color : "#FFFFFF",
 			textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER,
 			verticalAlign : Ti.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
 			text : textString
@@ -53,10 +53,10 @@ function downloadsPlatform(h, listWidgets, listOperators, workspaceName) {
 			height : 50,
 			touchEnabled : false,
 			font : {
-				fontSize : (_isApple) ? 20 : '18sp',
+				fontSize : (_isApple) ? 20 : '20dp',
 				fontFamily : 'Comfortaa'
 			},
-			color : "#0D5861",
+			color : "#FFFFFF",
 			textAlign : Ti.UI.TEXT_ALIGNMENT_LEFT,
 			verticalAlign : Ti.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
 			text : textString
@@ -74,10 +74,10 @@ function downloadsPlatform(h, listWidgets, listOperators, workspaceName) {
 			height : 50,
 			touchEnabled : false,
 			font : {
-				fontSize : (_isApple) ? 25 : '18sp',
+				fontSize : (_isApple) ? 25 : '20dp',
 				fontFamily : _self.fontAw.getFontFamily()
 			},
-			color : "#D3D3D3",
+			color : "#68FF42",
 			textAlign : Ti.UI.TEXT_ALIGNMENT_LEFT,
 			verticalAlign : Ti.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
 			text : _self.fontAw.getCharCode("icon-ok")
@@ -103,10 +103,10 @@ function downloadsPlatform(h, listWidgets, listOperators, workspaceName) {
 			height : 150,
 			touchEnabled : false,
 			font : {
-				fontSize : (_isApple) ? 200 : '18sp',
+				fontSize : (_isApple) ? 200 : '20dp',
 				fontFamily : _self.fontAw.getFontFamily()
 			},
-			color : "#0F5F61",
+			color : "#FFFFFF",
 			textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER,
 			verticalAlign : Ti.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
 			text : _self.fontAw.getCharCode(icon)
@@ -118,10 +118,10 @@ function downloadsPlatform(h, listWidgets, listOperators, workspaceName) {
 			height : 50,
 			touchEnabled : false,
 			font : {
-				fontSize : (_isApple) ? 20 : '18sp',
+				fontSize : (_isApple) ? 20 : '20dp',
 				fontFamily : 'Comfortaa'
 			},
-			color : "#0D5861",
+			color : "#FFFFFF",
 			textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER,
 			verticalAlign : Ti.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
 			text : textString
@@ -134,9 +134,9 @@ function downloadsPlatform(h, listWidgets, listOperators, workspaceName) {
      *  @usage: create HTML view */
     function createHTMLOperators(operators){
         for(var i in operators){
-            var _fileMashupPlatform = Ti.Filesystem.getFile(Ti.Filesystem.getApplicationDataDirectory(), 'operators/' + i + '/mashupPlatform.js');
+            var _fileMashupPlatform = Ti.Filesystem.getFile(Ti.Filesystem.getApplicationDataDirectory(), userName + '/operators/' + i + '/mashupPlatform.js');
             var _textMashupOriginal = Ti.Filesystem.getFile(Ti.Filesystem.getResourcesDirectory(), 'component/mashupPlatform.lib').read().toString();
-            var _fileBridge = Ti.Filesystem.getFile(Ti.Filesystem.getApplicationDataDirectory(), 'operators/'+i+'/APIBridge.js');
+            var _fileBridge = Ti.Filesystem.getFile(Ti.Filesystem.getApplicationDataDirectory(), userName + '/operators/'+i+'/APIBridge.js');
             var _textBridgeOriginal = Ti.Filesystem.getFile(Ti.Filesystem.getResourcesDirectory(), 'component/APIBridgeJS.lib').read().toString();
 
             // Set Android/iOS var in the bridge. appleOS
@@ -149,7 +149,7 @@ function downloadsPlatform(h, listWidgets, listOperators, workspaceName) {
             _fileMashupPlatform = null;
             _fileBridge = null;
             _fileMashupPlatform = null;
-            var _routeHTML = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'operators/' + i + '/index.html');
+            var _routeHTML = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, userName + '/operators/' + i + '/index.html');
             var _textHTML = '<!DOCTYPE html>\n<html>\n\t<head>\n';
             _textHTML = _textHTML + '\t\t<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n';
             _textHTML = _textHTML + '\t\t<script type="text/javascript" src="mashupPlatform.js"></script>\n';
@@ -251,7 +251,7 @@ function downloadsPlatform(h, listWidgets, listOperators, workspaceName) {
 						_footer.setTouchEnabled(true);
 						_footer.addEventListener('click', _self.funShowWorkspace);
 					}
-				});
+				}, userName);
 			}
 		});
 
@@ -272,4 +272,4 @@ function downloadsPlatform(h, listWidgets, listOperators, workspaceName) {
 
 }
 
-module.exports = downloadsPlatform;
+module.exports = downloadView
