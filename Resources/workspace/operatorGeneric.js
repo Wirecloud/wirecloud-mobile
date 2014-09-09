@@ -1,6 +1,6 @@
 //Widget Generic Component Constructor
 
-function operatorGeneric(parameters, idOperator) {
+function operatorGeneric(parameters, idOperator, userName) {
 
 	var _isApple = (Ti.Platform.osname == 'ipad');
 	var _self;
@@ -8,7 +8,7 @@ function operatorGeneric(parameters, idOperator) {
 		var _operatorGPSClass = require("ui/widgets/operatorGPS");
 		_self = _operatorGPSClass(idOperator);
 	} else {*/
-		var _routeHTML = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'operators/' + parameters.uri + '/index.html');
+		var _routeHTML = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, userName + '/operators/' + parameters.uri + '/index.html');
 		_self = Ti.UI.createWebView({
 			url : _routeHTML.nativePath,
 			width : 0,

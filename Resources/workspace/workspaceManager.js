@@ -1,6 +1,6 @@
 
 //workspaceManager ScrollView Component Constructor
-function workspaceManager(parameters) {
+function workspaceManager(parameters, userName) {
 
 	var _isApple = (Ti.Platform.osname == 'ipad');
 	var _isIOS7 = (_isApple && Ti.Platform.version.split('.')[0] === '7') ? true : false;
@@ -56,14 +56,24 @@ function workspaceManager(parameters) {
 	}
 	var _widgetsToDownload = new Array();
 	var _operatorsToDownload = new Array();
+	var _directory = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, userName);
+	if(!_directory.exists()){
+		_directory.createDirectory();
+		if (!Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, userName + '/widgets/').exists()) {
+    		Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, userName + '/widgets/').createDirectory();
+		}
+		if (!Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, userName + '/operators/').exists()) {
+    		Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, userName + '/operators/').createDirectory();
+		}
+	}
 	for (var i in _widgets){
-		if(!Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'widgets/'+_widgets[i]).exists()){
+		if(!Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, userName + '/widgets/'+_widgets[i]).exists()){
 			_widgetsToDownload.push(_widgets[i]);
 		}
 	}
 	_widgets = null;
 	for (var i in _operators){
-		if(!Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'operators/'+_operators[i]).exists()){
+		if(!Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, userName + '/operators/'+_operators[i]).exists()){
 			_operatorsToDownload.push(_operators[i]);
 		}
 	}
@@ -73,7 +83,7 @@ function workspaceManager(parameters) {
 		_self.funShowWorkspace();
 	}
 	else{
-		var _downloadObject = require('workspace/downloadsPlatform')(parameters.heightView, _widgetsToDownload, _operatorsToDownload, _self.platform.name);
+		var _downloadObject = require('ui/view/downloadView')(parameters.heightView, _widgetsToDownload, _operatorsToDownload, _self.platform.name, userName);
 		_self.add(_downloadObject);
 	}
 
@@ -87,7 +97,7 @@ function workspaceManager(parameters) {
 		}
 		for (var i in _self.platform.operatorsInUseById){
 			var _operatorClass = require("workspace/operatorGeneric");
-			var _operatorO = _operatorClass(_self.platform.operatorsInUseById[i], i);
+			var _operatorO = _operatorClass(_self.platform.operatorsInUseById[i], i, userName);
 			_operatorsViewById[i] = _operatorO;
 			_self.add(_operatorO);
 			_operatorClass = null;
@@ -113,7 +123,7 @@ function workspaceManager(parameters) {
 			var _dimWidgetO = getDimensionWidget({h: _tabView.height, w: _tabView.width}, dataTab[i]);
 			componentPos[i] = _dimWidgetO;
 			var _widgetClass = require("workspace/widgetGeneric");
-			var _widgetO = _widgetClass(_dimWidgetO, dataTab[i].meta, i);
+			var _widgetO = _widgetClass(_dimWidgetO, dataTab[i].meta, i, userName);
 			_widgetsViewById[i] = _widgetO;
 			_tabView.add(_widgetO);
 			_tabView.add(Ti.UI.createLabel({ // Widget Label

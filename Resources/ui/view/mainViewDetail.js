@@ -9,18 +9,16 @@
 
 "use strict";
 
-var mainViewDetail = function mainViewDetail(mashup, mainView) {
+var mainViewDetail = function mainViewDetail(mashup, mainView, userName) {
 
 /* mashup structure
-
 mashup = {
 	name: string
 	creator: string
 	shared: bool
 	...
 }
-
- */
+*/
 	var _isApple = Yaast.API.HW.System.isApple();
 	var _isIOS7 = (_isApple && Ti.Platform.version.split('.')[0] === '7') ? true : false;
 
@@ -41,7 +39,12 @@ mashup = {
     var creatorLabel = Ti.UI.createLabel(theme.creatorLabel);
     creatorLabel.text = 'Mashup created by ' + mashup.creator;
  	_self.add(creatorLabel);
- 	
+
+    // Description
+    var descriptionLabel = Ti.UI.createLabel(theme.descriptionLabel);
+    //creatorLabel.text += mashup.longdescripton;
+ 	_self.add(descriptionLabel);
+
  	// loadButton
  	var loadButton = Ti.UI.createLabel(theme.loadButton);
  	_self.add(loadButton);
@@ -65,29 +68,31 @@ mashup = {
     	theme = null;
     };
 
-	var callback_function = function(data) {
+	/*var callback_function = function(data) {
 		// TODO if error volver al main o reintentar?
 		var _worksClass = require('workspace/workspaceManager');
 		var _worksObject = _worksClass({
 		    'topView' : (_isApple && _isIOS7) ? 20 : 0,
 			'heightView' : (_isApple && _isIOS7) ? _self.height - 20 : _self.height,
 			'data' : data
-		});
+		}, userName);
 		_worksClass = null;
 
 		mainView.parentView.window.add(_worksObject);
-	};
+	};*/
 
 	/** @title: loadWorkspace (Function)
 	 *  @usage: add Widgets and operators to ScrollView
 	 *  @extras: require workspaceManager */
 	var loadWorkspace = function loadWorkspace() { //TODO
 		// clean all views
-		mainView.destroy();
-		
-		var _conObject = require('/connections/appConnection');
+		//mainView.destroy();
+		//mainView = null;
+		mainView.parentView.showWorkspaceView(mashup.id);
+
+		/*var _conObject = require('/connections/appConnection');
 		_conObject.getWirecloud(callback_function, mashup.id);
-		_conObject = null;
+		_conObject = null;*/
 	};
 
 	loadButton.addEventListener('click', loadWorkspace);

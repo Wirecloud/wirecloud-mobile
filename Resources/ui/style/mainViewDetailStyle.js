@@ -21,7 +21,8 @@ var mainViewDetailStyle = (function() {
     rowFontSize = (_isApple) ? '20' : '18dp';
 
     _self.view = {
-        left: Yaast.API.HW.UI.getPlatformWidth() * 0.5,
+        //left: Yaast.API.HW.UI.getPlatformWidth() * 0.5,
+        left: 0,
         width: Yaast.API.HW.UI.getPlatformWidth() * 0.5,
         height: heightView,
         top: rowHeight,
@@ -50,6 +51,18 @@ var mainViewDetailStyle = (function() {
         },
         left: 15,
         top: parseInt(rowHeight) + 30
+	};
+
+	_self.descriptionLabel = {
+		color: '#FFFFFF',
+		height: rowHeight,
+        font: {
+            fontFamily: Yaast.FontAwesome.getFontFamily(),
+            fontSize: rowFontSize
+        },
+        left: 15,
+        top: _self.creatorLabel.top + parseInt(rowHeight),
+        text: 'Description: '
 	};
 	
 	_self.loadButton = {

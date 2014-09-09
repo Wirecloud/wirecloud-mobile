@@ -360,7 +360,7 @@
 	/** @title: downloadListResource (Function)
 	 *  @param: data (widgets and operators uri), number of widgets, callback_function
 	 *  @usage: create requests to download wirecloud files */
-	function downloadListResource(data, barrier, callback_function) {
+	function downloadListResource(data, barrier, callback_function, userName) {
 		var _error = {};
 		_error.value = false;
 		_error.files = {};
@@ -382,33 +382,34 @@
 					delete _resources[result.id];
 				}
 				if (Object.keys(_resources).length === 0) callback_function(_error);
-			});
+			},
+			userName);
 		}
 
 		/** @title: downloadResources (Function)
 		 *  @param: widgets uri, id, type [operator|widget] and callback_function
 		 *  @usage: download index.html and files */
-		function downloadResources(uri, id, flag, callback) {
+		function downloadResources(uri, id, flag, callback, userName) {
 			var urlResource = _mainUrl + 'api/resource/' + uri + '/description?include_wgt_files=true';
 			Ti.API.info("URL a descargar recurso -> " + urlResource);
 			var client = Ti.Network.createHTTPClient({
 				onload : function(e) {
-					var _type = (flag) ? 'widgets/' : 'operators/';
+					var _type = (flag) ? '/widgets/' : '/operators/';
 					var _files = JSON.parse(this.responseText);
 					_files = _files.wgt_files;
 					var _path = uri.split('/');
 					var _pathUse = '';
 					for (var k in _path) {
 						_pathUse = _pathUse + _path[k];
-						if (!Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, _type + _pathUse).exists())
-							Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, _type + _pathUse).createDirectory();
+						if (!Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, userName + _type + _pathUse).exists())
+							Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, userName + _type + _pathUse).createDirectory();
 						_pathUse = _pathUse + '/';
 					}
 					if(flag){
 						var _extension = JSON.parse(this.responseText);
 						_extension = _extension.code_url;
 						_extension = _extension.substr(_extension.lastIndexOf('/')+1, _extension.length-1);
-				    	Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'widgets/' + uri + '/TIWebView').write(_extension, false);
+				    	Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, userName + '/widgets/' + uri + '/TIWebView').write(_extension, false);
 						_extension = null;
 					}
 					_path = null;
@@ -445,7 +446,8 @@
 									});
 								}
 							}
-						});
+						},
+						userName);
 					}
 				},
 				onerror : function(e) {
@@ -473,7 +475,7 @@
 		/** @title: downloadFile (Function)
 		 *  @param: url and type [operator|widget], id and callback_function
 		 *  @usage: download any type file from wirecloud instance */
-		function downloadFile(folderType, uri, file, id, callback) {
+		function downloadFile(folderType, uri, file, id, callback, userName) {
 			var url = _mainUrl + 'showcase/media/' + uri + '/' + file;
 			Ti.API.info("URL a descargar -> " + url);
 			var client = Ti.Network.createHTTPClient({
@@ -482,11 +484,11 @@
 					var _pathUse = '';
 					for (var k = 0; k < _path.length - 1; k++) {
 						_pathUse = _pathUse + _path[k];
-						if (!Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, folderType + uri + '/' + _pathUse).exists())
-							Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, folderType + uri + '/' + _pathUse).createDirectory();
+						if (!Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, userName + folderType + uri + '/' + _pathUse).exists())
+							Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, userName + folderType + uri + '/' + _pathUse).createDirectory();
 						_pathUse = _pathUse + '/';
 					}
-					Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, folderType + uri + '/' + file).write(this.responseData, false);
+					Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, userName + folderType + uri + '/' + file).write(this.responseData, false);
 					Ti.API.info("Result of " + url + ": Success");
 					callback({
 						'id' : id,

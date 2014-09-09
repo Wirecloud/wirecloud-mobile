@@ -12,15 +12,13 @@ var mainViewStyle = (function() {
 
 	var _isApple = Yaast.API.HW.System.isApple();
 
-    var _self = {},
-    heightView = (_isApple) ?
-                  Yaast.API.HW.UI.getPlatformHeight() - 20 :
-                  Yaast.API.HW.UI.getPlatformHeight(),
-    rowHeight =  (_isApple) ? 44 : '48dp',
-    rowFontSize = (_isApple) ? '22' : '20dp';
+    var _self = {};
+    var heightView = Yaast.API.HW.UI.getPlatformHeight() - Yaast.API.HW.UI.getDefaultStatusBar();
+    var rowHeight =  (_isApple) ? 44 : '48dp';
+    var rowFontSize = (_isApple) ? '22' : '20dp';
 
     _self.view = {
-        top: (_isApple) ? 20 : 0,
+        top: Yaast.API.HW.UI.getDefaultStatusBar(),
         left: 0,
         height: heightView,
         width: Yaast.API.HW.UI.getPlatformWidth(),
@@ -36,7 +34,7 @@ var mainViewStyle = (function() {
     };
 
     _self.topBar = {
-        top: (_isApple) ? 1 : 14,
+        top: 0,
         left: 0,
         height: 50,
         width: _self.view.width,
@@ -46,7 +44,6 @@ var mainViewStyle = (function() {
     };
 
     _self.button = {
-        top: (_isApple) ? 7 : '4dp',
         font : {
             fontSize : parseInt(rowFontSize) * 2,
             fontFamily : Yaast.FontAwesome.getFontFamily()
@@ -59,8 +56,6 @@ var mainViewStyle = (function() {
     };
 
     _self.labelButton = {
-        height: (_isApple) ? 30 : '40dp',
-        top: (_isApple) ? 7 : '4dp',
         font : {
             fontSize : (_isApple) ? '20' : '18dp',
             fontFamily : 'Default'
@@ -87,19 +82,22 @@ var mainViewStyle = (function() {
         top: _self.topBar.top + _self.topBar.height,
         left: 0,
         backgroundColor: '#3F566D',
-        width : Yaast.API.HW.UI.getPlatformWidth() / 2
+        width : _self.view.width / 2,
+        height: _self.view.height - _self.topBar.height - 12
     };
 
     _self.rightView = {
         top: _self.topBar.top + _self.topBar.height,
-        left: Yaast.API.HW.UI.getPlatformWidth() / 2,
-        width : Yaast.API.HW.UI.getPlatformWidth() / 2,
+        left: _self.view.width / 2,
+        width : _self.view.width / 2,
         backgroundColor: "#4F6C88",
+        height: _self.view.height - _self.topBar.height - 13
     };
 
 	_self.welcomeLabel = {
 		color: '#3F566D',
 		height: rowHeight,
+		left: parseInt(_self.logo.left) + parseInt(_self.logo.width) + 40,
         font: {
             fontFamily: Yaast.FontAwesome.getFontFamily(),
             fontSize: parseInt(rowFontSize) * 1.5
@@ -115,11 +113,10 @@ var mainViewStyle = (function() {
             fontFamily: Yaast.FontAwesome.getFontFamily(),
             fontSize: rowFontSize
         },
-        text: 'Available Workspaces',
         color: '#FFFFFF',
 	};
 
-    _self.leftListViewTemplate = {
+    _self.ownWorkspacesViewTemplate = {
         childTemplates: [
             {
                 type: 'Ti.UI.Label',
@@ -159,7 +156,7 @@ var mainViewStyle = (function() {
         ],
         properties: {
         	backgroundColor: '#2B3E50',
-        	selectedBackgroundColor: 858585
+        	selectedBackgroundColor: 858585,
         },
         events: {}
     };
