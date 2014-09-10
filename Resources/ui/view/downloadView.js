@@ -190,11 +190,19 @@ function downloadView(h, listWidgets, listOperators, workspaceName, userName) {
 	/** @title: downloadLaterHandler (Function)
 	 *  @usage: clean view and show workspace without widgets */
 	_self.downloadLaterHandler = function downloadLaterHandler(){
+		// Clean View
+		_self.remove(_description);
+		_downloadIcon.removeEventListener('click', _self.downloadHandler);
+		_removeIcon.removeEventListener('click', _self.downloadLaterHandler);
+		_self.remove(_downloadIcon);
+		_downloadIcon = null;
+		_self.remove(_removeIcon);
+		_removeIcon = null;
 
 	};
 
 	/** @title: funShowWorkspace (Function)
-	 *  @usage: fireEvent showWorkspace (workspaceManager.js) */
+	 *  @usage: fireEvent showWorkspace (workspaceView.js) */
 	_self.funShowWorkspace = function funShowWorkspace(){
 		Ti.App.fireEvent('showWorkspace');
 	};
@@ -272,4 +280,4 @@ function downloadView(h, listWidgets, listOperators, workspaceName, userName) {
 
 }
 
-module.exports = downloadView
+module.exports = downloadView;
