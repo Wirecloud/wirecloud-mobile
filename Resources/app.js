@@ -43,7 +43,9 @@ var Yaast = {
     },
     "FontAwesome": require('fonts/FontAwesome4'),
     "API": require('lib/API'),
-    "Sandbox": {}
+    "Sandbox": {
+    	'currentView': null
+    }
 };
 
 (function() {

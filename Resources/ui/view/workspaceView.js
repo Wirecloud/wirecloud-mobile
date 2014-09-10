@@ -1,9 +1,10 @@
 
-//workspaceManager ScrollView Component Constructor
-function workspaceManager(parameters) {
+//workspaceView ScrollView Component Constructor
+function workspaceView(parameters, userName) {
 
-	var _isApple = Yaast.API.HW.System.isApple();
-	var _platformObject = require('ui/lib/platform')(parameters.data);
+	var _isApple = (Ti.Platform.osname == 'ipad');
+	var _isIOS7 = (_isApple && Ti.Platform.version.split('.')[0] === '7') ? true : false;
+	var _platformObject = require('workspace/platform')(parameters.data);
 	var _currentPage = 0;
 	var _scrollView;
 	var _downloadObject = null;
@@ -11,8 +12,8 @@ function workspaceManager(parameters) {
 	var _operatorsViewById = {};
 
 	// Visualization Self
-	var _self = Ti.UI.createView({
-		top : 0,
+	var _selfView = Ti.UI.createView({
+		top : parameters.topView,
 		left : 0,
 		height : parameters.heightView,
 		width : Ti.Platform.displayCaps.platformWidth,
@@ -23,55 +24,70 @@ function workspaceManager(parameters) {
 		rowRatio: (_platformObject.preferences["cell-height"]) ? _platformObject.preferences["cell-height"].value : 12
 	});
 
+	var _self = {
+		'view': _selfView
+	};
+
 	// Visualization ScrollView Workspace Function
 	_self.funShowWorkspace = function funShowWorkspace(){
 		Ti.App.removeEventListener('showWorkspace', _self.funShowWorkspace);
 		if(_downloadObject !== null){
 			_downloadObject.clearObject();
-			_self.remove(_downloadObject);
+			_selfView.remove(_downloadObject);
 			_downloadObject = null;
 		}
 		_scrollView = Ti.UI.createScrollableView({
 			top: 0,
 			left: 0,
-			height: _self.height,
-			width: _self.width
+			height: _selfView.height,
+			width: _selfView.width
 		});
 		_self.funEndScrollView = function funEndScrollView(e){
 			if (_currentPage != e.currentPage) {
-				_self.tabLabel.text = ' / ' + _self.platform.tabs[e.currentPage].name;
+				_selfView.tabLabel.text = ' / ' + _selfView.platform.tabs[e.currentPage].name;
 				_currentPage = e.currentPage;
 			}
 		};
 		_scrollView.addEventListener('scrollend', _self.funEndScrollView);
-		_self.add(_scrollView);
+		_selfView.add(_scrollView);
 		_scrollView.setViews(createGlobalView());
-		delete _self['funShowWorkspace'];
+		delete _selfView['funShowWorkspace'];
 	};
 
 	// Check Dependencies
 	var _widgets = new Array();
-	for (var i in _self.platform.widgetsInUseById){
-		if(_widgets.indexOf(_self.platform.widgetsInUseById[i].uri) === -1 && _self.platform.widgetsInUseById[i].name !== 'map-viewer'){
-			_widgets.push(_self.platform.widgetsInUseById[i].uri);
+	for (var i in _selfView.platform.widgetsInUseById){
+		if(_widgets.indexOf(_selfView.platform.widgetsInUseById[i].uri) === -1 && _selfView.platform.widgetsInUseById[i].name !== 'map-viewer'){
+			_widgets.push(_selfView.platform.widgetsInUseById[i].uri);
 		}
 	}
 	var _operators = new Array();
-	for (var i in _self.platform.operatorsInUseById){
-		if(_operators.indexOf(_self.platform.operatorsInUseById[i].uri) === -1){
-			_operators.push(_self.platform.operatorsInUseById[i].uri);
+	for (var i in _selfView.platform.operatorsInUseById){
+		if(_operators.indexOf(_selfView.platform.operatorsInUseById[i].uri) === -1){
+			_operators.push(_selfView.platform.operatorsInUseById[i].uri);
 		}
 	}
 	var _widgetsToDownload = new Array();
 	var _operatorsToDownload = new Array();
+	var _directory = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, userName);
+
+	if(!_directory.exists()){
+		_directory.createDirectory();
+		if (!Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, userName + '/widgets/').exists()) {
+    		Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, userName + '/widgets/').createDirectory();
+		}
+		if (!Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, userName + '/operators/').exists()) {
+    		Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, userName + '/operators/').createDirectory();
+		}
+	}
 	for (var i in _widgets){
-		if(!Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'widgets/'+_widgets[i]).exists()){
+		if(!Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, userName + '/widgets/'+_widgets[i]).exists()){
 			_widgetsToDownload.push(_widgets[i]);
 		}
 	}
 	_widgets = null;
 	for (var i in _operators){
-		if(!Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'operators/'+_operators[i]).exists()){
+		if(!Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, userName + '/operators/'+_operators[i]).exists()){
 			_operatorsToDownload.push(_operators[i]);
 		}
 	}
@@ -81,8 +97,8 @@ function workspaceManager(parameters) {
 		_self.funShowWorkspace();
 	}
 	else{
-		var _downloadObject = require('ui/lib/downloadsPlatform')(parameters.heightView, _widgetsToDownload, _operatorsToDownload, _self.platform.name);
-		_self.add(_downloadObject);
+		var _downloadObject = require('ui/view/downloadView')(parameters.heightView, _widgetsToDownload, _operatorsToDownload, _selfView.platform.name, userName);
+		_selfView.add(_downloadObject);
 	}
 
 	/** @title: createGlobalView (Function)
@@ -90,14 +106,14 @@ function workspaceManager(parameters) {
 	 *  @extras: performance */
 	function createGlobalView(){
 		var _aViews = new Array();
-		for (var i = 0; i < _self.platform.tabs.length; i++) {
-			_aViews.push(createTabView(_self.platform.tabs[i].widgets));
+		for (var i = 0; i < _selfView.platform.tabs.length; i++) {
+			_aViews.push(createTabView(_selfView.platform.tabs[i].widgets));
 		}
-		for (var i in _self.platform.operatorsInUseById){
-			var _operatorClass = require("ui/lib/operatorGeneric");
-			var _operatorO = _operatorClass(_self.platform.operatorsInUseById[i], i);
+		for (var i in _selfView.platform.operatorsInUseById){
+			var _operatorClass = require("workspace/operatorGeneric");
+			var _operatorO = _operatorClass(_selfView.platform.operatorsInUseById[i], i, userName);
 			_operatorsViewById[i] = _operatorO;
-			_self.add(_operatorO);
+			_selfView.add(_operatorO);
 			_operatorClass = null;
 			_operatorO = null;
 		}
@@ -111,15 +127,17 @@ function workspaceManager(parameters) {
 	 *  @extras: performance */
 	function createTabView(dataTab){
 		var _tabView = Ti.UI.createView({
-			height: _self.height - 20,
-			width: _self.width - 20,
+			height: _selfView.height - 20,
+			width: _selfView.width - 20,
 			top: 10,
 			left: 10,
 		});
+		var componentPos = {};
 		for(var i in dataTab){
 			var _dimWidgetO = getDimensionWidget({h: _tabView.height, w: _tabView.width}, dataTab[i]);
-			var _widgetClass = require("ui/lib/widgetGeneric");
-			var _widgetO = _widgetClass(_dimWidgetO, dataTab[i].meta, i);
+			componentPos[i] = _dimWidgetO;
+			var _widgetClass = require("workspace/widgetGeneric");
+			var _widgetO = _widgetClass(_dimWidgetO, dataTab[i].meta, i, userName);
 			_widgetsViewById[i] = _widgetO;
 			_tabView.add(_widgetO);
 			_tabView.add(Ti.UI.createLabel({ // Widget Label
@@ -129,7 +147,7 @@ function workspaceManager(parameters) {
 				width: _widgetO.width - 20,
 				height: 30,
 				verticalAlign: Ti.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
-				color: "#2F4E63"
+				color: "#E3DEDD"
 			}));
 			_widgetClass = null;
 			_widgetO = null;
@@ -145,8 +163,8 @@ function workspaceManager(parameters) {
 	 *  @parameters: dim (tabView size) data (JSON iWidget)
 	 *  @usage: return dimensions and position of Widget */
 	function getDimensionWidget(dim, data){
-		var _w = ((data.dimensions.width * 8) / _self.columnRatio) * (dim.w/8);
-		var _l = ((data.dimensions.left * 8) / _self.columnRatio) * (dim.w/8);
+		var _w = parseInt(((data.dimensions.width * 8) / _selfView.columnRatio) * (dim.w/8), 10);
+		var _l = parseInt(((data.dimensions.left * 8) / _selfView.columnRatio) * (dim.w/8), 10);
 		var _t;
 		if(_l > 0) {
 			_l = _l + 10;
@@ -188,9 +206,9 @@ function workspaceManager(parameters) {
 		var _theEntity, _target;
 		var _outputname = data.name;
 		var _eventData = data.dataEvent;
-		for (var i = 0; i < _self.platform.wiring.length; i++) {
-			if (_self.platform.wiring[i].source.endpoint == _outputname && _self.platform.wiring[i].source.id == data.id) {
-				_target = _self.platform.wiring[i].target;
+		for (var i = 0; i < _selfView.platform.wiring.length; i++) {
+			if (_selfView.platform.wiring[i].source.endpoint == _outputname && _selfView.platform.wiring[i].source.id == data.id) {
+				_target = _selfView.platform.wiring[i].target;
 				if(_target.endpoint === 'menuInput'){
 					var _a = 0;
 				}
@@ -200,7 +218,7 @@ function workspaceManager(parameters) {
 					_theEntity = _operatorsViewById[_target.id];
 				}
 				Ti.API.info('activateCallback from id: '+data.id+' to id: '+_target.id+' using endpoint: '+_target.endpoint);
-				if(_theEntity == '[object TiUIWebView]') {
+				if(_theEntity.apiName === 'Ti.UI.WebView') {
 					_theEntity.evalJS("MashupPlatform.activateCallback(" + "'" + _target.endpoint + "'" + "," + JSON.stringify(_eventData) + ");");
 				}
 				else {
@@ -253,11 +271,11 @@ function workspaceManager(parameters) {
 		var _preferences;
 		if(data.typeView === 'widget'){
 			_theEntity = _widgetsViewById[data.id];
-			_preferences = _self.platform.widgetsInUseById[data.id].preferences;
+			_preferences = _selfView.platform.widgetsInUseById[data.id].preferences;
 		}
 		else{
 			_theEntity = _operatorsViewById[data.id];
-			_preferences = _self.platform.operatorsInUseById[data.id].preferences;
+			_preferences = _selfView.platform.operatorsInUseById[data.id].preferences;
 		}
 		Ti.API.info('activatePreferenceCallback to id: '+data.id+' with preferences: '+ JSON.stringify(_preferences));
 		_theEntity.evalJS("MashupPlatform.activatePreferenceCallback(" + JSON.stringify(_preferences) + ");");
@@ -275,9 +293,9 @@ function workspaceManager(parameters) {
 		var _optArray = new Array();
 		var _start = 0;
 		var _len = 0;
-		if(_self.platform.tabs.length < 7){
-			for(var n in _self.platform.tabs){
-				_optArray.push(_self.platform.tabs[n].name);
+		if(_selfView.platform.tabs.length < 7){
+			for(var n in _selfView.platform.tabs){
+				_optArray.push(_selfView.platform.tabs[n].name);
 			}
 		}
 		else{
@@ -285,18 +303,18 @@ function workspaceManager(parameters) {
 				_start = 0;
 				_len = 7;
 				for(var i = 0; i < 7; i++){
-					_optArray.push(_self.platform.tabs[i].name);
+					_optArray.push(_selfView.platform.tabs[i].name);
 				}
 				_optArray.push('...');
 			}
 			else{
 				_start = index;
-				_len = (_start + _len <= _self.platform.tabs.length) ? 6 : _self.platform.tabs.length - _start;
+				_len = (_start + _len <= _selfView.platform.tabs.length) ? 6 : _selfView.platform.tabs.length - _start;
 				_optArray.push('...');
 				for(var i = _start; i < _start + _len; i++){
-					if(_self.platform.tabs[i]) _optArray.push(_self.platform.tabs[i].name);
+					if(_selfView.platform.tabs[i]) _optArray.push(_selfView.platform.tabs[i].name);
 				}
-				if(_start + _len < _self.platform.tabs.length) _optArray.push('...');
+				if(_start + _len < _selfView.platform.tabs.length) _optArray.push('...');
 			}
 		}
 		_optArray.push(L('alert_button_deleteTab'));
@@ -310,7 +328,7 @@ function workspaceManager(parameters) {
 			if(e.source.options[e.index] === L('alert_button_deleteTab')){
 				var _workid;
 				var _conObject = require('/connections/appConnection');
-				var _conA = _conObject.deleteWorkspaceTab(_self.platform.id, _scrollView.getCurrentPage(), function(values) {
+				var _conA = _conObject.deleteWorkspaceTab(_selfView.platform.id, _scrollView.getCurrentPage(), function(values) {
 					if (values == "Error") {
 						var _stringSearch;
 						if (Ti.Network.online) _stringSearch = (_isApple) ? "error_connection_login_ios" : "error_connection_login_android";
@@ -367,13 +385,13 @@ function workspaceManager(parameters) {
 	 *  @usage: destroy all variables of Tab
 	 *  @extras: memory management (null) */
 	_self.clearObjectTab = function clearObjectTab(positionView){
-		for (var i in _self.platform._widgetsViewById){
+		for (var i in _selfView.platform._widgetsViewById){
 			_widgetsViewById[i] = null;
 		}
 		_widgetsViewById = null;
 		for (var i in _operatorsViewById){
 			_operatorsViewById[i].clearObject();
-			_self.remove(_operatorsViewById[i]);
+			_selfView.remove(_operatorsViewById[i]);
 			_operatorsViewById[i] = null;
 		}
 		_operatorsViewById = null;
@@ -394,7 +412,7 @@ function workspaceManager(parameters) {
 	};
 
 	/** @title: clearObject (Function)
-	 *  @usage: destroy all variables of WorkspaceManager
+	 *  @usage: destroy all variables of WorkspaceView
 	 *  @extras: memory management (null) */
 	_self.clearObject = function clearObject(){
 		for (var i in _widgetsViewById){
@@ -403,7 +421,7 @@ function workspaceManager(parameters) {
 		_widgetsViewById = null;
 		for (var i in _operatorsViewById){
 			_operatorsViewById[i].clearObject();
-			_self.remove(_operatorsViewById[i]);
+			_selfView.remove(_operatorsViewById[i]);
 			_operatorsViewById[i] = null;
 		}
 		_operatorsViewById = null;
@@ -422,13 +440,13 @@ function workspaceManager(parameters) {
 			_scrollView.removeView(_scrollView.views[0]);
 		}
 		_scrollView.removeEventListener('scrollend', _self.funEndScrollView);
-		_self.remove(_scrollView);
+		_selfView.remove(_scrollView);
 		_scrollView = null;
-		delete _self['tabFunction'];
-		delete _self['platform'];
-		delete _self['columnRatio'];
-		delete _self['rowRatio'];
-		delete _self['funEndScrollView'];
+		delete _selfView['tabFunction'];
+		delete _selfView['platform'];
+		delete _selfView['columnRatio'];
+		delete _selfView['rowRatio'];
+		delete _selfView['funEndScrollView'];
 		Ti.App.removeEventListener('pushEvent', _self.funPushEvent);
 		delete _self['funPushEvent'];
 		Ti.App.removeEventListener('makeRequest', _self.funMakeRequest);
@@ -440,8 +458,11 @@ function workspaceManager(parameters) {
 		_currentPage = null;
 	};
 
-	return _self;
+	_self.destroy = function destroy() {
+		Ti.API.info(JSON.stringify(_self));
+	};
 
+	return _self;
 }
 
-module.exports = workspaceManager;
+module.exports = workspaceView;
