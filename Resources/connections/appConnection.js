@@ -407,7 +407,7 @@
 					}
 					if(flag){
 						var _extension = JSON.parse(this.responseText);
-						_extension = _extension.code_url;
+						_extension = _extension.contents.src;
 						_extension = _extension.substr(_extension.lastIndexOf('/')+1, _extension.length-1);
 				    	Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, userName + '/widgets/' + uri + '/TIWebView').write(_extension, false);
 						_extension = null;
