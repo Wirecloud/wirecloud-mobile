@@ -48,7 +48,7 @@ var loginView = function (parentWindow) {
             cancel : 0,
             buttonNames : ['Aceptar'],
             message : string,
-            title : 'AppBase W4T - Aviso'
+            title : '-- W4T --'
         });
         dialog.addEventListener('click', function(e) {
             dialog.hide();
@@ -179,6 +179,7 @@ var loginView = function (parentWindow) {
         internetIcon = null;
 		Ti.Network.removeEventListener('change', _self.onChangeConnection);
 		delete _self.view;
+		theme = null;
 	};
 
 	return _self;
