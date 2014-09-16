@@ -32,11 +32,12 @@ var Yaast = {
         return self;
     },
     "FontAwesome": require('fonts/FontAwesome4'),
-    "API": require('lib/API'),
     "Sandbox": {
-    	'currentView': null
+    	'currentView': null,
     }
 };
+Yaast.API = require('lib/API');
+
 // Merge shortcut
 Yaast["MergeObject"] = Yaast.API.SW.Utils.mergeObject;
 
