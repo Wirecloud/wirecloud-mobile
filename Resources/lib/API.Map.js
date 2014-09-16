@@ -72,7 +72,7 @@ var Map = ( function() {
             });
         };
         Ti.App.addEventListener("API_MAP_EDIT_EVENT", function(data) {
-
+			Ti.API.info("En Titanium, API_MAP_EDIT_EVENT recibido");
             //TODO: check events?
 
             var element = getElement(data.elementType, data.elementId);
@@ -80,21 +80,31 @@ var Map = ( function() {
                 return;
 
             if (data.action === "add") {
-                if (handlers[data.elementId] == null) {
-                    handlers[data.elementId] = {
+                if (handlers[data.elementId] == null || handlers[data.elementId][data.event] == null) {
+                	if(handlers[data.elementId] == null){
+                		handlers[data.elementId] = {};
+                	}
+                    handlers[data.elementId][data.event] = {
                         count : 1,
                         handler : eventHandler.bind(null, data.event, data.elementType, data.elementId)
                     };
-                    element.addEventListener(data.event, handlers[data.elementId].handler);
+                    element.addEventListener(data.event, handlers[data.elementId][data.event].handler);
+                    Ti.API.info("En Titanium, API_MAP_EDIT_EVENT, addEventListener ejecutado para evento " + data.event);
                 } else
-                    handlers[data.elementId].count++;
+                    handlers[data.elementId][data.event].count++;
             } else if (data.action === "remove") {
 
-                if (handlers[data.elementId] != null) {
-                    if (--handlers[data.elementId].count <= 0) {
-                        element.removeEventListener(data.event, handlers[data.elementId].handler);
-                        handlers[data.elementId].handler = null;
-                        delete handlers[data.elementId];
+                if (handlers[data.elementId] != null && handlers[data.elementId][data.event] != null) {
+                    if (--handlers[data.elementId][data.event].count <= 0) {
+                        element.removeEventListener(data.event, handlers[data.elementId][data.event].handler);
+                        handlers[data.elementId][data.event].handler = null;
+                        delete handlers[data.elementId][data.event];
+                        
+                        var count = 0;
+                        for(var a in handlers[data.elementId]) 
+                        	count++;
+                    	if(count === 0)
+                    		delete handlers[data.elementId];
                     }
                 }
             }
@@ -298,6 +308,15 @@ var Map = ( function() {
         _self.LAYER_TYPE_WMTS_1_0_0 = _self.Map.LAYER_TYPE_WMTS_1_0_0;
         _self.FORMAT_PNG = _self.Map.FORMAT_PNG;
         _self.FORMAT_JPEG = _self.Map.FORMAT_JPEG;
+        
+        
+        /*
+         * Check if there is support for the map.
+         * @return {Boolean} True if it can be used.
+         */
+        _self.isMapAvailable = function isMapAvailable(){
+        	return _self.Map.isGooglePlayServicesAvailable() == 0; //0 for Android
+        };
 
         /**
          * Creates a new map view.
@@ -474,7 +493,7 @@ var Map = ( function() {
                 return false;
             }
 
-            Ti.App.tabView.add(mapsList[mapsId]);
+            Yaast.Sandbox.tabView.add(mapsList[mapsId]);
             _self.setBound(mapId, viewId, options);
         };
 
@@ -491,24 +510,24 @@ var Map = ( function() {
                 return false;
             }
             if ( typeof options.width === 'undefined' || typeof options.height === 'undefined') {
-                options.width = parseInt(Ti.App.tabView.rect.width * 0.7);
-                options.height = parseInt(Ti.App.tabView.rect.height * 0.5);
+                options.width = parseInt(Yaast.Sandbox.tabView.rect.width * 0.7);
+                options.height = parseInt(Yaast.Sandbox.tabView.rect.height * 0.5);
                 options.top = 'undefined';
                 options.left = 'undefined';
             } else {
                 // Position
                 if ( typeof options.top !== 'undefined' || typeof options.bottom !== 'undefined') {
                     if ( typeof options.bottom === 'undefined') {
-                        options.top = parseInt(options.top + Ti.App.componentPos[viewId].top);
+                        options.top = parseInt(options.top + Yaast.Sandbox.componentPos[viewId].top);
                     } else {
-                        options.top = parseInt(Ti.App.componentPos[viewId].top + (Ti.App.componentPos[viewId].height - options.bottom));
+                        options.top = parseInt(Yaast.Sandbox.componentPos[viewId].top + (Yaast.Sandbox.componentPos[viewId].height - options.bottom));
                     }
                 }
                 if ( typeof options.left !== 'undefined' || typeof options.right !== 'undefined') {
                     if ( typeof options.right === 'undefined') {
-                        options.left = parseInt(options.left + Ti.App.componentPos[viewId].left);
+                        options.left = parseInt(options.left + Yaast.Sandbox.componentPos[viewId].left);
                     } else {
-                        options.left = parseInt(Ti.App.componentPos[viewId].left + (Ti.App.componentPos[viewId].width - options.right));
+                        options.left = parseInt(Yaast.Sandbox.componentPos[viewId].left + (Yaast.Sandbox.componentPos[viewId].width - options.right));
                     }
                 }
             }
@@ -525,7 +544,7 @@ var Map = ( function() {
          * @param {mapId} Map in which execute the action.
          */
         _self.removeBound = function removeBound(mapId) {
-            Ti.App.tabView.remove(mapsList[mapId]);
+            Yaast.Sandbox.tabView.remove(mapsList[mapId]);
         };
 
         /**
@@ -592,28 +611,46 @@ var Map = ( function() {
         /**
          * Gets the value of a property of the map.
          * @param {mapId} The map.
-         * @param {propertyName} String with the name of the property.
-         * @return {Object} The value of the property.
+         * @param {propertyName} String with the name of the property or array with a list of properties.
+         * @return {Object} The value of the property or an object with the properties and values requested in the property list.
          */
         _self.getMapProperty = function(mapId, propertyName) {
-
-            var validProperties = ["userLocation", "userLocationButton", "mapType", "region", "animate", "traffic", "enableZoomControls", "rect", "region", "zoom"];
-            var onlyIdProperties = ["annotations", "polygons", "layers", "routes"];
-
-            if (validProperties.indexOf(propertyName) >= 0) {
-                return getSetProperty("map", mapId, propertyName);
-
-            } else if (onlyIdProperties.indexOf(propertyName) >= 0) {
-                var values = getSetProperty("map", mapId, propertyName);
-                var ids = [];
-                for (var id in values)
-                ids.push(id);
-                return ids;
-
-            } else {
-                Ti.API.info("Error Getter method not found");
-                return;
-            }
+        	
+        	if(propertyName instanceof Array){
+        		
+        		var result = {};
+        		
+        		for(var x = 0; x < propertyName.length; x++){
+        			var val = _self.getMapProperty(mapId, propertyName[x]);
+        			if(typeof(val) !== 'undefined'){
+        				result[propertyName[x]] = val;
+        			}
+        		}
+        		
+        		return result;
+        		
+        	} else {
+        		
+        		var validProperties = ["userLocation", "userLocationButton", "mapType", "region", "animate", "traffic", "enableZoomControls", "rect", "region", "zoom"];
+	            var onlyIdProperties = ["annotations", "polygons", "layers", "routes"];
+	
+	            if (validProperties.indexOf(propertyName) >= 0) {
+	                return getSetProperty("map", mapId, propertyName);
+	
+	            } else if (onlyIdProperties.indexOf(propertyName) >= 0) {
+	                var values = getSetProperty("map", mapId, propertyName);
+	                var ids = [];
+	                for (var id in values)
+	                ids.push(id);
+	                return ids;
+	
+	            } else {
+	                Ti.API.info("Error Getter method not found");
+	                return;
+	            }
+        		
+        	}
+            
 
         };
 
@@ -858,19 +895,38 @@ var Map = ( function() {
         /**
          * Gets the value of a property of an annotation.
          * @param {annotationId} The annotation id.
-         * @param {propertyName} String with the name of the property.
-         * @return {Object} The value of the property.
+         * @param {propertyName} String with the name of the property or array with a list of properties.
+         * @return {Object} The value of the property or an object with the properties and values requested in the property list.
          */
         _self.getAnnotationProperty = function(annotationId, propertyName) {
+        	
+        	if(propertyName instanceof Array){
+        		
+        		var result = {};
+        		
+        		for(var x = 0; x < propertyName.length; x++){
+        			var val = _self.getAnnotationProperty(annotationId, propertyName[x]);
+        			if(typeof(val) !== 'undefined'){
+        				result[propertyName[x]] = val;
+        			}
+        		}
+        		
+        		return result;
+        		
+        	} else {
+        	
+        		var validProperties = ["id", "subtitle", "subtitleid", "title", "titleid", "latitude", "longitude", "draggable", "image", "pincolor", "customView", "leftButton", "leftView", "rightButton", "rightView", "showInfoWindow", "visible"];
 
-            var validProperties = ["id", "subtitle", "subtitleid", "title", "titleid", "latitude", "longitude", "draggable", "image", "pincolor", "customView", "leftButton", "leftView", "rightButton", "rightView", "showInfoWindow", "visible"];
-
-            if (validProperties.indexOf(propertyName) >= 0) {
-                return getSetProperty("annotation", annotationId, propertyName);
-            } else {
-                //TODO: Error Getter method not found
-                return;
-            }
+	            if (validProperties.indexOf(propertyName) >= 0) {
+	                return getSetProperty("annotation", annotationId, propertyName);
+	            } else {
+	                //TODO: Error Getter method not found
+	                return;
+	            }
+        		
+        	}
+        
+            
         };
 
         /**
@@ -991,19 +1047,36 @@ var Map = ( function() {
         /**
          * Gets the value of a property of a route.
          * @param {routeId} The route id.
-         * @param {propertyName} String with the name of the property.
-         * @return {Object} The value of the property.
+         * @param {propertyName} String with the name of the property or array with a list of properties.
+         * @return {Object} The value of the property or an object with the properties and values requested in the property list.
          */
         _self.getRouteProperty = function(routeId, propertyName) {
+        	
+        	if(propertyName instanceof Array){
+        		
+        		var result = {};
+        		
+        		for(var x = 0; x < propertyName.length; x++){
+        			var val = _self.getRouteProperty(routeId, propertyName[x]);
+        			if(typeof(val) !== 'undefined'){
+        				result[propertyName[x]] = val;
+        			}
+        		}
+        		
+        		return result;
+        		
+        	} else {
+        		
+        		var validProperties = ["id", "points", "width", "color"];
 
-            var validProperties = ["id", "points", "width", "color"];
-
-            if (validProperties.indexOf(propertyName) >= 0) {
-                return getSetProperty("route", routeId, propertyName);
-            } else {
-                //TODO: Error Getter method not found
-                return;
-            }
+	            if (validProperties.indexOf(propertyName) >= 0) {
+	                return getSetProperty("route", routeId, propertyName);
+	            } else {
+	                //TODO: Error Getter method not found
+	                return;
+	            }
+        		
+        	}
 
         };
 
@@ -1087,30 +1160,47 @@ var Map = ( function() {
         /**
          * Gets the value of a property of a polygon.
          * @param {polygonId} The polygon id.
-         * @param {propertyName} String with the name of the property.
-         * @return {Object} The value of the property.
+         * @param {propertyName} String with the name of the property or array with a list of properties.
+         * @return {Object} The value of the property or an object with the properties and values requested in the property list.
          */
         _self.getPolygonProperty = function(polygonId, propertyName) {
+        	
+        	if(propertyName instanceof Array){
+        		
+        		var result = {};
+        		
+        		for(var x = 0; x < propertyName.length; x++){
+        			var val = _self.getPolygonProperty(polygonId, propertyName[x]);
+        			if(typeof(val) !== 'undefined'){
+        				result[propertyName[x]] = val;
+        			}
+        		}
+        		
+        		return result;
+        		
+        	} else {
+        		
+        		var validProperties = ["id", "points", "holePoints", "strokeWidth", "strokeColor", "fillColor", "annotationId", "zIndex"];
 
-            var validProperties = ["id", "points", "holePoints", "strokeWidth", "strokeColor", "fillColor", "annotationId", "zIndex"];
-
-            if (validProperties.indexOf(propertyName) >= 0) {
-
-                if (propertyName === "annotationId") {//Special case, this is a "virtual" method
-                    var annotation = getSetProperty("polygon", polygonId, "annotation");
-                    if (annotation != null) {
-                        return annotation.getId();
-                    } else {
-                        return null;
-                    }
-                } else {
-                    return getSetProperty("polygon", polygonId, propertyName);
-                }
-
-            } else {
-                //TODO: Error Getter method not found
-                return;
-            }
+	            if (validProperties.indexOf(propertyName) >= 0) {
+	
+	                if (propertyName === "annotationId") {//Special case, this is a "virtual" method
+	                    var annotation = getSetProperty("polygon", polygonId, "annotation");
+	                    if (annotation != null) {
+	                        return annotation.getId();
+	                    } else {
+	                        return null;
+	                    }
+	                } else {
+	                    return getSetProperty("polygon", polygonId, propertyName);
+	                }
+	
+	            } else {
+	                //TODO: Error Getter method not found
+	                return;
+	            }	
+        			
+        	}
 
         };
 
@@ -1276,19 +1366,37 @@ var Map = ( function() {
         /**
          * Gets the value of a property of a layer.
          * @param {layerId} The layer id.
-         * @param {propertyName} String with the name of the property.
-         * @return {Object} The value of the property.
+         * @param {propertyName} String with the name of the property or array with a list of properties.
+         * @return {Object} The value of the property or an object with the properties and values requested in the property list.
          */
         _self.getLayerProperty = function(layerId, propertyName) {
+        	
+        	if(propertyName instanceof Array){
+        		
+        		var result = {};
+        		
+        		for(var x = 0; x < propertyName.length; x++){
+        			var val = _self.getLayerProperty(layerId, propertyName[x]);
+        			if(typeof(val) !== 'undefined'){
+        				result[propertyName[x]] = val;
+        			}
+        		}
+        		
+        		return result;
+        		
+        	} else {
+        		
+        		var validProperties = ["id", "baseUrl", "type", "name", "srs", "visible", "zIndex", "opacity", "format", "style", "tyleMatrixSet"];
 
-            var validProperties = ["id", "baseUrl", "type", "name", "srs", "visible", "zIndex", "opacity", "format", "style", "tyleMatrixSet"];
+	            if (validProperties.indexOf(propertyName) >= 0) {
+	                return getSetProperty("layer", layerId, propertyName);
+	            } else {
+	                //TODO: Error Getter method not found
+	                return;
+	            }
+        		
+        	}
 
-            if (validProperties.indexOf(propertyName) >= 0) {
-                return getSetProperty("layer", layerId, propertyName);
-            } else {
-                //TODO: Error Getter method not found
-                return;
-            }
         };
 
         /**
