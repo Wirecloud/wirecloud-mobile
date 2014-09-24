@@ -1,6 +1,6 @@
 //downloadsPlatform Window Component Constructor
 
-function downloadView(h, listWidgets, listOperators, workspaceName, userName) {
+function downloadView(h, listWidgets, listOperators, workspaceName, userName, operatorsIdsByName) {
 
 	var _isApple = Yaast.API.HW.System.isApple();
 	var _self = Ti.UI.createView({
@@ -134,14 +134,23 @@ function downloadView(h, listWidgets, listOperators, workspaceName, userName) {
      *  @usage: create HTML view */
     function createHTMLOperators(operators){
         for(var i in operators){
-            var _fileMashupPlatform = Ti.Filesystem.getFile(Ti.Filesystem.getApplicationDataDirectory(), userName + '/operators/' + i + '/mashupPlatform.js');
-            var _textMashupOriginal = Ti.Filesystem.getFile(Ti.Filesystem.getResourcesDirectory(), 'component/mashupPlatform.lib').read().toString();
+            var _fileMashupPlatform = Ti.Filesystem.getFile(Ti.Filesystem.getApplicationDataDirectory(), userName + '/operators/' + i + '/wiringPlatform.js');
+            var _textMashupOriginal = Ti.Filesystem.getFile(Ti.Filesystem.getResourcesDirectory(), 'workspace/wiring/wiringPlatformJS.lib').read().toString();
             var _fileBridge = Ti.Filesystem.getFile(Ti.Filesystem.getApplicationDataDirectory(), userName + '/operators/'+i+'/APIBridge.js');
-            var _textBridgeOriginal = Ti.Filesystem.getFile(Ti.Filesystem.getResourcesDirectory(), 'component/APIBridgeJS.lib').read().toString();
+            var _textBridgeOriginal = Ti.Filesystem.getFile(Ti.Filesystem.getResourcesDirectory(), 'workspace/APIBridge/APIBridgeJS.lib').read().toString();
 
             // Set Android/iOS var in the bridge. appleOS
             var res = _textBridgeOriginal.split("// ChangeMeYaaST!! appleOS bool");
             _textBridgeOriginal = res[0] + "var appleOS = " + _isApple + ";" + res[1];
+            Ti.API.info("++++++ Adding in Bridge: (operator) --> var appleOS = " + _isApple + ";");
+			res = null;
+
+			var operatorId = operatorsIdsByName[i];
+            // Set id var in the bridge.
+            var res2 = _textBridgeOriginal.split("// ChangeMeYaaST!! MagicID");
+            _textBridgeOriginal = res2[0] + "var id = " + operatorId + ";" + res2[1];
+            Ti.API.info("+++++++ Adding in Bridge: (operator) --> var id = " + operatorId + ";");
+            res2 = null;
 
             _fileMashupPlatform.write(_textMashupOriginal, false);
             _fileBridge.write(_textBridgeOriginal, false);
@@ -152,13 +161,14 @@ function downloadView(h, listWidgets, listOperators, workspaceName, userName) {
             var _routeHTML = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, userName + '/operators/' + i + '/index.html');
             var _textHTML = '<!DOCTYPE html>\n<html>\n\t<head>\n';
             _textHTML = _textHTML + '\t\t<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n';
-            _textHTML = _textHTML + '\t\t<script type="text/javascript" src="mashupPlatform.js"></script>\n';
+            _textHTML = _textHTML + '\t\t<script type="text/javascript" src="wiringPlatform.js"></script>\n';
             _textHTML = _textHTML + '\t\t<script type="text/javascript" src="APIBridge.js"></script>\n';
             var _files = JSON.parse(operators[i]);
             for(var j in _files){
                 if(_files[j].indexOf('.js') != -1) _textHTML = _textHTML + '\t\t<script type="text/javascript" src="' + _files[j] + '"></script>\n';
             };
             _textHTML = _textHTML + '\t</head>\n\t<body>\n\t</body>\n</html>';
+            //Ti.API.info('++++++++OPERATORS html: \n' + _textHTML);
             _routeHTML.write(_textHTML, false);
             _textHTML = null;
             _configOperator = null;
