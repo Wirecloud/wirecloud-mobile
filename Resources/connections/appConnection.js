@@ -52,7 +52,9 @@
 				response = this.responseText;
 				if (id !== undefined) {
 					var parsedResponse = JSON.parse(response);
-					getWorkspacesData(id, function(e) { callback_function([response, e]);});
+					getWorkspacesData(id, function(e) { 
+						callback_function([response, e]);
+					});
 				} else {
 					callback_function(response);
 				}
@@ -361,27 +363,34 @@
 	 *  @param: data (widgets and operators uri), number of widgets, callback_function
 	 *  @usage: create requests to download wirecloud files */
 	function downloadListResource(data, barrier, callback_function, userName) {
-		var _error = {};
-		_error.value = false;
-		_error.files = {};
+		var result = {};
+		result.value = false;
+		result.files = {};
 		var _resources = {};
 		for (var i = 0; i < data.length; i++) {
 			var flag = false;
-			if (i < barrier) flag = true;
-			_resources[i] = downloadResources(data[i], i, flag, function(result) {
-				_error.value = result.value;
-				if (_error.value == true && Ti.Network.online) {
-					_error.uri = "error_inet";
+			if (i < barrier) {
+				// flag operators
+				flag = true;
+			}
+
+			_resources[i] = downloadResources(data[i], i, flag, function(drResult) {
+				result.value = drResult.value;
+				if (result.value == true && Ti.Network.online) {
+					result.uri = "error_inet";
 					for(var j in _resources) {
 						_resources[j].abort();
 						delete _resources[j];
 					}
 				}
 				else {
-					if(result.flag == false) _error.files[result.uri] = JSON.stringify(result.files);
-					delete _resources[result.id];
+					if(drResult.flag == false) result.files[drResult.uri] = JSON.stringify(drResult.files);
+					delete _resources[drResult.id];
 				}
-				if (Object.keys(_resources).length === 0) callback_function(_error);
+
+				if (Object.keys(_resources).length === 0) {
+					callback_function(result);
+				}
 			},
 			userName);
 		}
