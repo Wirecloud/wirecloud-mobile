@@ -35,6 +35,7 @@ var API = (function() {
     self.SW.FileSystem = require('lib/API.FileSystem');
     self.SW.Contacts = require('lib/API.Contacts')(self);
     self.SW.Utils = require('lib/API.Utils')(self);
+    self.SW.Wiring = require('lib/API.Wiring');
     self.HW.Media = require('lib/API.Media')(self);
     self.SW.Notification = require('lib/API.Notification')(self);
     self.SW.Calendar = '';

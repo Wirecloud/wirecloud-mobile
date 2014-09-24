@@ -20,7 +20,7 @@ function platform(workspaceInfo) {
 
 	// Loop through all widgets and operators installed in Wirecloud
 	for (var _i in _tempInfoResources) {
-		var _protClass = require('ui/lib/widgetPrototype');
+		var _protClass = require('workspace/widgetPrototype');
 		if (_tempInfoResources[_i].type == 'widget') {
 			_widgetsByFullName[_i] = _protClass(_tempInfoResources[_i]);
 		} else { // operator
@@ -77,7 +77,7 @@ function platform(workspaceInfo) {
 
 	// Parse Tabs
 	for (var _i in _tempInfoWorkspace.tabs) {
-		var _widArray = parseIwidgets(_tempInfoWorkspace.tabs[_i].iwidgets); 
+		var _widArray = parseIwidgets(_tempInfoWorkspace.tabs[_i].iwidgets);
 		var _blocked = false;
 		for (var _j in _widArray){
 			if(_widArray[_j].readonly === 1){
