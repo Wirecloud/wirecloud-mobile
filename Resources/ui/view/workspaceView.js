@@ -4,12 +4,13 @@ function workspaceView(parameters, userName) {
 
 	var _isApple = (Ti.Platform.osname == 'ipad');
 	var _isIOS7 = (_isApple && Ti.Platform.version.split('.')[0] === '7') ? true : false;
-	var _platformObject = require('workspace/platform')(parameters.data);
+	var _platformObject = Yaast.API.SW.Wiring(parameters.data);
 	var _currentPage = 0;
 	var _scrollView;
 	var _downloadObject = null;
 	var _widgetsViewById = {};
 	var _operatorsViewById = {};
+	var _operatorsIdsByName = {};
 
 	// Visualization Self
 	var _selfView = Ti.UI.createView({
@@ -65,6 +66,7 @@ function workspaceView(parameters, userName) {
 	for (var i in _selfView.platform.operatorsInUseById){
 		if(_operators.indexOf(_selfView.platform.operatorsInUseById[i].uri) === -1){
 			_operators.push(_selfView.platform.operatorsInUseById[i].uri);
+			_operatorsIdsByName[_selfView.platform.operatorsInUseById[i].uri] = i;
 		}
 	}
 	var _widgetsToDownload = new Array();
@@ -97,7 +99,7 @@ function workspaceView(parameters, userName) {
 		_self.funShowWorkspace();
 	}
 	else{
-		var _downloadObject = require('ui/view/downloadView')(parameters.heightView, _widgetsToDownload, _operatorsToDownload, _selfView.platform.name, userName);
+		var _downloadObject = require('ui/view/downloadView')(parameters.heightView, _widgetsToDownload, _operatorsToDownload, _selfView.platform.name, userName, _operatorsIdsByName);
 		_selfView.add(_downloadObject);
 	}
 
@@ -154,6 +156,7 @@ function workspaceView(parameters, userName) {
 			_dimWidgetO = null;
 		}
 		i = null;
+		// TODO tablistview
 		Yaast.Sandbox.tabView = _tabView;
 		Yaast.Sandbox.componentPos = componentPos;
 		return _tabView;
@@ -246,7 +249,6 @@ function workspaceView(parameters, userName) {
 				_theEntity = _operatorsViewById[data.id];
 			}
 			var _result;
-			Ti.API.info(JSON.stringify(values));
 			if(values.status != 200) _result = "'" + 'Error' + "'";
 			else{
 				_result = JSON.stringify({
@@ -459,7 +461,7 @@ function workspaceView(parameters, userName) {
 	};
 
 	_self.destroy = function destroy() {
-		Ti.API.info(JSON.stringify(_self));
+		_self.view = null;
 	};
 
 	return _self;
