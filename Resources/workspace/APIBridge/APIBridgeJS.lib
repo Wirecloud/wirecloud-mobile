@@ -14,9 +14,18 @@
     var methodHandlers = {};
     var appleOS;
     var id;
+
+    // Dont remove the next line.
+    // ChangeMeYaaST!! appleOS bool
+
+	// Dont remove the next line.
+    // ChangeMeYaaST!! MagicID
+
     var prefs = null;
     var inputs = {};
     var callCounter = 0;
+
+    /* TODO DESTROY metod to Remove all eventListeners escuchar evento AppBaseDestroyCheck*/
 
     var _genericMethodHandler = function _genericMethodHandler(callback, methName, params, options, isAsync) {
         var methodInfo, data;
@@ -1137,7 +1146,7 @@
 
             Ti.API.info('[APIBridge] Invoking HTML callbacks for event: ' + publicEvent + ' with data:' + JSON.stringify(data));
 
-            if (eventHandlers[publicEvent] != null) { 
+            if (eventHandlers[publicEvent] != null) {
                 if (eventHandlers[publicEvent].length > 0) {
                     for (i = 0; i < eventHandlers[publicEvent].length; i ++) {
                         Ti.API.info('[APIBridge] invocando event callback html ' + publicEvent);
@@ -1304,7 +1313,7 @@
 
         if (this.lastChange + 1 == event.order) {
             // Real Next
-            Ti.API.info('[Audio DUMMY eventHandler] change event ' + event.order + ', viewId: ' + id + ', entityId: ' + this.id +', event: ' + JSON.stringify(event));
+            Ti.API.info('[Audio DUMMY changeHandler] change event ' + event.order + ', viewId: ' + id + ', entityId: ' + this.id +', event: ' + JSON.stringify(event));
             this.lastChange += 1;
             for (i = 0; i < this.callbacks.audioChange.length; i ++) {
                 Ti.API.info('[Audio DUMMY eventHandler] launching HTML callback... ' + this.callbacks.audioChange[i]);
@@ -1317,11 +1326,11 @@
             }
         } else if (this.lastChange + 1 < event.order) {
             // Push this event
-            Ti.API.info('[Audio DUMMY eventHandler] save this change event: ' + event.order);
+            Ti.API.info('[Audio DUMMY changeHandler] save this change event: ' + event.order);
             this.pendingEvents.audioChange[event.order] = event;
         } else {
             // ORDER ERROR
-            Ti.API.info('[Audio DUMMY eventHandler] change event order error ' + event.order + ' < ' + this.lastChange + ', event: ' + JSON.stringify(event));
+            Ti.API.info('[Audio DUMMY changeHandler] change event order error ' + event.order + ' < ' + this.lastChange + ', event: ' + JSON.stringify(event));
             // discard event
         }
     };
@@ -1331,7 +1340,7 @@
 
         if (this.lastProgress + 1 == event.order) {
             // Real Next
-            Ti.API.info('[Audio DUMMY eventHandler] progress event ' + event.order + ', viewId: ' + id + ', entityId: ' + this.id +', event: ' + JSON.stringify(event));
+            Ti.API.info('[Audio DUMMY processHandler] progress event ' + event.order + ', viewId: ' + id + ', entityId: ' + this.id +', event: ' + JSON.stringify(event));
             this.lastProgress += 1;
             for (i = 0; i < this.callbacks.audioProgress.length; i ++) {
                 this.callbacks.audioProgress[i](event);
@@ -1343,11 +1352,11 @@
             }
         } else if (this.lastProgress + 1 < event.order) {
             // Push this event
-            Ti.API.info('[Audio DUMMY eventHandler] save this progress event: ' + event.order);
+            Ti.API.info('[Audio DUMMY processHandler] save this progress event: ' + event.order);
             this.pendingEvents.audioProgress[event.order]= event;
         } else {
             // ORDER ERROR
-            Ti.API.info('[Audio DUMMY eventHandler] progress event order error ' + event.order + ' < ' + this.lastChange + ', event: ' + JSON.stringify(event));
+            Ti.API.info('[Audio DUMMY processHandler] progress event order error ' + event.order + ' < ' + this.lastChange + ', event: ' + JSON.stringify(event));
             // discard event
         }
     };
@@ -1858,6 +1867,4 @@
         }
     };
     // End Video Dummy
-    
-    
 }());
