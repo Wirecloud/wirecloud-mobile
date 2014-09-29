@@ -174,11 +174,14 @@ var appWindow = ( function() {
         if (!_isApple) {
             self.window.addEventListener('android:back', self.backToMainFunction);
         }
-		workspaceView = require('ui/view/workspaceView')({
+
+        var theWorkspaceInstance = require('ui/view/workspaceView');
+		workspaceView = theWorkspaceInstance({
 		    'topView' : Yaast.API.HW.UI.getDefaultStatusBar(),
 			'heightView' : Yaast.API.HW.UI.getPlatformHeight() - Yaast.API.HW.UI.getDefaultStatusBar(),
 			'data' : data
 		}, self.userName);
+
 		self.window.add(workspaceView.view);
 		Yaast.Sandbox.currentView = 'workspace';
 	};
