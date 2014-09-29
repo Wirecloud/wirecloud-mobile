@@ -27,7 +27,8 @@
 						wValues.push(rValues);
 						callback_function(wValues);
 					}
-				});
+				},
+				id);
 			}
 		};
 		if (id !== undefined) {
@@ -81,8 +82,13 @@
 	/** @title: getResources (Function)
 	 *  @param: csrftoken, sessionid, callback_function
 	 *  @usage: create HTTP client for Wirecloud API */
-	function getResources(callback_function) {
-		var url = _mainUrl + "api/resources";
+	function getResources(callback_function, optionalid) {
+		if (!optionalid) {
+			var url = _mainUrl + "api/resources";
+		} else {
+			var url = _mainUrl + "api/workspace/" + optionalid + "/resources";
+		}
+		Ti.API.info("[getResoruces]: " + url);
 		var client = Ti.Network.createHTTPClient({
 			onload : function(e) {
 				callback_function(this.responseText);
