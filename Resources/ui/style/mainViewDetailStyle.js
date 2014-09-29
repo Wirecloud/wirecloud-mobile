@@ -15,15 +15,15 @@ var mainViewDetailStyle = (function() {
 
     var _self = {},
     heightView = (_isApple) ?
-                  Yaast.API.HW.UI.getPlatformHeight() - 20 :
-                  Yaast.API.HW.UI.getPlatformHeight(),
+                  Yaast.API.UI.getPlatformHeight() - 20 :
+                  Yaast.API.UI.getPlatformHeight(),
     rowHeight =  (_isApple) ? 44 : '48dp',
     rowFontSize = (_isApple) ? '20' : '18dp';
 
     _self.view = {
-        //left: Yaast.API.HW.UI.getPlatformWidth() * 0.5,
+        //left: Yaast.API.UI.getPlatformWidth() * 0.5,
         left: 0,
-        width: Yaast.API.HW.UI.getPlatformWidth() * 0.5,
+        width: Yaast.API.UI.getPlatformWidth() * 0.5,
         height: heightView,
         top: rowHeight,
         backgroundColor: '#4F6C88'

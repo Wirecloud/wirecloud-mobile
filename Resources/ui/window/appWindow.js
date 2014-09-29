@@ -177,8 +177,8 @@ var appWindow = ( function() {
 
         var theWorkspaceInstance = require('ui/view/workspaceView');
 		workspaceView = theWorkspaceInstance({
-		    'topView' : Yaast.API.HW.UI.getDefaultStatusBar(),
-			'heightView' : Yaast.API.HW.UI.getPlatformHeight() - Yaast.API.HW.UI.getDefaultStatusBar(),
+		    'topView' : Yaast.API.UI.getDefaultStatusBar(),
+			'heightView' : Yaast.API.UI.getPlatformHeight() - Yaast.API.UI.getDefaultStatusBar(),
 			'data' : data
 		}, self.userName);
 

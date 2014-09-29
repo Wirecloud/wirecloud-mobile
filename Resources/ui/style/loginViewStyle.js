@@ -15,12 +15,12 @@ var loginViewStyle = (function() {
     _self = {};
 
     _self.view = {
-        top: Yaast.API.HW.UI.getDefaultStatusBar(),
+        top: Yaast.API.UI.getDefaultStatusBar(),
         left: 0,
         backgroundColor: '#FFFFFF',
-        width: Yaast.API.HW.UI.getPlatformWidth()
+        width: Yaast.API.UI.getPlatformWidth()
     };
-    _self.view.height = Yaast.API.HW.UI.getPlatformHeight() - _self.view.top;
+    _self.view.height = Yaast.API.UI.getPlatformHeight() - _self.view.top;
 
     _self.logo = {
         url: (Yaast.API.HW.System.isApple()) ? Ti.Filesystem.getResourcesDirectory()  + 'images/logo_tab.svg' : '../../images/logo_tab.svg',
@@ -37,7 +37,7 @@ var loginViewStyle = (function() {
     _self.systemLabel = {
         top: parseInt(_self.view.height * 0.075, 10),
         left: parseInt(_self.view.width/2+(_self.view.width/2 * 0.15), 10),
-        height: Yaast.API.HW.UI.getDefaultRowHeight(),
+        height: Yaast.API.UI.getDefaultRowHeight(),
         text: _os + ' ' + Yaast.API.HW.System.getVersion() + _version,
         textAlign: Ti.UI.TEXT_ALIGNMENT_LEFT,
         color: '#1F3346',

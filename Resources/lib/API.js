@@ -30,7 +30,6 @@ var API = (function() {
     };
 
     self.HW.System = require('lib/API.System');
-    self.HW.UI = require('lib/API.UI')(self);
     self.HW.Network = require('lib/API.Network')(self);
     self.SW.FileSystem = require('lib/API.FileSystem');
     self.SW.Contacts = require('lib/API.Contacts')(self);
@@ -47,6 +46,7 @@ var API = (function() {
     self.HW.Camera = require('lib/API.Camera')(self);
     self.HW.GeoLocation = '';
     self.HW.Gesture = '';
+    self.UI = require('lib/API.UI')(self);
 
     var events = {
         activeHandlers: {},

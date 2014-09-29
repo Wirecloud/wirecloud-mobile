@@ -13,15 +13,15 @@ var mainViewStyle = (function() {
 	var _isApple = Yaast.API.HW.System.isApple();
 
     var _self = {};
-    var heightView = Yaast.API.HW.UI.getPlatformHeight() - Yaast.API.HW.UI.getDefaultStatusBar();
+    var heightView = Yaast.API.UI.getPlatformHeight() - Yaast.API.UI.getDefaultStatusBar();
     var rowHeight =  (_isApple) ? 44 : '48dp';
     var rowFontSize = (_isApple) ? '22' : '20dp';
 
     _self.view = {
-        top: Yaast.API.HW.UI.getDefaultStatusBar(),
+        top: Yaast.API.UI.getDefaultStatusBar(),
         left: 0,
         height: heightView,
-        width: Yaast.API.HW.UI.getPlatformWidth(),
+        width: Yaast.API.UI.getPlatformWidth(),
         backgroundColor: '#5F5F5F'
     };
 

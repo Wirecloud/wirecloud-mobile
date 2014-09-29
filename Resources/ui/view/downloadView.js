@@ -7,7 +7,7 @@ function downloadView(h, listWidgets, listOperators, workspaceName, userName, op
 		top : 0,
 		left : 0,
 		height : h,
-		width : Yaast.API.HW.UI.getPlatformWidth(),
+		width : Yaast.API.UI.getPlatformWidth(),
 		fontAw : Yaast.FontAwesome
 	});
 
