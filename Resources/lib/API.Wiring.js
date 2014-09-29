@@ -55,7 +55,12 @@ function platform(workspaceInfo) {
 		var _widgetsInUseInThisTabById = {};
 		for (var _i in iwidgets) {
 			var _metaInfo = _widgetsByFullName[iwidgets[_i].widget];
-			_metaInfo.readonly = iwidgets[_i].readOnly;
+			if (_metaInfo) {
+				_metaInfo.readonly = iwidgets[_i].readOnly;
+			} else {
+				Ti.API.info('[API.Wiring] Widget not available: ' + iwidgets[_i].widget);
+				return _widgetsInUseInThisTabById;
+			}
 			for (var _j in _metaInfo.preferences){
 				_metaInfo.preferences[_j] = iwidgets[_i].variables[_j].value;
 			}
