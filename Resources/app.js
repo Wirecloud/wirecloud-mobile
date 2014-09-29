@@ -39,7 +39,7 @@ var Yaast = {
 Yaast.API = require('lib/API');
 
 Ti.API.info('WELCOME 2 Wirecloud 4 Tablet!!!');
-Ti.API.info('Screen Density: ' + Yaast.API.HW.UI.getDensityScreen());
+Ti.API.info('Screen Density: ' + Yaast.API.HW.UI.getScreenDensity());
 
 // Merge shortcut
 Yaast["MergeObject"] = Yaast.API.SW.Utils.mergeObject;
