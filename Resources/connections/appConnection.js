@@ -1,9 +1,10 @@
 (function() {
 
 	var _isApple = (Ti.Platform.osname == 'ipad');
-	//var _mainUrl = "https://mashup.lab.fi-ware.eu/";
-	//var _mainUrl = "http://138.100.12.106:8088/";
-	var _mainUrl = "https://wirecloud.conwet.fi.upm.es/";
+	var _mainUrl = Yaast.Sandbox.currentURL;
+	if (_mainUrl[_mainUrl.length - 1] !== '/') {
+		_mainUrl = _mainUrl + '/';
+	}
 	var _tim = 100000;
 
 	/** @title: getWirecloud (Function)
@@ -416,15 +417,15 @@
 					var _pathUse = '';
 					for (var k in _path) {
 						_pathUse = _pathUse + _path[k];
-						if (!Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, userName + _type + _pathUse).exists())
-							Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, userName + _type + _pathUse).createDirectory();
+						if (!Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, Yaast.Sandbox.instanceDir + userName + _type + _pathUse).exists())
+							Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, Yaast.Sandbox.instanceDir + userName + _type + _pathUse).createDirectory();
 						_pathUse = _pathUse + '/';
 					}
 					if(flag){
 						var _extension = JSON.parse(this.responseText);
 						_extension = _extension.contents.src;
 						_extension = _extension.substr(_extension.lastIndexOf('/')+1, _extension.length-1);
-				    	Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, userName + '/widgets/' + uri + '/TIWebView').write(_extension, false);
+				    	Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, Yaast.Sandbox.instanceDir + userName + '/widgets/' + uri + '/TIWebView').write(_extension, false);
 						_extension = null;
 					}
 					_path = null;
@@ -499,11 +500,11 @@
 					var _pathUse = '';
 					for (var k = 0; k < _path.length - 1; k++) {
 						_pathUse = _pathUse + _path[k];
-						if (!Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, userName + folderType + uri + '/' + _pathUse).exists())
-							Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, userName + folderType + uri + '/' + _pathUse).createDirectory();
+						if (!Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, Yaast.Sandbox.instanceDir + userName + folderType + uri + '/' + _pathUse).exists())
+							Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, Yaast.Sandbox.instanceDir + userName + folderType + uri + '/' + _pathUse).createDirectory();
 						_pathUse = _pathUse + '/';
 					}
-					Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, userName + folderType + uri + '/' + file).write(this.responseData, false);
+					Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, Yaast.Sandbox.instanceDir + userName + folderType + uri + '/' + file).write(this.responseData, false);
 					Ti.API.info("Result of " + url + ": Success");
 					callback({
 						'id' : id,

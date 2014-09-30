@@ -34,15 +34,37 @@ var Yaast = {
     "FontAwesome": require('fonts/FontAwesome4'),
     "Sandbox": {
     	'currentView': null,
+    	'appConfig': {
+    		'config': {
+    			'lastInstance': null,
+    			'lastConnection': null,
+    			'lastUser': null,
+    		},
+    		'wcDirByURL' : {},
+    		'lastId' : 0
+    	},
+    	'defaultURL': "https://wirecloud.conwet.fi.upm.es/",
+    	// TODO merge David login
+    	'currentURL': "https://wirecloud.conwet.fi.upm.es/"
     }
 };
 Yaast.API = require('lib/API');
 
-Ti.API.info('WELCOME 2 Wirecloud 4 Tablet!!!');
-Ti.API.info('Screen Density: ' + Yaast.API.UI.getScreenDensity());
-
 // Merge shortcut
 Yaast["MergeObject"] = Yaast.API.SW.Utils.mergeObject;
+
+// General app config
+var metaFile = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'w4tmeta');
+if (metaFile.exists()) {
+	// Restore last config
+	Yaast.Sandbox.appConfig.config = JSON.parse(Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'w4tmeta').read().toString());
+} else {
+	// Create w4tmeta file with default values
+	metaFile.write(JSON.stringify(Yaast.Sandbox.appConfig.config));
+}
+
+Ti.API.info('WELCOME 2 Wirecloud 4 Tablet!!!');
+Ti.API.info('Screen Density: ' + Yaast.API.UI.getScreenDensity());
 
 (function() {
 	Ti.API.info('Ti.Platform.displayCaps.density: ' + Ti.Platform.displayCaps.density);

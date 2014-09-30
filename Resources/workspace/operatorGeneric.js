@@ -4,7 +4,7 @@ function operatorGeneric(parameters, idOperator, userName) {
 
 	var _isApple = (Ti.Platform.osname == 'ipad');
 	var _self;
-	var _routeHTML = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, userName + '/operators/' + parameters.uri + '/index.html');
+	var _routeHTML = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, Yaast.Sandbox.instanceDir + userName + '/operators/' + parameters.uri + '/index.html');
 	_self = Ti.UI.createWebView({
 		url : _routeHTML.nativePath,
 		width : 0,

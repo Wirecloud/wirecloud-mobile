@@ -190,9 +190,9 @@ var mainView = function mainView(parentWindow, userName) {
     // Create Connection to fill ListView
     _self.reloadTable = function reloadTable() {
     	Ti.API.info('----reloadTable in MainView');
-        var compFolder = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'composition').getDirectoryListing();
+        var compFolder = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, Yaast.Sandbox.instanceDir + 'composition').getDirectoryListing();
         var i;
-        if(compFolder.length === 0){
+        if(compFolder.length === 0) {
         	Ti.API.info('----No offline Workspaces availables');
         	// TODO esto no va, hay que usar secciones, ya que se trata de un listView
             //ownWorkspacesView.setTouchEnabled(false);
@@ -205,7 +205,7 @@ var mainView = function mainView(parentWindow, userName) {
             var rows = [];
             for(i = 0; i < compFolder.length; i++){
                 var metadataComp = JSON.parse(Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory,
-                    'composition/' + compFolder[i] + '/', '.metadata').read().toString());
+                    Yaast.Sandbox.instanceDir + 'composition/' + compFolder[i] + '/', '.metadata').read().toString());
                 _self.compositions[compFolder[i]] = metadataComp;
                 rows.push({
                     id: {

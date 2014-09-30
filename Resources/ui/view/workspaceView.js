@@ -71,25 +71,25 @@ function workspaceView(parameters, userName) {
 	}
 	var _widgetsToDownload = new Array();
 	var _operatorsToDownload = new Array();
-	var _directory = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, userName);
+	var _directory = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, Yaast.Sandbox.instanceDir + userName);
 
 	if(!_directory.exists()){
 		_directory.createDirectory();
-		if (!Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, userName + '/widgets/').exists()) {
-    		Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, userName + '/widgets/').createDirectory();
+		if (!Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, Yaast.Sandbox.instanceDir + userName + '/widgets/').exists()) {
+    		Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, Yaast.Sandbox.instanceDir + userName + '/widgets/').createDirectory();
 		}
-		if (!Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, userName + '/operators/').exists()) {
-    		Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, userName + '/operators/').createDirectory();
+		if (!Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, Yaast.Sandbox.instanceDir + userName + '/operators/').exists()) {
+    		Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, Yaast.Sandbox.instanceDir + userName + '/operators/').createDirectory();
 		}
 	}
 	for (var i in _widgets){
-		if(!Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, userName + '/widgets/'+_widgets[i]).exists()){
+		if(!Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, Yaast.Sandbox.instanceDir + userName + '/widgets/'+_widgets[i]).exists()){
 			_widgetsToDownload.push(_widgets[i]);
 		}
 	}
 	_widgets = null;
 	for (var i in _operators){
-		if(!Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, userName + '/operators/'+_operators[i]).exists()){
+		if(!Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, Yaast.Sandbox.instanceDir + userName + '/operators/'+_operators[i]).exists()){
 			_operatorsToDownload.push(_operators[i]);
 		}
 	}

@@ -5,12 +5,12 @@ function widgetGeneric(dim, parameters, idWidget, userName) {
 
 	var _isApple = (Ti.Platform.osname == 'ipad');
 	var _self;
-	var _routeHTML = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, userName + '/widgets/'+parameters.uri+'/index.html');
+	var _routeHTML = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, Yaast.Sandbox.instanceDir + userName + '/widgets/'+parameters.uri+'/index.html');
 	var _textHTML = _routeHTML.read().toString();
 	if(_textHTML.indexOf('wiringPlatform.js') < 0){
-		var _fileMashupPlatform = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, userName + '/widgets/'+parameters.uri+'/wiringPlatform.js');
+		var _fileMashupPlatform = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, Yaast.Sandbox.instanceDir + userName + '/widgets/'+parameters.uri+'/wiringPlatform.js');
 		var _textMashupOriginal = Ti.Filesystem.getFile(Ti.Filesystem.getResourcesDirectory(), 'workspace/wiring/wiringPlatformJS.lib').read().toString();
-		var _fileBridge = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, userName + '/widgets/'+parameters.uri+'/APIBridge.js');
+		var _fileBridge = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, Yaast.Sandbox.instanceDir + userName + '/widgets/'+parameters.uri+'/APIBridge.js');
         var _textBridgeOriginal = Ti.Filesystem.getFile(Ti.Filesystem.getResourcesDirectory(), 'workspace/APIBridge/APIBridgeJS.lib').read().toString();
 		_fileMashupPlatform.write(_textMashupOriginal, false);
 

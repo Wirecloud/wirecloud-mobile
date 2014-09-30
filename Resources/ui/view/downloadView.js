@@ -2,6 +2,7 @@
 
 function downloadView(h, listWidgets, listOperators, workspaceName, userName, operatorsIdsByName) {
 
+	var _mainFolderName = Yaast.Sandbox.mainFolderName;
 	var _isApple = Yaast.API.HW.System.isApple();
 	var _self = Ti.UI.createView({
 		top : 0,
@@ -134,9 +135,9 @@ function downloadView(h, listWidgets, listOperators, workspaceName, userName, op
      *  @usage: create HTML view */
     function createHTMLOperators(operators){
         for(var i in operators){
-            var _fileMashupPlatform = Ti.Filesystem.getFile(Ti.Filesystem.getApplicationDataDirectory(), userName + '/operators/' + i + '/wiringPlatform.js');
+            var _fileMashupPlatform = Ti.Filesystem.getFile(Ti.Filesystem.getApplicationDataDirectory(), Yaast.Sandbox.instanceDir + userName + '/operators/' + i + '/wiringPlatform.js');
             var _textMashupOriginal = Ti.Filesystem.getFile(Ti.Filesystem.getResourcesDirectory(), 'workspace/wiring/wiringPlatformJS.lib').read().toString();
-            var _fileBridge = Ti.Filesystem.getFile(Ti.Filesystem.getApplicationDataDirectory(), userName + '/operators/'+i+'/APIBridge.js');
+            var _fileBridge = Ti.Filesystem.getFile(Ti.Filesystem.getApplicationDataDirectory(), Yaast.Sandbox.instanceDir + userName + '/operators/'+i+'/APIBridge.js');
             var _textBridgeOriginal = Ti.Filesystem.getFile(Ti.Filesystem.getResourcesDirectory(), 'workspace/APIBridge/APIBridgeJS.lib').read().toString();
 
             // Set Android/iOS var in the bridge. appleOS
@@ -158,7 +159,7 @@ function downloadView(h, listWidgets, listOperators, workspaceName, userName, op
             _fileMashupPlatform = null;
             _fileBridge = null;
             _fileMashupPlatform = null;
-            var _routeHTML = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, userName + '/operators/' + i + '/index.html');
+            var _routeHTML = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, Yaast.Sandbox.instanceDir + userName + '/operators/' + i + '/index.html');
             var _textHTML = '<!DOCTYPE html>\n<html>\n\t<head>\n';
             _textHTML = _textHTML + '\t\t<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">\n';
             _textHTML = _textHTML + '\t\t<script type="text/javascript" src="wiringPlatform.js"></script>\n';

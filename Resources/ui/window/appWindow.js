@@ -96,6 +96,7 @@ var appWindow = ( function() {
 
     // Show Login View
     self.showLoginView = function showLoginView() {
+
         loginView = require('ui/view/loginView')(self);
     	if (!_isApple) {
             self.window.addEventListener('android:back', quitFunction);
@@ -130,7 +131,62 @@ var appWindow = ( function() {
     // Show Main View
     self.showMainView = function showMainView(userName) {
         self.userName = userName;
-        if (!_isApple) {
+
+		// TODO put this code somewhere in loginView (merge David)
+        // Wirecloud Instance Dir 
+        var dirInstance = Yaast.Sandbox.appConfig.wcDirByURL[Yaast.Sandbox.currentURL];
+        if (dirInstance === undefined) {
+        	dirInstance = (Yaast.Sandbox.appConfig.lastId + 1) + '/';
+        	Yaast.Sandbox.appConfig.lastId ++;
+        	Yaast.Sandbox.appConfig.wcDirByURL[Yaast.Sandbox.currentURL] = dirInstance;
+        }
+        Yaast.Sandbox.instanceDir = dirInstance;
+
+		var timestamp = new Date().getTime();
+        // Create directory and metainfo for new users
+        var userMeta = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, Yaast.Sandbox.instanceDir + userName + '/usermeta');
+        if (!userMeta.exists()) {
+        	Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, Yaast.Sandbox.instanceDir).createDirectory();
+        	Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, Yaast.Sandbox.instanceDir + userName).createDirectory();
+        	var userDic = {};
+        	userDic[userName] = timestamp;
+            var initialInstanceMeta = {
+            	'url': Yaast.Sandbox.currentURL,
+        		'lastUser': userName,
+        		'users': userDic,
+        		'folderId':Yaast.Sandbox.appConfig.lastId
+        	};
+        	Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, Yaast.Sandbox.instanceDir + '/workspacemeta').write(JSON.stringify(initialInstanceMeta), false);
+        	var initialMeta = {
+        		'userName': userName,
+        	};
+        	userMeta.write(JSON.stringify(initialMeta), false);
+        } else {
+        	var metaInstance = JSON.parse(Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, Yaast.Sandbox.instanceDir + '/workspacemeta').read().toString());
+        	// Update lasUser in meta
+            metaInstance.lastUser = userName;
+            metaInstance.users[userName] = timestamp;
+        	Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, Yaast.Sandbox.instanceDir + '/workspacemeta').write(JSON.stringify(metaInstance), false);
+        }
+
+		// TODO put this code somewhere in loginView (merge David)
+		// Login log
+		var fullLoginlog = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'log/' + 'loginlog');
+		var loginLog = {
+			'timestamp': timestamp,
+			'user': userName,
+			'mode': Yaast.API.HW.Network.getNetwork(),
+			'mac': Yaast.API.HW.System.getMacAddress(),
+			'ip': Yaast.API.HW.Network.getIpAddress(),
+			'SO': Yaast.API.HW.System.getDeviceOs() + ' ' + Yaast.API.HW.System.getVersion()
+		};
+		if (!fullLoginlog.exists()) {
+			Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'log').createDirectory();
+		}
+		fullLoginlog.write(new Date().getTime() + '\n' + JSON.stringify(loginLog) + '\n\n', true);
+
+		// Back button
+		if (!_isApple) {
             self.window.addEventListener('android:back', logoutFunction);
         }
         mainView = require('ui/view/mainView')(self, userName);
