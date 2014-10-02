@@ -132,16 +132,6 @@ var appWindow = ( function() {
     self.showMainView = function showMainView(userName) {
         self.userName = userName;
 
-		// TODO put this code somewhere in loginView (merge David)
-        // Wirecloud Instance Dir 
-        var dirInstance = Yaast.Sandbox.appConfig.wcDirByURL[Yaast.Sandbox.currentURL];
-        if (dirInstance === undefined) {
-        	dirInstance = (Yaast.Sandbox.appConfig.lastId + 1) + '/';
-        	Yaast.Sandbox.appConfig.lastId ++;
-        	Yaast.Sandbox.appConfig.wcDirByURL[Yaast.Sandbox.currentURL] = dirInstance;
-        }
-        Yaast.Sandbox.instanceDir = dirInstance;
-
 		var timestamp = new Date().getTime();
         // Create directory and metainfo for new users
         var userMeta = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, Yaast.Sandbox.instanceDir + userName + '/usermeta');
@@ -168,22 +158,6 @@ var appWindow = ( function() {
             metaInstance.users[userName] = timestamp;
         	Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, Yaast.Sandbox.instanceDir + '/workspacemeta').write(JSON.stringify(metaInstance), false);
         }
-
-		// TODO put this code somewhere in loginView (merge David)
-		// Login log
-		var fullLoginlog = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'log/' + 'loginlog');
-		var loginLog = {
-			'timestamp': timestamp,
-			'user': userName,
-			'mode': Yaast.API.HW.Network.getNetwork(),
-			'mac': Yaast.API.HW.System.getMacAddress(),
-			'ip': Yaast.API.HW.Network.getIpAddress(),
-			'SO': Yaast.API.HW.System.getDeviceOs() + ' ' + Yaast.API.HW.System.getVersion()
-		};
-		if (!fullLoginlog.exists()) {
-			Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'log').createDirectory();
-		}
-		fullLoginlog.write(new Date().getTime() + '\n' + JSON.stringify(loginLog) + '\n\n', true);
 
 		// Back button
 		if (!_isApple) {
