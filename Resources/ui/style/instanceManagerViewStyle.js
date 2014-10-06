@@ -113,7 +113,7 @@ var loginViewStyle = (function() {
 
 	// Configuration Form Instances
 
-    _self.conectionView = {
+    _self.connectionView = {
     	bottom: parseInt((_self.containerView.height*3.75)/100), // 60 -> 7.5 %
     	width: '94%',
         left: '3%',
@@ -146,11 +146,11 @@ var loginViewStyle = (function() {
         }
     };
     
-    _self.conectionListViewTemplate = {
+    _self.connectionListViewTemplate = {
         childTemplates: [
             {
                 type: 'Ti.UI.Label',
-                bindId: 'conection',
+                bindId: 'connection',
                 properties: {
                     layout: 'horizontal',
                     color: _background,
@@ -184,11 +184,11 @@ var loginViewStyle = (function() {
         events: {}
     };
     
-    _self.conectionListViewTemplateConected = {
+    _self.connectionListViewTemplateConected = {
         childTemplates: [
             {
                 type: 'Ti.UI.Label',
-                bindId: 'conection',
+                bindId: 'connection',
                 properties: {
                     layout: 'horizontal',
                     color: _background,
@@ -237,11 +237,11 @@ var loginViewStyle = (function() {
         events: {}
     };
     
-    _self.conectionListViewTemplateChoosed = {
+    _self.connectionListViewTemplateChoosed = {
         childTemplates: [
             {
                 type: 'Ti.UI.Label',
-                bindId: 'conection',
+                bindId: 'connection',
                 properties: {
                     layout: 'horizontal',
                     color: _fontColor,
@@ -272,7 +272,7 @@ var loginViewStyle = (function() {
             },  
             {
                 type: 'Ti.UI.Label',
-                bindId: 'edit_conection',
+                bindId: 'edit_connection',
                 properties: {
                     layout: 'horizontal',
                     color: _editColor,
@@ -287,7 +287,7 @@ var loginViewStyle = (function() {
             }, 
             {
                 type: 'Ti.UI.Label',
-                bindId: 'delete_conection',
+                bindId: 'delete_connection',
                 properties: {
                     layout: 'horizontal',
                     color: _deleteColor,
@@ -347,11 +347,11 @@ var loginViewStyle = (function() {
         events: {}
     };
     
-    _self.conectionListViewTemplateChoosedConected = {
+    _self.connectionListViewTemplateChoosedConected = {
         childTemplates: [
             {
                 type: 'Ti.UI.Label',
-                bindId: 'conection',
+                bindId: 'connection',
                 properties: {
                     layout: 'horizontal',
                     color: _background,
@@ -382,7 +382,7 @@ var loginViewStyle = (function() {
             },  
             {
                 type: 'Ti.UI.Label',
-                bindId: 'edit_conection',
+                bindId: 'edit_connection',
                 properties: {
                     layout: 'horizontal',
                     color: _editColor2,
@@ -397,7 +397,7 @@ var loginViewStyle = (function() {
             }, 
             {
                 type: 'Ti.UI.Label',
-                bindId: 'delete_conection',
+                bindId: 'delete_connection',
                 properties: {
                     layout: 'horizontal',
                     color: _deleteColor2,
@@ -457,11 +457,11 @@ var loginViewStyle = (function() {
         events: {}
     };
     
-    _self.conectionListViewTemplatePublicChoosed = {
+    _self.connectionListViewTemplatePublicChoosed = {
         childTemplates: [
             {
                 type: 'Ti.UI.Label',
-                bindId: 'conection',
+                bindId: 'connection',
                 properties: {
                     layout: 'horizontal',
                     color: _fontColor,
@@ -537,11 +537,11 @@ var loginViewStyle = (function() {
         events: {}
     };
     
-    _self.conectionListViewTemplateChoosedPublicConected = {
+    _self.connectionListViewTemplateChoosedPublicConected = {
         childTemplates: [
             {
                 type: 'Ti.UI.Label',
-                bindId: 'conection',
+                bindId: 'connection',
                 properties: {
                     layout: 'horizontal',
                     color: _background,

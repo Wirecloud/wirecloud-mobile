@@ -18,12 +18,12 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
     var configurationFormContainer, configurationFormTitle,
     	configurationFormSubmitButton, configurationFormBackButton,
     	configurationFormIntancesContainer,
-    	configurationFormIntancesConectionView,
-    	configurationFormIntancesConectionViewList,
+    	configurationFormIntancesConnectionView,
+    	configurationFormIntancesConnectionViewList,
     	configurationFormIntancesTitle,
     	configurationFormIntancesAddButton,
     	configurationFormSettingsContainer,
-    	sectionsConectionListView,
+    	sectionsConnectionListView,
     	configButtonHandler;
 
 	// Variables para el Formulario de Instancias
@@ -31,7 +31,7 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 		instanceFormUrlTextField, instanceFormSubmitButton, 
 		instanceFormBackButton;
 
-    var createNewConection = function createNewConection(event, name, url, index){
+    var createNewConnection = function createNewConnection(event, name, url, index){
     	instanceFormContainer = Ti.UI.createView(Yaast.MergeObject(
         	theme.containerView, {
         		left: '20%',
@@ -100,23 +100,23 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 	        	var listaConexiones = Ti.UI.createListSection();
 
 	        	listaConexiones.setItems([ 
-		    		{conection: { text: instanceFormNameTextField.value}, url: { text: urlStan }},
+		    		{connection: { text: instanceFormNameTextField.value}, url: { text: urlStan }},
 		    	]);
 
         		// Si es una edición, se edita la línea
         		if(index!=null) {
-        			configurationFormIntancesConectionViewList.sections[0].updateItemAt(index, listaConexiones.getItemAt(0));
+        			configurationFormIntancesConnectionViewList.sections[0].updateItemAt(index, listaConexiones.getItemAt(0));
         		}
         		// Si no es una edición se crea la línea
         		else {
-			    	configurationFormIntancesConectionViewList.sections[0].appendItems(listaConexiones.getItems());
+			    	configurationFormIntancesConnectionViewList.sections[0].appendItems(listaConexiones.getItems());
 		    	}
 
 		    	//createConfiguration();
 		    	instanceFormContainer.animate({duration : 500, delay : 0, opacity : 0}, function() {
 					configurationFormContainer.setOpacity(1);
 			    	// Se elimina el formulario
-					destroyNewConection();
+					destroyNewConnection();
 				});
 			}
 		};
@@ -146,7 +146,7 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 		        dialog.addEventListener('click', function(conf) {
 		        	if(conf.index !== conf.source.cancel){
 		        		createConfiguration();
-		        		destroyNewConection();
+		        		destroyNewConnection();
 		        	}
 		            dialog.hide();
 		            dialog = null;
@@ -155,7 +155,7 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 			}
 			else{
 				createConfiguration();
-				destroyNewConection();
+				destroyNewConnection();
 			}
 		};
 
@@ -165,7 +165,7 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 		parentWindow.add(instanceFormContainer);
     };
 
-   	var destroyNewConection = function destroyNewConection(){
+   	var destroyNewConnection = function destroyNewConnection(){
 		if(instanceFormContainer != null){
 			parentWindow.remove(instanceFormContainer);
 
@@ -226,7 +226,7 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 				logo.setOpacity(1);
 				systemLabel.setOpacity(1);
 				// Config update
-				Yaast.Sandbox.appConfig.currentURL = currentURL;
+				Yaast.Sandbox.currentURL = currentURL;
 				formCallback();
 				destroyConfiguration();
 			});
@@ -273,7 +273,7 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 	    configurationFormIntancesTitle = Ti.UI.createLabel(theme.instanceTitle);
 	    configurationFormIntancesContainer.add(configurationFormIntancesTitle);
 
-	     // Conection Adder Label
+	     // Connection Adder Label
 	    configurationFormIntancesAddButton = Ti.UI.createButton(Yaast.MergeObject(
 			theme.button, {
 				top: 12,
@@ -288,34 +288,34 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 
 		configurationFormIntancesAddButton.submit = function submit(e){
 			configurationFormContainer.animate({duration : 500, delay : 0, opacity : 0}, function() {
-				createNewConection(e, null, null, null);
+				createNewConnection(e, null, null, null);
 			});
 		};
 
 	    configurationFormIntancesAddButton.addEventListener('click', configurationFormIntancesAddButton.submit);
 	    configurationFormIntancesContainer.add(configurationFormIntancesAddButton);
 
-        // Conection View
-        configurationFormIntancesConectionView = Ti.UI.createView(theme.conectionView);
+        // Connection View
+        configurationFormIntancesConnectionView = Ti.UI.createView(theme.connectionView);
 
-		configurationFormIntancesConectionViewList = Ti.UI.createListView({
+		configurationFormIntancesConnectionViewList = Ti.UI.createListView({
 	        templates: {
-	            'template':theme.conectionListViewTemplate, // Template por Defecto
-	            'template_conected':theme.conectionListViewTemplateConected, // Tema conectado contraido
-	            'choosed':theme.conectionListViewTemplateChoosed, // Template para Elegido
-	            'choosed_conected':theme.conectionListViewTemplateChoosedConected, // Template para Elegido Conectado
-	            'choosedPublic':theme.conectionListViewTemplatePublicChoosed, // Template para Elegido Publico
-	            'choosedPublic_conected':theme.conectionListViewTemplateChoosedPublicConected, // Template para Elegido Publico Conectado
+	            'template':theme.connectionListViewTemplate, // Template por Defecto
+	            'template_conected':theme.connectionListViewTemplateConected, // Tema conectado contraido
+	            'choosed':theme.connectionListViewTemplateChoosed, // Template para Elegido
+	            'choosed_conected':theme.connectionListViewTemplateChoosedConected, // Template para Elegido Conectado
+	            'choosedPublic':theme.connectionListViewTemplatePublicChoosed, // Template para Elegido Publico
+	            'choosedPublic_conected':theme.connectionListViewTemplateChoosedPublicConected, // Template para Elegido Publico Conectado
 	        },
 	        defaultItemTemplate: 'template'
     	});
 
-    	sectionsConectionListView = [];
+    	sectionsConnectionListView = [];
 
     	var listaConexionesPrivadas = Ti.UI.createListSection();
     	listaConexionesPrivadas.setItems([ // TODO coger la información de la db
     		{template: (itemConected!=null && itemConected[1]==1)?'template_conected':'template', 
-    			conection: { text: 'Wirecloud CoNWeT'}, url: { text: 'http://wirecloud.conwet.fi.upm.es/' }, id: { text: '1' }}
+    			connection: { text: 'Wirecloud CoNWeT'}, url: { text: 'http://wirecloud.conwet.fi.upm.es/' }, id: { text: '1' }}
     	]);
     	var hViewPrivadas = Ti.UI.createView(theme.headerView);
     	hViewPrivadas.add(Ti.UI.createLabel(Yaast.MergeObject(
@@ -324,12 +324,12 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 			})
 		));
     	listaConexionesPrivadas.setHeaderView(hViewPrivadas);
-    	sectionsConectionListView.push(listaConexionesPrivadas);
+    	sectionsConnectionListView.push(listaConexionesPrivadas);
 
     	var listaConexionesPublicas = Ti.UI.createListSection();
     	listaConexionesPublicas.setItems([ // TODO coger la información de la db
-    		{conection: { text: 'Wirecloud CoNWeT'}, url: { text: 'http://wirecloud.conwet.fi.upm.es/' }, id: { text: '1' }},
-    		{conection: { text: 'Mashups Fi Lab 2'}, url: { text: 'http://wirecloud2.conwet.fi.upm.es' }, id: { text: '2' }}
+    		{connection: { text: 'Wirecloud CoNWeT'}, url: { text: 'http://wirecloud.conwet.fi.upm.es/' }, id: { text: '1' }},
+    		{connection: { text: 'Mashups Fi Lab 2'}, url: { text: 'http://wirecloud2.conwet.fi.upm.es' }, id: { text: '2' }}
     	]);
     	var hViewPublicas = Ti.UI.createView(theme.headerView);
     	hViewPublicas.add(Ti.UI.createLabel(Yaast.MergeObject(
@@ -338,21 +338,21 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 			})
 		));
     	listaConexionesPublicas.setHeaderView(hViewPublicas);
-    	sectionsConectionListView.push(listaConexionesPublicas);
+    	sectionsConnectionListView.push(listaConexionesPublicas);
 
-    	configurationFormIntancesConectionViewList.sections = sectionsConectionListView;
+    	configurationFormIntancesConnectionViewList.sections = sectionsConnectionListView;
 
-    	configurationFormIntancesConectionViewList.changeConection = function changeConection(e){
+    	configurationFormIntancesConnectionViewList.changeConnection = function changeConnection(e){
 	    	var item = e.section.getItemAt(e.itemIndex);
 
-			if(e.bindId!=null && e.bindId=='delete_conection'){
+			if(e.bindId!=null && e.bindId=='delete_connection'){
 				if(itemConected==null 
 					|| e.sectionIndex!=itemConected[0] 
 					|| (e.sectionIndex==itemConected[0] && e.itemIndex!=itemConected[1])){
 					var dialog = Ti.UI.createAlertDialog({
 			            cancel : 1,
 			            buttonNames : ['Aceptar', 'Cancelar'],
-			            message : '¿Está seguro que quiere eliminar la instancia \"'+item.conection.text+'\"? No se podrá recuperar',
+			            message : '¿Está seguro que quiere eliminar la instancia \"'+item.connection.text+'\"? No se podrá recuperar',
 			            title : '-- W4T --'
 			        });
 			        dialog.addEventListener('click', function(conf) {
@@ -399,9 +399,9 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 			        dialog.show();
 		       	}
 			}
-			else if(e.bindId!=null && e.bindId=='edit_conection'){
+			else if(e.bindId!=null && e.bindId=='edit_connection'){
 				configurationFormContainer.animate({duration : 500, delay : 0, opacity : 0}, function() {
-	    			createNewConection(e, item.conection.text, item.url.text, e.itemIndex);
+	    			createNewConnection(e, item.connection.text, item.url.text, e.itemIndex);
 	    		});
 			}
 			else if(e.bindId!=null && ( e.bindId=='conect_button' || e.bindId=='conect_button_icon' )){
@@ -416,10 +416,10 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 			        });
 			        dialog.addEventListener('click', function(conf) {
 			        	if(conf.index !== conf.source.cancel){
-			        		var lastConected = configurationFormIntancesConectionViewList
+			        		var lastConected = configurationFormIntancesConnectionViewList
 			        			.sections[itemConected[0]].getItemAt(itemConected[1]);
 		    				lastConected.template = 'template';
-		    				configurationFormIntancesConectionViewList
+		    				configurationFormIntancesConnectionViewList
 		    					.sections[itemConected[0]]
 		    					.updateItemAt(itemConected[1], lastConected);
 		    				itemConected = null;
@@ -475,7 +475,7 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
     		else{
 	    		// Actualizamos el index anterior
 	    		if(lastItemChoosed!=null){
-	    			var lastItem = configurationFormIntancesConectionViewList
+	    			var lastItem = configurationFormIntancesConnectionViewList
 			        			.sections[lastItemChoosed[0]].getItemAt(lastItemChoosed[1]);
 	    			if(itemConected!=null && lastItemChoosed[0]==itemConected[0] && lastItemChoosed[1]==itemConected[1]){
 	    				lastItem.template = 'template_conected';
@@ -483,7 +483,7 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 	    			else{
 	    				lastItem.template = 'template';
 	    			}
-	    			configurationFormIntancesConectionViewList
+	    			configurationFormIntancesConnectionViewList
 			        			.sections[lastItemChoosed[0]].updateItemAt(lastItemChoosed[1], lastItem);
 	    		}
 
@@ -506,9 +506,9 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 		    				item.template = 'choosed';
 		    			}
 	    			}
-				    configurationFormIntancesConectionViewList
+				    configurationFormIntancesConnectionViewList
 			        			.sections[lastItemChoosed[0]].updateItemAt(lastItemChoosed[1], item);  
-				    configurationFormIntancesConectionViewList.scrollToItem(e.sectionIndex, e.itemIndex);
+				    configurationFormIntancesConnectionViewList.scrollToItem(e.sectionIndex, e.itemIndex);
 	    		}
 	    		// Se cancelan todas las conexiones
 	    		else{
@@ -516,10 +516,10 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 	    		}
     		}
     	};
-    	configurationFormIntancesConectionViewList.addEventListener('itemclick', configurationFormIntancesConectionViewList.changeConection);
+    	configurationFormIntancesConnectionViewList.addEventListener('itemclick', configurationFormIntancesConnectionViewList.changeConnection);
 
-    	configurationFormIntancesConectionView.add(configurationFormIntancesConectionViewList);
-		configurationFormIntancesContainer.add(configurationFormIntancesConectionView);
+    	configurationFormIntancesConnectionView.add(configurationFormIntancesConnectionViewList);
+		configurationFormIntancesContainer.add(configurationFormIntancesConnectionView);
 
 		configurationFormContainer.add(configurationFormIntancesContainer);
 
@@ -568,7 +568,7 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
         	
         	if(configurationFormIntancesContainer!=null){
 
-				sectionsConectionListView = null;
+				sectionsConnectionListView = null;
 				lastItemChoosed = null;
 
 		    	if(configurationFormIntancesTitle!=null){
@@ -583,16 +583,16 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 			        configurationFormIntancesAddButton = null;
 		        }
 
-		        if(configurationFormIntancesConectionView!=null){
-		        	 if(configurationFormIntancesConectionViewList!=null){
-				        configurationFormIntancesConectionViewList.removeEventListener('itemclick', 
-				        	configurationFormIntancesConectionViewList.changeConection);
-				        delete configurationFormIntancesConectionViewList.changeConection;
-				        configurationFormIntancesConectionView.remove(configurationFormIntancesConectionViewList);
-				        configurationFormIntancesConectionViewList = null;
+		        if(configurationFormIntancesConnectionView!=null){
+		        	 if(configurationFormIntancesConnectionViewList!=null){
+				        configurationFormIntancesConnectionViewList.removeEventListener('itemclick', 
+				        	configurationFormIntancesConnectionViewList.changeConnection);
+				        delete configurationFormIntancesConnectionViewList.changeConnection;
+				        configurationFormIntancesConnectionView.remove(configurationFormIntancesConnectionViewList);
+				        configurationFormIntancesConnectionViewList = null;
 			        }
-		        	configurationFormIntancesContainer.remove(configurationFormIntancesConectionView);
-					configurationFormIntancesConectionView = null;
+		        	configurationFormIntancesContainer.remove(configurationFormIntancesConnectionView);
+					configurationFormIntancesConnectionView = null;
 		        }
 		        configurationFormContainer.remove(configurationFormIntancesContainer);
 		        configurationFormIntancesContainer = null;
@@ -613,7 +613,7 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 	_self.destroy = function destroy() {
 
 	    // Contenedor de Formulario de Instancias
-	    destroyNewConection();
+	    destroyNewConnection();
 
 	    // Contenedor de Opciones
 		destroyConfiguration();
