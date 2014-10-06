@@ -65,15 +65,15 @@ var loginViewStyle = (function() {
         }
     };
 
-    _self.activityLabel = {
-        top: parseInt((_self.view.height/2)-(Yaast.API.UI.getDefaultRowHeight()/2), 10),
-        text: 'Conectando, espere por favor',
-        right:'5%',
-        textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER,
-        color: _fontColor,
-        font: {
-            fontSize: parseInt((Ti.Platform.displayCaps.platformHeight*7)/100, 10), // 40
-            fontFamily: _font
+    _self.spinner = {
+  		message: 'Checking Authorization',
+  		style:Ti.UI.ActivityIndicatorStyle.BIG_DARK,
+  		top: parseInt((_self.view.height/2)-(Yaast.API.UI.getDefaultRowHeight()/2), 10),
+  		right:'5%',
+  		color: _fontColor,
+        font : {
+            fontSize : parseInt((Ti.Platform.displayCaps.platformHeight*5)/100, 10),
+            fontFamily : 'Bangla Sangam MN'
         }
     };
     

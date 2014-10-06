@@ -260,7 +260,7 @@ var loginView = function (parentWindow) {
         else if(loginFormPasswordTextField.value.length === 0) showMessageError('La contraseña no puede estar vacía');
         else{
             loginFormContainer.animate({duration : 1000, delay : 0, opacity : 0}, function() {
-                activitySession = Ti.UI.createLabel(theme.activityLabel);
+                activitySession = Ti.UI.createActivityIndicator(theme.spinner);
                 _self.view.add(activitySession);
                 activitySession.show();
                 if (currentURL == null) {
