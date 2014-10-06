@@ -33,15 +33,20 @@ var loginViewStyle = (function() {
         top: Yaast.API.UI.getDefaultStatusBar(),
         left: 0,
         backgroundColor: _background,
-        width: Yaast.API.UI.getPlatformWidth()
+        width: Yaast.API.UI.getPlatformWidth(),
+        height: Yaast.API.UI.getPlatformHeight() - Yaast.API.UI.getDefaultStatusBar() -10,
+        // Size test
+        borderWidth: 1,
+        borderColor: _background3,
     };
     _self.view.height = Yaast.API.UI.getPlatformHeight() - _self.view.top;
 
 	// General View
 
     _self.logo = {
+    	// TODO check this image in retina
         image: (Yaast.API.HW.System.isApple()) ? Ti.Filesystem.getResourcesDirectory()  + 'images/logo_tab.png' : '../../images/logo_tab.png',
-        width: parseInt(((_self.view.width / 3) - ((_self.view.width * 4) / 100)), 10),
+        width: parseInt(((_self.view.width / 2) - ((_self.view.width * 4) / 100)), 10),
         left: '2%',
         enableZoomControls: false, 
         touchEnabled: false
@@ -55,7 +60,7 @@ var loginViewStyle = (function() {
         textAlign: Ti.UI.TEXT_ALIGNMENT_LEFT,
         color: _fontColor,
         font: {
-            fontSize: parseInt((Ti.Platform.displayCaps.platformHeight*3.5)/100, 10), // 30
+            fontSize: parseInt((Ti.Platform.displayCaps.platformHeight*2.5)/100, 10),
             fontFamily: _font
         }
     };
@@ -80,8 +85,8 @@ var loginViewStyle = (function() {
      */
     
     _self.containerView = {
-        width: parseInt(((_self.view.width*2)/3) - (_self.view.width*0.04), 10),
-        height: parseInt(((_self.view.height*2)/3), 10),
+        width: parseInt(((_self.view.width)/2) - (_self.view.width*0.04), 10),
+        height: parseInt(((_self.view.height)/2), 10),
         borderRadius: 15,
         borderWidth: 1,
         borderColor: _background3,
@@ -105,7 +110,7 @@ var loginViewStyle = (function() {
             Ti.UI.Android.SOFT_KEYBOARD_SHOW_ON_FOCUS,
         autocorrect: false,
         font: {
-            fontSize: parseInt((Ti.Platform.displayCaps.platformHeight*5.5)/100, 10),
+            fontSize: parseInt((Ti.Platform.displayCaps.platformHeight*3.5)/100, 10),
             fontFamily: _font
         }
     };
@@ -117,9 +122,10 @@ var loginViewStyle = (function() {
         borderWidth: 1,
         paddingLeft: 5,
         borderColor: _background,
-		height: parseInt((Ti.Platform.displayCaps.platformHeight*7)/100, 10)+15,
+        textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER,
+		height: parseInt((Ti.Platform.displayCaps.platformHeight*6)/100, 10)+15,
     	font: {
-            fontSize: parseInt((Ti.Platform.displayCaps.platformHeight*7)/100, 10),
+            fontSize: parseInt((Ti.Platform.displayCaps.platformHeight*2.5)/100, 10),
             fontFamily: _font
         }
     };
@@ -130,32 +136,38 @@ var loginViewStyle = (function() {
    	 * Login Page 
    	 *  
    	 */
-	
-    
-    _self.instanceLabel = {
-        top: '2%',
-        text: 'Instancia: ',
-        left:'2%',
-        textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER,
-        color: _fontColor,
-        font: {
-            fontSize: parseInt((Ti.Platform.displayCaps.platformHeight*7)/100, 10), // 40
-            fontFamily: _font
-        }
-    };
-    
     _self.instanceName = {
         top: '4%',
-        right:'2%',
-        textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER,
+        left:'2%',
+        textAlign: Ti.UI.TEXT_ALIGNMENT_LEFT,
+        width: _self.containerView.width * 0.85,
         color: _fontColor,
+        wordWrap: false,
+        ellipsize: true,
         font: {
-            fontSize: parseInt((Ti.Platform.displayCaps.platformHeight*5)/100, 10), // 40
+            fontSize: parseInt((Ti.Platform.displayCaps.platformHeight*3.5)/100, 10), // 40
             fontFamily: _font
         }
     };
     
-    
+    _self.configButtonIcon = {
+        top: '4%',
+        right:'2%',
+        width: _self.containerView.width * 0.15,
+        color: '#FFFFFF',
+        shadowColor: '#FFFFFF',
+        shadowOffset: {x:0, y:0},
+        shadowRadius: 3,
+        textAlign: Ti.UI.TEXT_ALIGNMENT_LEFT,
+        text: Yaast.FontAwesome.getCharCode('fa-cog'),
+        ellipsize: true,
+        font: {
+            fontSize: parseInt((Ti.Platform.displayCaps.platformHeight*4)/100, 10),
+            fontFamily: Yaast.FontAwesome.getFontFamily(),
+        }
+    };
+
+
     /*
      * 
      * Configuration Form
@@ -169,7 +181,7 @@ var loginViewStyle = (function() {
    		font: {
             fontSize:  parseInt((Ti.Platform.displayCaps.platformHeight*9)/100, 10), // 32
             fontFamily: _font
-       }, 
+       },
         text: 'Configuración'
     };
     

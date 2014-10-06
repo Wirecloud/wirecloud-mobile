@@ -18,20 +18,20 @@ var loginView = function (parentWindow) {
     	}, lastItemChoosed = null, itemConected = null, currentURL; // TODO inicializar itemConected desde la DB
 
     // Variables para la configuración
-    var configurationFormContainer, configurationFormTitle, 
-    	configurationFormSubmitButton, configurationFormBackButton, 
-    	configurationFormIntancesContainer, 
-    	configurationFormIntancesConectionView, 
-    	configurationFormIntancesConectionViewList, 
-    	configurationFormIntancesTitle, 
+    var configurationFormContainer, configurationFormTitle,
+    	configurationFormSubmitButton, configurationFormBackButton,
+    	configurationFormIntancesContainer,
+    	configurationFormIntancesConectionView,
+    	configurationFormIntancesConectionViewList,
+    	configurationFormIntancesTitle,
     	configurationFormIntancesAddButton,
     	configurationFormSettingsContainer,
-    	sectionsConectionListView;
+    	sectionsConectionListView,
+    	configButtonHandler;
 
     // Variables para el Formulario de Login
     var loginFormContainer, loginFormUserTextField, loginFormPasswordTextField, 
-    	loginFormSubmitButton, loginFormConfigButton, loginFormInstanceTitle, 
-    	loginFormInstanceName;
+    	loginFormSubmitButton, loginFormConfigButton, loginFormInstanceName, loginConfigButton;
 
 	// Variables para el Formulario de Instancias
 	var instanceFormContainer, instanceFormNameTextField, 
@@ -84,7 +84,7 @@ var loginView = function (parentWindow) {
         }
     };
 
-    var createNewConection = function createNewConection(event, name, url, index){        	
+    var createNewConection = function createNewConection(event, name, url, index){
     	instanceFormContainer = Ti.UI.createView(Yaast.MergeObject(
         	theme.containerView, {
         		left: '20%',
@@ -331,7 +331,7 @@ var loginView = function (parentWindow) {
 
 	/** Private Function to create Form Configuration */
     var createConfiguration = function createConfiguration() {
-
+		// TODO we need to refactor this method
     	configurationFormContainer = Ti.UI.createView(theme.view);
 
     	configurationFormTitle = Ti.UI.createLabel(theme.configurationFormTitle);
@@ -743,16 +743,16 @@ var loginView = function (parentWindow) {
         	}
         ));
 
-        loginFormInstanceTitle = Ti.UI.createLabel(theme.instanceLabel);
-	    loginFormContainer.add(loginFormInstanceTitle);
-
 		loginFormInstanceName = Ti.UI.createLabel(Yaast.MergeObject(
 			theme.instanceName, {
-				text: (instancia!=null)?instancia:'Wirecloud Conwet (default)'
+				text: Yaast.Sandbox.appConfig.config.lastInstanceName + ' (' + Yaast.Sandbox.appConfig.config.lastInstanceURL + ')'
 			})
 		);
-		currentURL = Yaast.Sandbox.defaultURL;
+		currentURL = Yaast.Sandbox.currentURL;
 	    loginFormContainer.add(loginFormInstanceName);
+
+		loginConfigButton = Ti.UI.createLabel(theme.configButtonIcon);
+		loginFormContainer.add(loginConfigButton);
 
         loginFormUserTextField = Ti.UI.createTextField(Yaast.MergeObject(
             theme.inputTextField, {
@@ -809,7 +809,6 @@ var loginView = function (parentWindow) {
 			theme.button, {
 				title: 'Log In',
                 width: '30%',
-              	right: '2%',
                 bottom: parseInt((loginFormContainer.getHeight()*5)/100)
 			}
 		));
@@ -819,15 +818,7 @@ var loginView = function (parentWindow) {
 		loginFormSubmitButton.addEventListener('click', loginFormSubmitButton.submit);
 		loginFormContainer.add(loginFormSubmitButton);
 
-		// Botón de enviar
-		loginFormConfigButton = Ti.UI.createButton(Yaast.MergeObject(
-			theme.button, {
-				title: 'Configuración',
-              	left: '2%',
-                bottom: parseInt((loginFormContainer.getHeight()*5)/100)
-			}
-		));
-		loginFormConfigButton.submit = function submit(){
+		configButtonHandler = function configButtonHandler(){
 			// Animación para el Logo
 			logo.animate({duration : 500, delay : 0, opacity : 0});
 			// System Label
@@ -838,8 +829,8 @@ var loginView = function (parentWindow) {
 				destroyForm();
 			});
 		};
-		loginFormConfigButton.addEventListener('click', loginFormConfigButton.submit);
-		loginFormContainer.add(loginFormConfigButton);
+		loginConfigButton.addEventListener('click', configButtonHandler);
+		loginFormContainer.add(loginConfigButton);
 
 		_self.view.add(loginFormContainer);
 	};
@@ -850,10 +841,6 @@ var loginView = function (parentWindow) {
 
 		if(loginFormContainer!=null){
 	        _self.view.remove(loginFormContainer);
-			if(loginFormInstanceTitle != null){
-				loginFormContainer.remove(loginFormInstanceTitle);
-				loginFormInstanceTitle = null;
-			}
 
 			if(loginFormInstanceName!=null){
 				loginFormContainer.remove(loginFormInstanceName);
@@ -887,11 +874,10 @@ var loginView = function (parentWindow) {
 		        loginFormSubmitButton = null;
 	        }
 
-	        if(loginFormConfigButton!=null){
-		        loginFormConfigButton.removeEventListener('click', loginFormConfigButton.submit);
-		        delete loginFormConfigButton.submit;
-		        loginFormContainer.remove(loginFormConfigButton);
-		        loginFormConfigButton = null;
+	        if(loginConfigButton!=null){
+		        loginConfigButton.removeEventListener('click', configButtonHandler);
+		        loginFormContainer.remove(loginConfigButton);
+		        loginConfigButton = null;
 	       	}
 
 	       	loginFormContainer = null;
