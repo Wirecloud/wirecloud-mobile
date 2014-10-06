@@ -33,10 +33,12 @@ var Yaast = {
     },
     "FontAwesome": require('fonts/FontAwesome4'),
     "Sandbox": {
+    	// Default values
     	'currentView': null,
     	'appConfig': {
     		'config': {
-    			'lastInstance': null,
+    			'lastInstanceName': "Wirecloud CoNWeT",
+    			'lastInstanceURL': "https://wirecloud.conwet.fi.upm.es/",
     			'lastConnection': null,
     			'lastUser': null,
     		},
@@ -44,7 +46,6 @@ var Yaast = {
     		'lastId' : 0
     	},
     	'defaultURL': "https://wirecloud.conwet.fi.upm.es/",
-    	// TODO merge David login
     	'currentURL': "https://wirecloud.conwet.fi.upm.es/"
     }
 };
@@ -58,6 +59,7 @@ var metaFile = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'w4
 if (metaFile.exists()) {
 	// Restore last config
 	Yaast.Sandbox.appConfig.config = JSON.parse(Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'w4tmeta').read().toString());
+	Yaast.Sandbox.appConfig.currentURL = Yaast.Sandbox.appConfig.config.lastInstance;
 } else {
 	// Create w4tmeta file with default values
 	metaFile.write(JSON.stringify(Yaast.Sandbox.appConfig.config));
