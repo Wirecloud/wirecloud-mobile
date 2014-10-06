@@ -48,6 +48,13 @@ var UI = function (APIReferences) {
     };
     _self.setFontSizes();
 
+    /** Get default font Size.
+     * @method
+     * @return {Number} */
+	_self.getDefaultFontSize = function getDefaultFontSize() {
+		return _self.DEFAULT_FONT_SIZE;
+	};
+
     /** Get constant Row Height on Android or iOS Table.
      * @method
      * @return {Number} */
