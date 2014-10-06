@@ -159,15 +159,23 @@ var loginView = function (parentWindow) {
 
     /** Private Function to create Form Login */
     var createForm = function createForm() {
+    	var instanceURL, instanceName;
         loginFormContainer = Ti.UI.createView(Yaast.MergeObject(
         	theme.containerView, {
         		right: '2%'
         	}
         ));
 
+		if (Yaast.Sandbox.appConfig.config.lastInstanceName == null) {
+			instanceName = Yaast.Sandbox.defaultInstanceName;
+			instanceURL = Yaast.Sandbox.defaultURL;
+		} else {
+			instanceName = Yaast.Sandbox.appConfig.config.lastInstanceName;
+			instanceURL =Yaast.Sandbox.appConfig.config.lastInstanceURL;
+		}
 		loginFormInstanceName = Ti.UI.createLabel(Yaast.MergeObject(
 			theme.instanceName, {
-				text: Yaast.Sandbox.appConfig.config.lastInstanceName + ' (' + Yaast.Sandbox.appConfig.config.lastInstanceURL + ')'
+				text: instanceName + ' (' + instanceURL + ')'
 			})
 		);
 		currentURL = Yaast.Sandbox.currentURL;

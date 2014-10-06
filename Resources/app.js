@@ -37,8 +37,8 @@ var Yaast = {
     	'currentView': null,
     	'appConfig': {
     		'config': {
-    			'lastInstanceName': "Wirecloud CoNWeT",
-    			'lastInstanceURL': "https://wirecloud.conwet.fi.upm.es/",
+    			'lastInstanceName': null,
+    			'lastInstanceURL': null,
     			'lastConnection': null,
     			'lastUser': null,
     		},
@@ -46,6 +46,7 @@ var Yaast = {
     		'lastId' : 0
     	},
     	'defaultURL': "https://wirecloud.conwet.fi.upm.es/",
+    	'defaultInstanceName': "Wirecloud CoNWeT",
     	'currentURL': "https://wirecloud.conwet.fi.upm.es/"
     }
 };

@@ -226,6 +226,14 @@ var mainView = function mainView(parentWindow, userName) {
             compositions = null;
             rows = null;
             _self.view.add(leftView);
+
+            // Default detailView
+	        _self.detailView = require('ui/view/mainViewDetail')(
+	            'default',
+	            _self,
+	            userName
+	        );
+	        rightView.add(_self.detailView);
         }
         compFolder = null;
     };

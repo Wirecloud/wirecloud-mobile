@@ -12,7 +12,7 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 
 	// Variables Comunes
     var theme = require('ui/style/instanceManagerViewStyle'), 
-    	lastItemChoosed = null, itemConected = null, currentURL; // TODO inicializar itemConected desde la DB
+    	lastItemChoosed = null, itemConected = null, currentURL, currentInstanceName; // TODO inicializar itemConected desde la DB
 
     // Variables para la configuración
     var configurationFormContainer, configurationFormTitle,
@@ -227,6 +227,8 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 				systemLabel.setOpacity(1);
 				// Config update
 				Yaast.Sandbox.currentURL = currentURL;
+				Yaast.Sandbox.appConfig.config.lastInstanceName = currentInstanceName;
+				Yaast.Sandbox.appConfig.config.lastInstanceURL = currentURL;
 				formCallback();
 				destroyConfiguration();
 			});
@@ -436,6 +438,7 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 			    			itemConected = [e.sectionIndex, e.itemIndex];
 			    			// TODO add in DB
 			    			currentURL = itemChoosed.url.text;
+			    			currentInstanceName = itemChoosed.connection.text;
 			    		}
 			    		dialog.hide();
 		           		dialog = null;
@@ -455,6 +458,7 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 	    			
 	    			itemConected = [e.sectionIndex, e.itemIndex]; // TODO save in the DB
 	    			currentURL = itemChoosed.url.text;
+	    			currentInstanceName = itemChoosed.connection.text;
 				}
 			}
 			else if(e.bindId!=null && ( e.bindId=='disconect_button' || e.bindId=='disconect_button_icon' )){
@@ -470,6 +474,7 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 	    			
 	    			itemConected = null; // TODO delete in the DB
 	    			currentURL = null;
+	    			currentInstanceName = null;
     			}
 			}
     		else{
