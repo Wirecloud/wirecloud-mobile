@@ -14,6 +14,7 @@ var loginViewStyle = (function() {
     _version = (_os === 'Android') ? " ~ " + Yaast.API.HW.System.getVersionString() : "",
     _self = {},
     _font = 'Comfortaa',
+    _fontSize = Yaast.API.UI.getDefaultFontSize(),
     _background = '#2B3E50',
     _background2 = '#456082',
     _background3 = '#D5E4F1',
@@ -25,7 +26,8 @@ var loginViewStyle = (function() {
     _deleteColor2 = "#AA0000",
     _fontColorGreen = "#00AA00",
     _fontColor = '#EBEBEB',
-    _fontColorButton = '#354B5D'; // 1F3346
+    _fontColorButton = '#354B5D', // 1F3346
+    _rowHeight = Yaast.API.UI.getDefaultRowHeight();
     
     
 
@@ -60,7 +62,7 @@ var loginViewStyle = (function() {
         textAlign: Ti.UI.TEXT_ALIGNMENT_LEFT,
         color: _fontColor,
         font: {
-            fontSize: parseInt((Ti.Platform.displayCaps.platformHeight*2.5)/100, 10),
+            fontSize: parseInt((Ti.Platform.displayCaps.platformHeight*3.5)/100, 10),
             fontFamily: _font
         }
     };
@@ -69,7 +71,7 @@ var loginViewStyle = (function() {
   		message: 'Checking Authorization',
   		style:Ti.UI.ActivityIndicatorStyle.BIG_DARK,
   		top: parseInt((_self.view.height/2)-(Yaast.API.UI.getDefaultRowHeight()/2), 10),
-  		right:'5%',
+  		right:'7%',
   		color: _fontColor,
         font : {
             fontSize : parseInt((Ti.Platform.displayCaps.platformHeight*5)/100, 10),
@@ -125,7 +127,7 @@ var loginViewStyle = (function() {
         textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER,
 		height: parseInt((Ti.Platform.displayCaps.platformHeight*6)/100, 10)+15,
     	font: {
-            fontSize: parseInt((Ti.Platform.displayCaps.platformHeight*2.5)/100, 10),
+            fontSize: _fontSize * 2,
             fontFamily: _font
         }
     };
@@ -137,7 +139,7 @@ var loginViewStyle = (function() {
    	 *  
    	 */
     _self.instanceName = {
-        top: '4%',
+        top: _rowHeight * 0.2,
         left:'2%',
         textAlign: Ti.UI.TEXT_ALIGNMENT_LEFT,
         width: _self.containerView.width * 0.85,
@@ -145,24 +147,35 @@ var loginViewStyle = (function() {
         wordWrap: false,
         ellipsize: true,
         font: {
-            fontSize: parseInt((Ti.Platform.displayCaps.platformHeight*3.5)/100, 10), // 40
+            fontSize: _fontSize * 2,
             fontFamily: _font
         }
     };
-    
+
+    _self.instanceURL = {
+        top: (_self.view.height * 5 / 100) + _self.instanceName.top + (_rowHeight * 0.1),
+        left:'2%',
+        textAlign: Ti.UI.TEXT_ALIGNMENT_LEFT,
+        width: _self.containerView.width * 0.85,
+        color: _fontColor,
+        wordWrap: false,
+        ellipsize: true,
+        font: {
+            fontSize: _fontSize,
+            fontFamily: _font
+        }
+    };
+
     _self.configButtonIcon = {
         top: '4%',
         right:'2%',
-        width: _self.containerView.width * 0.15,
+        width: _self.containerView.width * 0.1,
         color: '#FFFFFF',
-        shadowColor: '#FFFFFF',
-        shadowOffset: {x:0, y:0},
-        shadowRadius: 3,
-        textAlign: Ti.UI.TEXT_ALIGNMENT_LEFT,
+        textAlign: Ti.UI.TEXT_ALIGNMENT_RIGHT,
         text: Yaast.FontAwesome.getCharCode('fa-cog'),
         ellipsize: true,
         font: {
-            fontSize: parseInt((Ti.Platform.displayCaps.platformHeight*4)/100, 10),
+            fontSize: _fontSize * 2,
             fontFamily: Yaast.FontAwesome.getFontFamily(),
         }
     };    

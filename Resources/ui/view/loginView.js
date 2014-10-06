@@ -22,7 +22,8 @@ var loginView = function (parentWindow) {
 
     // Variables para el Formulario de Login
     var loginFormContainer, loginFormUserTextField, loginFormPasswordTextField, 
-    	loginFormSubmitButton, loginFormConfigButton, loginFormInstanceName, loginConfigButton;
+    	loginFormSubmitButton, loginFormConfigButton, loginFormInstanceName,
+    	loginFormInstanceURL, loginConfigButton;
 
     // Enterprise Logo
     _self.view.add(logo);
@@ -175,11 +176,18 @@ var loginView = function (parentWindow) {
 		}
 		loginFormInstanceName = Ti.UI.createLabel(Yaast.MergeObject(
 			theme.instanceName, {
-				text: instanceName + ' (' + instanceURL + ')'
+				text: instanceName
 			})
 		);
 		currentURL = Yaast.Sandbox.currentURL;
 	    loginFormContainer.add(loginFormInstanceName);
+	    
+	    loginFormInstanceURL = Ti.UI.createLabel(Yaast.MergeObject(
+			theme.instanceURL, {
+				text: '(' + instanceURL + ')'
+			})
+		);
+	    loginFormContainer.add(loginFormInstanceURL);
 
 		loginConfigButton = Ti.UI.createLabel(theme.configButtonIcon);
 		loginFormContainer.add(loginConfigButton);
@@ -267,6 +275,11 @@ var loginView = function (parentWindow) {
 			if(loginFormInstanceName!=null){
 				loginFormContainer.remove(loginFormInstanceName);
 				loginFormInstanceName = null;
+			}
+
+			if(loginFormInstanceURL!=null){
+				loginFormContainer.remove(loginFormInstanceURL);
+				loginFormInstanceURL = null;
 			}
 
 			if(loginFormUserTextField != null){
