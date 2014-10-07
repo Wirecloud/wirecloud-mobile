@@ -14,8 +14,9 @@ var mainViewStyle = (function() {
 
     var _self = {};
     var heightView = Yaast.API.UI.getPlatformHeight() - Yaast.API.UI.getDefaultStatusBar();
-    var rowHeight =  (_isApple) ? 44 : '48dp';
-    var rowFontSize = (_isApple) ? '22' : '20dp';
+    var rowHeight =  Yaast.API.UI.getDefaultRowHeight();
+    var rowFontSize = Yaast.API.UI.getDefaultFontSize();
+    var _fontSize = Yaast.API.UI.getDefaultFontSize();
 
     _self.view = {
         top: Yaast.API.UI.getDefaultStatusBar(),
@@ -100,7 +101,7 @@ var mainViewStyle = (function() {
 		left: parseInt(_self.logo.left) + parseInt(_self.logo.width) + 40,
         font: {
             fontFamily: Yaast.FontAwesome.getFontFamily(),
-            fontSize: parseInt(rowFontSize) * 1.5
+            fontSize: parseInt(rowFontSize) * 2
         },
         shadowColor: '#aaa',
         shadowOffset: {x:0, y:0},

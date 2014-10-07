@@ -142,6 +142,13 @@ var mainView = function mainView(parentWindow, userName) {
             leftView.add(publicWorkspacesView);
             _self.view.add(leftView);
             _self.view.add(rightView);
+            // Default detailView
+	        _self.detailView = require('ui/view/mainViewDetail')(
+	            'default',
+	            _self,
+	            userName
+	        );
+	        rightView.add(_self.detailView);
 		}
 	};
 	
@@ -171,7 +178,7 @@ var mainView = function mainView(parentWindow, userName) {
     })));
     topBar.add(wirecloudLogo);
     topBar.add(Ti.UI.createLabel(Yaast.MergeObject(theme.welcomeLabel, {
-        text: 'Welcome to Wirecloud 4 Tablet ' + userName
+        text: 'Wirecloud 4 Tablet'
     })));
     _self.view.add(topBar);
 

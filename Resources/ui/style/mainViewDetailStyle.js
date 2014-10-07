@@ -17,16 +17,17 @@ var mainViewDetailStyle = (function() {
     heightView = (_isApple) ?
                   Yaast.API.UI.getPlatformHeight() - 20 :
                   Yaast.API.UI.getPlatformHeight(),
-    rowHeight =  (_isApple) ? 44 : '48dp',
-    rowFontSize = (_isApple) ? '20' : '18dp';
+    rowHeight =  Yaast.API.UI.getDefaultRowHeight(),
+    rowFontSize = Yaast.API.UI.getDefaultFontSize(),
+    _fontSize = Yaast.API.UI.getDefaultFontSize();
 
     _self.view = {
         //left: Yaast.API.UI.getPlatformWidth() * 0.5,
         left: 0,
+        top: 0,
         width: Yaast.API.UI.getPlatformWidth() * 0.5,
         height: heightView,
-        top: rowHeight,
-        backgroundColor: '#4F6C88'
+        backgroundColor: '#4F6C88',
     };
 
 	_self.mainTitle = {
@@ -77,6 +78,75 @@ var mainViewDetailStyle = (function() {
         textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER,
         text: Yaast.FontAwesome.getCharCode('fa-external-link'),
         top: _self.view.height / 2
+	};
+
+	// Default 
+	_self.logoIcon = {
+    	// TODO check this image in retina
+        image: (Yaast.API.HW.System.isApple()) ? Ti.Filesystem.getResourcesDirectory()  + 'images/wc2.png' : '../../images/wc2.png',
+        width: parseInt((_self.view.width / 2) , 10),
+        height: parseInt((_self.view.height / 4) , 10),
+        enableZoomControls: false, 
+        touchEnabled: false,
+        top: rowHeight
+	};
+	 _self.welcomeLabel = {
+		color: '#FFFFFF',
+		height: rowHeight * 2,
+        font: {
+            fontFamily: Yaast.FontAwesome.getFontFamily(),
+            fontSize: _fontSize * 2
+        },
+        textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER,
+        shadowColor: '#FFFFFF',
+        shadowOffset: {x:0, y:0},
+        shadowRadius: 3,
+        top: _self.logoIcon.top + _self.logoIcon.height + rowHeight
+	};
+	_self.infoLabel = {
+		color: '#FFFFFF',
+		height: rowHeight * 1.5,
+        font: {
+            fontFamily: Yaast.FontAwesome.getFontFamily(),
+            fontSize: _fontSize * 1.5
+        },
+        shadowColor: '#FFFFFF',
+        textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER,
+        shadowOffset: {x:0, y:0},
+        shadowRadius: 3,
+        top: _self.welcomeLabel.top + _self.welcomeLabel.height + rowHeight * 1.5
+	};
+	_self.linkLabel = {
+		color: '#FFFFFF',
+		height: rowHeight,
+        font: {
+            fontFamily: Yaast.FontAwesome.getFontFamily(),
+            fontSize: _fontSize
+        },
+        shadowColor: '#FFFFFF',
+        shadowOffset: {x:0, y:0},
+        shadowRadius: 3,
+        top: _self.infoLabel.top + _self.infoLabel.height + rowHeight
+	};
+	_self.wirecloudLinkView = {
+		color: '#FFFFFF',
+		height: rowHeight,
+		backgroundColor: 'FFFFFF',
+		width:'100%',
+        font: {
+            fontFamily: Yaast.FontAwesome.getFontFamily(),
+            fontSize: _fontSize *1.5
+        },
+        wordWrap: false,
+        top: _self.linkLabel.top + _self.linkLabel.height
+	};
+	_self.wirecloudLinkText = {
+		color: '#D8923A',
+		height: rowHeight,
+        font: {
+            fontFamily: Yaast.FontAwesome.getFontFamily(),
+            fontSize: _fontSize *1.5
+        },
 	};
 
     return _self;

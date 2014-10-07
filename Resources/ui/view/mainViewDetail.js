@@ -29,76 +29,113 @@ mashup = {
 
     // _self reference
     var _self = Ti.UI.createView(theme.view);
+    _self.mashup = mashup;
 
-    // Main title
-    var mainTitle = Ti.UI.createLabel(theme.mainTitle);
-    mainTitle.text = mashup.name;
-	_self.add(mainTitle);
+	if (mashup === 'default') {
+		// Default DetailView
+		// Logo Icon
+	 	var logoIcon = Ti.UI.createImageView(theme.logoIcon);
+	 	_self.add(logoIcon);
+	 	
+		// Welcome Label
+	 	var welcomeLabel = Ti.UI.createLabel(theme.welcomeLabel);
+	 	welcomeLabel.text = userName + ',\nWelcome to Wirecloud 4 Tablet';
+	 	_self.add(welcomeLabel);
 
-    // Creator
-    var creatorLabel = Ti.UI.createLabel(theme.creatorLabel);
-    creatorLabel.text = 'Mashup created by ' + mashup.creator;
- 	_self.add(creatorLabel);
+	 	// Info Label
+	 	var infoLabel = Ti.UI.createLabel(theme.infoLabel);
+	 	infoLabel.text = 'Choose a workspace from the left panel and use it!';
+	 	_self.add(infoLabel);
 
-    // Description
-    var descriptionLabel = Ti.UI.createLabel(theme.descriptionLabel);
-    //creatorLabel.text += mashup.longdescripton;
- 	_self.add(descriptionLabel);
+	 	// Link label
+	 	var linkLabel = Ti.UI.createLabel(theme.linkLabel);
+	 	linkLabel.text = 'Manage workspaces and create new ones visiting';
+	 	_self.add(linkLabel);
+	 	
+	 	// Wirecloud link
+	 	var wirecloudLink = Ti.UI.createView(theme.wirecloudLinkView);
+	 	var wirecloudLinkText = Ti.UI.createLabel(theme.wirecloudLinkText);
+	 	wirecloudLinkText.text = 'Wirecloud Site';
+	 	wirecloudLink.add(wirecloudLinkText);
+		var linkHandler = function linkHandler(e) {
+			//open link in safari - application will close
+			Titanium.Platform.openURL(Yaast.Sandbox.currentURL);
+		};
+		wirecloudLink.addEventListener('click', linkHandler);
+		_self.add(wirecloudLink);
 
- 	// loadButton
- 	var loadButton = Ti.UI.createLabel(theme.loadButton);
- 	_self.add(loadButton);
- 
+	} else {
+	    // Main title
+	    var mainTitle = Ti.UI.createLabel(theme.mainTitle);
+	    mainTitle.text = mashup.name;
+		_self.add(mainTitle);
+	
+	    // Creator
+	    var creatorLabel = Ti.UI.createLabel(theme.creatorLabel);
+	    creatorLabel.text = 'Mashup created by ' + mashup.creator;
+	 	_self.add(creatorLabel);
+	
+	    // Description
+	    var descriptionLabel = Ti.UI.createLabel(theme.descriptionLabel);
+	    //creatorLabel.text += mashup.longdescripton;
+	 	_self.add(descriptionLabel);
+	
+	 	// loadButton
+	 	var loadButton = Ti.UI.createLabel(theme.loadButton);
+	 	_self.add(loadButton);
+	
+		/** @title: loadWorkspace (Function)
+		 *  @usage: add Widgets and operators to ScrollView
+		 *  @extras: require workspaceManager */
+		var loadWorkspace = function loadWorkspace() { //TODO
+			mainView.parentView.showWorkspaceView(mashup.id);
+		};
+	
+		loadButton.addEventListener('click', loadWorkspace);
+	}
+
  	// Destroy DetailView
     _self.destroy = function destroy() {
-    	// Main title
-    	_self.remove(mainTitle);
-    	mainTitle = null;
-
-		// Creator
-    	_self.remove(creatorLabel);
-    	creatorLabel = null;
-
-    	// loadButton
-    	loadButton.removeEventListener('click', loadWorkspace);
-    	_self.remove(loadButton);
-    	loadButton = null;
-
+    	if (_self.mashup === 'default') {
+			// Logo Icon
+		 	_self.remove(logoIcon);
+		 	logoIcon = null;
+		 	
+			// Welcome Label
+			_self.remove(welcomeLabel);
+		 	welcomeLabel = null;
+	
+		 	// Info Label
+			_self.remove(infoLabel);
+		 	infoLabel = null;
+	
+		 	// Link label
+			_self.remove(linkLabel);
+		 	linkLabel = null;
+		 	
+		 	// Wirecloud link
+			_self.remove(wirecloudLink);
+			wirecloudLink.removeEventListener('click', linkHandler);
+		 	wirecloudLink = null;
+		 	linkHandler = null;
+    	} else {
+	    	// Main title
+	    	_self.remove(mainTitle);
+	    	mainTitle = null;
+	
+			// Creator
+	    	_self.remove(creatorLabel);
+	    	creatorLabel = null;
+	
+	    	// loadButton
+	    	loadButton.removeEventListener('click', loadWorkspace);
+	    	_self.remove(loadButton);
+	    	loadButton = null;
+		}
 		// Theme
     	theme = null;
     };
-
-	/*var callback_function = function(data) {
-		// TODO if error volver al main o reintentar?
-		var _worksClass = require('workspace/workspaceManager');
-		var _worksObject = _worksClass({
-		    'topView' : (_isApple && _isIOS7) ? 20 : 0,
-			'heightView' : (_isApple && _isIOS7) ? _self.height - 20 : _self.height,
-			'data' : data
-		}, userName);
-		_worksClass = null;
-
-		mainView.parentView.window.add(_worksObject);
-	};*/
-
-	/** @title: loadWorkspace (Function)
-	 *  @usage: add Widgets and operators to ScrollView
-	 *  @extras: require workspaceManager */
-	var loadWorkspace = function loadWorkspace() { //TODO
-		// clean all views
-		//mainView.destroy();
-		//mainView = null;
-		mainView.parentView.showWorkspaceView(mashup.id);
-
-		/*var _conObject = require('/connections/appConnection');
-		_conObject.getWirecloud(callback_function, mashup.id);
-		_conObject = null;*/
-	};
-
-	loadButton.addEventListener('click', loadWorkspace);
-
     return _self;
-
 };
 
 module.exports = mainViewDetail;
