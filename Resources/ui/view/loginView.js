@@ -202,7 +202,6 @@ var loginView = function (parentWindow) {
         ));
         loginFormUserTextField.returnUserTField = function returnUserTField() {
             loginFormUserTextField.blur();
-            loginFormPasswordTextField.focusPassTField();
         };
         loginFormUserTextField.addEventListener('return', loginFormUserTextField.returnUserTField);
         loginFormContainer.add(loginFormUserTextField);
