@@ -44,7 +44,7 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
                 top: parseInt(instanceFormContainer.getHeight() * 0.15, 10),
                 keyboardType: Ti.UI.KEYBOARD_DEFAULT,
                 returnKeyType: Ti.UI.RETURNKEY_NEXT,
-                hintText: "Nombre de la Instancia"
+                hintText: "Instance Name"
             }
         ));
         if(name!=null){
@@ -61,7 +61,7 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
                 top: parseInt(instanceFormContainer.getHeight() * 0.4, 10),
                 keyboardType: Ti.UI.KEYBOARD_URL,
                 returnKeyType: Ti.UI.RETURNKEY_DONE,
-                hintText: "URL de la Instancia"
+                hintText: "Instance URL"
             }
         ));
 
@@ -81,16 +81,16 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 		// Botón de enviar
 		instanceFormSubmitButton = Ti.UI.createButton(Yaast.MergeObject(
 			theme.button, {
-				title: (index!=null) ? 'Editar Instancia' : 'Guardar Instancia',
+				title: (index!=null) ? 'Edit Instance' : 'Save Instance',
 				left: '5%',
                 bottom: parseInt((instanceFormContainer.getHeight()*7)/100)
 			}
 		));
 
 		instanceFormSubmitButton.submit = function submit(){
-	        if(instanceFormNameTextField.value.length === 0) showMessageError('El nombre la instancia no puede estar vacía');
+	        if(instanceFormNameTextField.value.length === 0) showMessageError("The instance name can't be empty");
 	        //else if(instanceFormNameTextField.value.length > 30) showMessageError('El nombre la instancia no puede contener más de 30 caracteres');
-	        else if(instanceFormUrlTextField.value.length === 0) showMessageError('La URL de la instancia no puede estar vacía');
+	        else if(instanceFormUrlTextField.value.length === 0) showMessageError("The instance URL can't be empty");
 	        else{
         		var urlStan = instanceFormUrlTextField.value;
         		if (instanceFormUrlTextField.value[instanceFormUrlTextField.value.length-1]!='/') {
@@ -127,7 +127,7 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 		// Botón de enviar
 		instanceFormBackButton = Ti.UI.createButton(Yaast.MergeObject(
 			theme.button, {
-				title: 'Volver',
+				title: 'Back',
 				right: '5%',
                 bottom: parseInt((instanceFormContainer.getHeight()*7)/100)
 			}
@@ -139,8 +139,8 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 					&& instanceFormUrlTextField.value.length>0)){
 				var dialog = Ti.UI.createAlertDialog({
 		            cancel : 1,
-		            buttonNames : ['Aceptar', 'Cancelar'],
-		            message : '¿Está seguro que quiere volver sin guardar? Los datos introducidos no se guardarán',
+		            buttonNames : ['Acept', 'Cancel'],
+		            message : 'Do you want exit without saving changes?',
 		            title : '-- W4T --'
 		        });
 		        dialog.addEventListener('click', function(conf) {
@@ -213,7 +213,7 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 			theme.button, {
 				bottom: parseInt(((parentWindow.getHeight()*9)/100), 10),
         		right: '52%',
-				title: 'Guardar Configuración',
+				title: 'Save config',
 				height: parseInt((Ti.Platform.displayCaps.platformHeight*7)/100, 10),
 		    	font: {
 		            fontSize: parseInt((Ti.Platform.displayCaps.platformHeight*6)/100, 10)
@@ -240,7 +240,7 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 			theme.button, {
 				bottom: parseInt(((parentWindow.getHeight()*9)/100), 10),
         		left: '52%',
-				title: 'Volver a la página anterior',
+				title: 'back',
 				height: parseInt((Ti.Platform.displayCaps.platformHeight*7)/100, 10),
 		    	font: {
 		            fontSize: parseInt((Ti.Platform.displayCaps.platformHeight*6)/100, 10)
@@ -322,7 +322,7 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
     	var hViewPrivadas = Ti.UI.createView(theme.headerView);
     	hViewPrivadas.add(Ti.UI.createLabel(Yaast.MergeObject(
 			theme.headerViewLabel, {
-				text: 'Personales'
+				text: 'Private'
 			})
 		));
     	listaConexionesPrivadas.setHeaderView(hViewPrivadas);
@@ -336,7 +336,7 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
     	var hViewPublicas = Ti.UI.createView(theme.headerView);
     	hViewPublicas.add(Ti.UI.createLabel(Yaast.MergeObject(
 			theme.headerViewLabel, {
-				text: 'Públicas'
+				text: 'Public'
 			})
 		));
     	listaConexionesPublicas.setHeaderView(hViewPublicas);
@@ -353,8 +353,8 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 					|| (e.sectionIndex==itemConected[0] && e.itemIndex!=itemConected[1])){
 					var dialog = Ti.UI.createAlertDialog({
 			            cancel : 1,
-			            buttonNames : ['Aceptar', 'Cancelar'],
-			            message : '¿Está seguro que quiere eliminar la instancia \"'+item.connection.text+'\"? No se podrá recuperar',
+			            buttonNames : ['Acept', 'Cancel'],
+			            message : 'The instance \"'+item.connection.text+'\" will be removed',
 			            title : '-- W4T --'
 			        });
 			        dialog.addEventListener('click', function(conf) {
@@ -381,8 +381,8 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 		       	else{
 		       		var dialog = Ti.UI.createAlertDialog({
 			            cancel : 1,
-			            buttonNames : ['Aceptar', 'Cancelar'],
-			            message : 'Quiere eliminar una instancia a la que está conectado, ¿quiere continuar?',
+			            buttonNames : ['Acept', 'Cancel'],
+			            message : 'The current instance \"'+item.connection.text+'\" will be removed.',
 			            title : '-- W4T --'
 			        });
 			        dialog.addEventListener('click', function(conf) {
@@ -413,7 +413,7 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 					var dialog = Ti.UI.createAlertDialog({
 			            cancel : 1,
 			            buttonNames : ['Aceptar', 'Cancelar'],
-			            message : 'Ya había establecido conexión con otra instancia, ¿quiere continuar?',
+			            message : 'Do you want to change the \"'+item.connection.text+'\" instance?',
 			            title : '-- W4T --'
 			        });
 			        dialog.addEventListener('click', function(conf) {
