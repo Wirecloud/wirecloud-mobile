@@ -11,11 +11,14 @@
 var loginView = function (parentWindow) {
 
 	// Variables Comunes
-    var theme = require('ui/style/loginViewStyle'), 
+    var theme = require('ui/style/loginViewStyle'),
     	activitySession, logo = Ti.UI.createImageView(theme.logo),
     	systemLabel = Ti.UI.createLabel(theme.systemLabel), _self = {
        		view : Ti.UI.createView(theme.view)
-    	}, lastItemChoosed = null, itemConected = null, currentURL; // TODO inicializar itemConected desde la DB
+    	}, lastItemChoosed = null, itemConected = null, currentURL;
+    	
+    // Handlers
+    var focusPassTField, blurPassTField, returnUserTField, returnPassTField;
 
     // Variables para la configuración
     var configurationView;
@@ -60,7 +63,7 @@ var loginView = function (parentWindow) {
         });
         dialog.show();
 
-        if(activitySession != null){
+        if(activitySession != null || activitySession != undefined){
             activitySession.hide();
             _self.view.remove(activitySession);
             activitySession = null;
@@ -200,10 +203,7 @@ var loginView = function (parentWindow) {
                 hintText: "Nombre de usuario"
             }
         ));
-        loginFormUserTextField.returnUserTField = function returnUserTField() {
-            loginFormUserTextField.blur();
-        };
-        loginFormUserTextField.addEventListener('return', loginFormUserTextField.returnUserTField);
+
         loginFormContainer.add(loginFormUserTextField);
 
         loginFormPasswordTextField = Ti.UI.createTextField(Yaast.MergeObject(
@@ -215,19 +215,19 @@ var loginView = function (parentWindow) {
                 hintText: "Contraseña"
             }
         ));
-        loginFormPasswordTextField.returnPassTField = function returnPassTField() {
+        returnPassTField = function returnPassTField() {
             loginFormPasswordTextField.blur();
             checkAuthentication();
         };
 
         if(Yaast.API.HW.System.isApple()) {
-            loginFormPasswordTextField.focusPassTField = function focusPassTField() {
+            focusPassTField = function focusPassTField() {
                 _self.top = _self.view.getTop();
                 _self.height = _self.view.getHeight();
                 _self.view.setHeight(_self.view.getHeight() + (loginFormContainer.height/2));
                 _self.view.setTop(-(loginFormContainer.height/2));
             };
-            loginFormPasswordTextField.blurPassTField = function blurPassTField() {
+            blurPassTField = function blurPassTField() {
                 if(_self.top && _self.height){
                     _self.view.setTop(_self.top);
                     _self.view.setHeight(_self.height);
@@ -235,10 +235,14 @@ var loginView = function (parentWindow) {
                     delete _self.height;
                 }
             };
-            loginFormPasswordTextField.addEventListener('focus', loginFormPasswordTextField.focusPassTField);
-            loginFormPasswordTextField.addEventListener('blur', loginFormPasswordTextField.blurPassTField);
+	        returnUserTField = function returnUserTField() {
+	            loginFormUserTextField.blur();
+	        };
+	        loginFormUserTextField.addEventListener('return', returnUserTField);
+            loginFormPasswordTextField.addEventListener('focus', focusPassTField);
+            loginFormPasswordTextField.addEventListener('blur', blurPassTField);
         }
-        loginFormPasswordTextField.addEventListener('return', loginFormPasswordTextField.returnPassTField);
+        loginFormPasswordTextField.addEventListener('return', returnPassTField);
 		loginFormContainer.add(loginFormPasswordTextField);
 
 		// Botón de enviar
@@ -282,20 +286,22 @@ var loginView = function (parentWindow) {
 			}
 
 			if(loginFormUserTextField != null){
-				loginFormUserTextField.removeEventListener('return', loginFormUserTextField.returnUserTField);
-		        delete loginFormUserTextField.returnUserTField;
+				if (Yaast.API.HW.System.isApple()) {
+					loginFormUserTextField.removeEventListener('return', returnUserTField);
+				}
+		        returnUserTField = null;
 		        loginFormContainer.remove(loginFormUserTextField);
 		        loginFormUserTextField = null;
 	       	}
 
 	        if(loginFormPasswordTextField!=null){
 		        if(Yaast.API.HW.System.isApple()) {
-		            loginFormPasswordTextField.removeEventListener('focus', loginFormPasswordTextField.focusPassTField);
-		            loginFormPasswordTextField.removeEventListener('blur', loginFormPasswordTextField.blurPassTField);
-		            delete loginFormPasswordTextField.focusPassTField;
-		            delete loginFormPasswordTextField.blurPassTField;
+		            loginFormPasswordTextField.removeEventListener('focus', focusPassTField);
+		            loginFormPasswordTextField.removeEventListener('blur', blurPassTField);
+		            focusPassTField = null;
+		            blurPassTField = null;
 		        }
-		        loginFormPasswordTextField.removeEventListener('return', loginFormPasswordTextField.returnPassTField);
+		        loginFormPasswordTextField.removeEventListener('return', returnPassTField);
 		        delete loginFormPasswordTextField.returnPassTField;
 		        loginFormContainer.remove(loginFormPasswordTextField);
 		        loginFormPasswordTextField = null;
