@@ -317,7 +317,7 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
     	var listaConexionesPrivadas = Ti.UI.createListSection();
     	listaConexionesPrivadas.setItems([ // TODO coger la información de la db
     		{template: (itemConected!=null && itemConected[1]==1)?'template_conected':'template', 
-    			connection: { text: 'Wirecloud CoNWeT'}, url: { text: 'http://wirecloud.conwet.fi.upm.es/' }, id: { text: '1' }}
+    			connection: { text: 'Wirecloud CoNWeT'}, url: { text: 'https://wirecloud.conwet.fi.upm.es/' }, id: { text: '1' }}
     	]);
     	var hViewPrivadas = Ti.UI.createView(theme.headerView);
     	hViewPrivadas.add(Ti.UI.createLabel(Yaast.MergeObject(
@@ -330,7 +330,7 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 
     	var listaConexionesPublicas = Ti.UI.createListSection();
     	listaConexionesPublicas.setItems([ // TODO coger la información de la db
-    		{connection: { text: 'Wirecloud CoNWeT'}, url: { text: 'http://wirecloud.conwet.fi.upm.es/' }, id: { text: '1' }},
+    		{connection: { text: 'Wirecloud CoNWeT'}, url: { text: 'https://wirecloud.conwet.fi.upm.es/' }, id: { text: '1' }},
     		{connection: { text: 'Mashups Fi Lab 2'}, url: { text: 'http://wirecloud2.conwet.fi.upm.es' }, id: { text: '2' }}
     	]);
     	var hViewPublicas = Ti.UI.createView(theme.headerView);
