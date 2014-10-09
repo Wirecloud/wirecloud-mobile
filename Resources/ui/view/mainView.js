@@ -42,12 +42,17 @@ var mainView = function mainView(parentWindow, userName) {
 
 	// Add click event into listView
 	theme.ownWorkspacesViewTemplate.events = {click: _self.clickRowListView};
+
+	var ownWorkspaceHeader = Ti.UI.createLabel(theme.ownWorkspaceHeader);
+
     var ownWorkspacesView = Ti.UI.createListView({
         templates: {
             'template':theme.ownWorkspacesViewTemplate
         },
         defaultItemTemplate: 'template'
     });
+
+	var publicWorkspaceHeader = Ti.UI.createLabel(theme.publicWorkspaceHeader);
 
     var publicWorkspacesView = Ti.UI.createListView({
         templates: {
@@ -110,8 +115,8 @@ var mainView = function mainView(parentWindow, userName) {
 			var parsedValues = JSON.parse(values);
 			// TODO file system persistence
 			var newLink;
-			var ownWorkspaces = Ti.UI.createListSection({headerView: createHeaderView('My Workspaces')});
-			var publicWorkspaces = Ti.UI.createListSection({headerView: createHeaderView('Public Workspaces')});
+			var ownWorkspaces = Ti.UI.createListSection();
+			var publicWorkspaces = Ti.UI.createListSection();
             var rowsOwn = [];
             var rowsPublic = [];
 			for (var i = 0; i < parsedValues.length; i ++) {
@@ -133,12 +138,15 @@ var mainView = function mainView(parentWindow, userName) {
             rowsOwn = null;
             rowsPublic = null;
             ownWorkspacesView.setTouchEnabled(true);
-            ownWorkspacesView.height = leftView.height / 2;
-            ownWorkspacesView.top=0;
+            ownWorkspacesView.height = (leftView.height / 2) - ownWorkspaceHeader.height;
+            ownWorkspacesView.top =  ownWorkspaceHeader.height;
             publicWorkspacesView.setTouchEnabled(true);
+            leftView.add(ownWorkspaceHeader);
             leftView.add(ownWorkspacesView);
-            publicWorkspacesView.height = leftView.height / 2;
-            publicWorkspacesView.top = ownWorkspacesView.height;
+            publicWorkspaceHeader.top = ownWorkspacesView.height + ownWorkspaceHeader.height;
+            publicWorkspacesView.height = (leftView.height / 2) - publicWorkspaceHeader.height;
+            publicWorkspacesView.top = publicWorkspaceHeader.top + publicWorkspaceHeader.height;
+            leftView.add(publicWorkspaceHeader);
             leftView.add(publicWorkspacesView);
             _self.view.add(leftView);
             _self.view.add(rightView);

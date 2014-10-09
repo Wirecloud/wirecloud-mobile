@@ -117,6 +117,35 @@ var mainViewStyle = (function() {
         color: '#FFFFFF',
 	};
 
+    _self.ownWorkspaceHeader = {
+    	text: "My Dashboards" ,
+    	width: '100%',
+    	backgroundColor: '#C3D7F8',
+    	top: 0,
+    	color: '#00286B',
+    	height:  rowHeight,
+        font: {
+            fontFamily:'Default',
+            fontSize: rowFontSize * 1.5
+        },
+        left: 0,
+        textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER
+    };
+
+    _self.publicWorkspaceHeader = {
+    	text: "Public Dashboards" ,
+    	width: '100%',
+    	backgroundColor: '#C3D7F8',
+    	color: '#00286B',
+    	height:  rowHeight,
+        font: {
+            fontFamily:'Default',
+            fontSize: rowFontSize * 1.5
+        },
+        left: 0,
+        textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER
+    };
+
     _self.ownWorkspacesViewTemplate = {
         childTemplates: [
             {
