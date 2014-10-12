@@ -44,12 +44,12 @@ mashup = {
 
 	 	// Info Label
 	 	var infoLabel = Ti.UI.createLabel(theme.infoLabel);
-	 	infoLabel.text = 'Choose a workspace from the left panel and use it!';
+	 	infoLabel.text = 'Choose a dashboard from the left panel and use it!';
 	 	_self.add(infoLabel);
 
 	 	// Link label
 	 	var linkLabel = Ti.UI.createLabel(theme.linkLabel);
-	 	linkLabel.text = 'Manage workspaces and create new ones visiting';
+	 	linkLabel.text = 'Manage your dashboards and create new ones visiting';
 	 	_self.add(linkLabel);
 	 	
 	 	// Wirecloud link
