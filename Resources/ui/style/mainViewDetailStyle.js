@@ -22,12 +22,13 @@ var mainViewDetailStyle = (function() {
     _fontSize = Yaast.API.UI.getDefaultFontSize();
 
     _self.view = {
-        //left: Yaast.API.UI.getPlatformWidth() * 0.5,
         left: 0,
         top: 0,
         width: Yaast.API.UI.getPlatformWidth() * 0.5,
         height: heightView,
         backgroundColor: '#4F6C88',
+        borderWidth: 1,
+        borderColor: 'FFFFFF'
     };
 
 	_self.mainTitle = {
@@ -141,7 +142,7 @@ var mainViewDetailStyle = (function() {
         top: _self.linkLabel.top + _self.linkLabel.height
 	};
 	_self.wirecloudLinkText = {
-		color: '#D8923A',
+		color: '#F5BD76',
 		height: rowHeight,
         font: {
             fontFamily: Yaast.FontAwesome.getFontFamily(),
