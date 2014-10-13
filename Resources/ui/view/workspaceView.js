@@ -1,6 +1,6 @@
 
 //workspaceView ScrollView Component Constructor
-function workspaceView(parameters, userName) {
+function workspaceView(parameters, userName, returnCallback) {
 
 	var _isApple = (Ti.Platform.osname == 'ipad');
 	var _isIOS7 = (_isApple && Ti.Platform.version.split('.')[0] === '7') ? true : false;
@@ -11,6 +11,7 @@ function workspaceView(parameters, userName) {
 	var _widgetsViewById = {};
 	var _operatorsViewById = {};
 	var _operatorsIdsByName = {};
+	var _returnCall = returnCallback;
 
 	// Visualization Self
 	var _selfView = Ti.UI.createView({
@@ -99,7 +100,7 @@ function workspaceView(parameters, userName) {
 		_self.funShowWorkspace();
 	}
 	else{
-		var _downloadObject = require('ui/view/downloadView')(parameters.heightView, _widgetsToDownload, _operatorsToDownload, _selfView.platform.name, userName, _operatorsIdsByName);
+		var _downloadObject = require('ui/view/downloadView')(parameters.heightView, _widgetsToDownload, _operatorsToDownload, _selfView.platform.name, userName, _operatorsIdsByName, _returnCall);
 		_selfView.add(_downloadObject);
 	}
 

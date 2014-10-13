@@ -187,7 +187,6 @@ var appWindow = ( function() {
         dialog.show();
     };
 
-
 	// -- WORKSPACE --
 
     // Show workspace View
@@ -197,6 +196,11 @@ var appWindow = ( function() {
 		_conObject.getWirecloud(workspaceViewCallback, mashupId);
 		_conObject = null;
     };
+
+	self.cleanAndReturnToMain = function cleanAndReturnToMain(){
+		self.cleanCurrentView();
+		self.showMainView(self.userName);
+	};
 
 	// showWorkspaceView Callback
 	var workspaceViewCallback = function workspaceViewCallback(data) {
@@ -210,7 +214,7 @@ var appWindow = ( function() {
 		    'topView' : Yaast.API.UI.getDefaultStatusBar(),
 			'heightView' : Yaast.API.UI.getPlatformHeight() - Yaast.API.UI.getDefaultStatusBar(),
 			'data' : data
-		}, self.userName);
+		}, self.userName, self.cleanAndReturnToMain);
 
 		self.window.add(workspaceView.view);
 		Yaast.Sandbox.currentView = 'workspace';

@@ -15,6 +15,7 @@
 	<string name="label_downloader_desc_down">Cargando Workspace</string>
 	<string name="label_downloader_desc_main_fl">Aviso de uso de datos</string>
 	<string name="label_downloader_desc_main_ol">\n\nEs necesario descargar los widgets y operadores de Wirecloud\n\ntal vez prefiera activar una conexión wifi antes de empezar.\n\n¿desea continuar\?</string>
+	<string name="label_downloader_desc_main_ol_wifi">\n\nEs necesario descargar los widgets y operadores de Wirecloud\n\n¿desea continuar\?</string>
 	<string name="label_downloader_row_url">Comprobación de dependencias alojadas en Wirecloud</string>
 	<string name="label_downloader_row_wid">Widgets u operadores descargados en caché</string>
 	<string name="label_downloader_row_wid_build">Construida caché de recursos asignados al Workspace</string>

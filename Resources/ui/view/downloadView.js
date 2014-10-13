@@ -1,9 +1,10 @@
 //downloadsPlatform Window Component Constructor
 
-function downloadView(h, listWidgets, listOperators, workspaceName, userName, operatorsIdsByName) {
+function downloadView(h, listWidgets, listOperators, workspaceName, userName, operatorsIdsByName, returnCallback) {
 
 	var _mainFolderName = Yaast.Sandbox.mainFolderName;
 	var _isApple = Yaast.API.HW.System.isApple();
+	var _fontSize = Yaast.API.UI.getDefaultFontSize();
 	var _self = Ti.UI.createView({
 		top : 0,
 		left : 0,
@@ -25,7 +26,7 @@ function downloadView(h, listWidgets, listOperators, workspaceName, userName, op
 	/** @title: createDescriptionLabel (Function)
 	 *  @param: height and text
 	 *  @usage: create Label for Description View */
-	function createDescriptionLabel(h, textString) {
+	function createDescriptionLabel(h, textString, fontSize) {
 		return Ti.UI.createLabel({
 			top : 0,
 			left : 0,
@@ -33,7 +34,7 @@ function downloadView(h, listWidgets, listOperators, workspaceName, userName, op
 			height : h,
 			touchEnabled : false,
 			font : {
-				fontSize : (_isApple) ? 20 : '20dp',
+				fontSize : fontSize,
 				fontFamily : 'Comfortaa'
 			},
 			color : "#FFFFFF",
@@ -57,7 +58,7 @@ function downloadView(h, listWidgets, listOperators, workspaceName, userName, op
 				fontSize : (_isApple) ? 20 : '20dp',
 				fontFamily : 'Comfortaa'
 			},
-			color : "#FFFFFF",
+			color : "#CED2DF",
 			textAlign : Ti.UI.TEXT_ALIGNMENT_LEFT,
 			verticalAlign : Ti.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
 			text : textString
@@ -75,28 +76,33 @@ function downloadView(h, listWidgets, listOperators, workspaceName, userName, op
 			height : 50,
 			touchEnabled : false,
 			font : {
-				fontSize : (_isApple) ? 25 : '20dp',
-				fontFamily : _self.fontAw.getFontFamily()
+				fontSize : parseInt(_fontSize) * 2.5,
+				fontFamily : Yaast.FontAwesome.getFontFamily()
 			},
-			color : "#68FF42",
+			color : "#FFFFFF",
 			textAlign : Ti.UI.TEXT_ALIGNMENT_LEFT,
 			verticalAlign : Ti.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
-			text : _self.fontAw.getCharCode("icon-ok")
+			text : Yaast.FontAwesome.getCharCode("fa-cloud-download")
 		});
 	};
 
 	/** @title: createBigIcon (Function)
 	 *  @usage: create Label with Icon and subLabel */
 	function createBigIcon(icon, textString, left) {
+		var iconColor;
+
 		var _view = Ti.UI.createView({
 			top : _description.top + _description.height,
 			width : parseInt(_self.width / 2, 10) - parseInt(_self.width / 5, 10),
 			height : 200
 		});
-		if (left === true)
+		if (left === true) {
 			_view.setLeft(parseInt(_self.width / 5, 10));
-		else
+			iconColor = "#006100";
+		} else {
 			_view.setRight(parseInt(_self.width / 5, 10));
+			iconColor = "#610000";
+		}
 		_view.add(Ti.UI.createLabel({
 			top : 0,
 			left : 0,
@@ -104,22 +110,22 @@ function downloadView(h, listWidgets, listOperators, workspaceName, userName, op
 			height : 150,
 			touchEnabled : false,
 			font : {
-				fontSize : (_isApple) ? 200 : '20dp',
-				fontFamily : _self.fontAw.getFontFamily()
+				fontSize : parseInt(_fontSize) * 4.5,
+				fontFamily : Yaast.FontAwesome.getFontFamily()
 			},
-			color : "#FFFFFF",
+			color : iconColor,
 			textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER,
 			verticalAlign : Ti.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
-			text : _self.fontAw.getCharCode(icon)
+			text : Yaast.FontAwesome.getCharCode(icon)
 		}));
 		_view.add(Ti.UI.createLabel({
-			top : 150,
+			top : 120,
 			left : 0,
 			width : _view.width,
 			height : 50,
 			touchEnabled : false,
 			font : {
-				fontSize : (_isApple) ? 20 : '20dp',
+				fontSize : _fontSize,
 				fontFamily : 'Comfortaa'
 			},
 			color : "#FFFFFF",
@@ -190,7 +196,6 @@ function downloadView(h, listWidgets, listOperators, workspaceName, userName, op
 		_downWidgetsIcon = null;
 		_self.remove(_buildWidgetsIcon);
 		_buildWidgetsIcon = null;
-		_footer.removeEventListener('click', _self.funShowWorkspace);
 		_self.remove(_footer);
 		_footer = null;
 		delete _self['downloadLaterHandler'];
@@ -218,6 +223,15 @@ function downloadView(h, listWidgets, listOperators, workspaceName, userName, op
 		Ti.App.fireEvent('showWorkspace');
 	};
 
+	/** @title: funShowWorkspace (Function)
+	 *  @usage: fireEvent showWorkspace (workspaceView.js) */
+	_self.returnMain = function returnMain(){
+		_footer.removeEventListener('click', _self.returnMain);
+		_footer.hide();
+		_self.clearObject();
+		returnCallback();
+	};
+
 	/** @title: downloadHandler (Function)
 	 *  @usage: call to download dependencies and verify files */
 	_self.downloadHandler = function downloadHandler() {
@@ -232,7 +246,7 @@ function downloadView(h, listWidgets, listOperators, workspaceName, userName, op
 		_removeIcon = null;
 
 		// Create Layout
-		_description = createDescriptionLabel(200, L('label_downloader_desc_down'));
+		_description = createDescriptionLabel(200, L('label_downloader_desc_down'), _fontSize * 2);
 		_self.add(_description);
 		_self.add(createRowLabel(200, L('label_downloader_row_url')));
 		_checkURLIcon = createOkIcon(200, parseInt(_self.width / 6, 10), 650);
@@ -243,47 +257,70 @@ function downloadView(h, listWidgets, listOperators, workspaceName, userName, op
 		_self.add(createRowLabel(400, L('label_downloader_row_wid_build')));
 		_buildWidgetsIcon = createOkIcon(400, parseInt(_self.width / 6, 10), 650);
 		_self.add(_buildWidgetsIcon);
-		_footer = createDescriptionLabel(100, L('label_downloader_row_wait'));
+		_footer = Ti.UI.createActivityIndicator({
+	  		message: 'Downloading Workspace',
+	  		width: "100%",
+	  		style:Ti.UI.ActivityIndicatorStyle.BIG_DARK,
+	  		color: "#FFFFFF",
+	        font : {
+	            fontSize : _fontSize * 2,
+	            fontFamily : 'Bangla Sangam MN'
+	        }
+	    });
 		_footer.setTop(525);
+		_footer.show();
 		_self.add(_footer);
 
 		// Check List Resource from Wirecloud Desktop
+		_checkURLIcon.setColor("#006100");
 		var _conObject = require('/connections/appConnection');
+		_footer.addEventListener('click', _self.returnMain);
 		var _conA = _conObject.checkListResource(_widgetsToDownload.concat(_operatorsToDownload), function(checkResult) {
 			if (checkResult.value === true) {
-				_footer.setText(L('label_downloader_footer_error') + ' ' +checkResult.uri);
+				_footer.setMessage(L('label_downloader_footer_error') + ' (' + checkResult.uri + ')');
 				_footer.setColor("#610000");
 				_checkURLIcon.setColor("#610000");
 			} else {
-				_checkURLIcon.setColor("#006100");
+				_checkURLIcon.setColor("#68FF42");
+				_downWidgetsIcon.setColor("#006100");
+				_checkURLIcon.text = Yaast.FontAwesome.getCharCode("fa-check");
 				_conA = _conObject.downloadListResource(_widgetsToDownload.concat(_operatorsToDownload), _widgetsToDownload.length,
 				    function(downResult) {
 					if (downResult.value == true) {
-						_footer.setText(L('label_downloader_footer_error_down') + ' ' + downResult.uri);
+						_footer.setMessage(L('label_downloader_footer_error_down') + ' ' + downResult.uri);
 						_footer.setColor("#610000");
 						_downWidgetsIcon.setColor("#610000");
+						_downWidgetsIcon.text = Yaast.FontAwesome.getCharCode("fa-times-circle");
 					} else {
+						_footer.removeEventListener('click', _self.returnMain);
+						_downWidgetsIcon.setColor("#68FF42");
+						_downWidgetsIcon.text = Yaast.FontAwesome.getCharCode("fa-check");
+						_buildWidgetsIcon.setColor("#68FF42");
+						_buildWidgetsIcon.text = Yaast.FontAwesome.getCharCode("fa-check");
+						_footer.setColor("#68FF42");
 						createHTMLOperators(downResult.files);
-						_downWidgetsIcon.setColor("#006100");
-						_buildWidgetsIcon.setColor("#006100");
-						_footer.setText(L('label_downloader_footer_show'));
-						_footer.setTouchEnabled(true);
-						_footer.addEventListener('click', _self.funShowWorkspace);
+						_footer.hide();
+						// Load workspace
+						_self.funShowWorkspace();
 					}
 				}, userName);
 			}
 		});
-
 	};
-
-	_description = createDescriptionLabel(350, L('label_downloader_desc_main_fl') + ' ' + workspaceName + L('label_downloader_desc_main_ol'));
+	var mess;
+	if (Yaast.API.HW.Network.getNetwork() == 'WIFI') {
+		mess = L('label_downloader_desc_main_fl') + ' ' + workspaceName + L('label_downloader_desc_main_ol_wifi');
+	} else {
+		mess = L('label_downloader_desc_main_fl') + ' ' + workspaceName + L('label_downloader_desc_main_ol');
+	}
+	_description = createDescriptionLabel(350, mess, _fontSize * 1.5);
 	_self.add(_description);
 
-	_downloadIcon = createBigIcon("icon-download-alt", L('label_downloader_down'), true);
+	_downloadIcon = createBigIcon("fa-download", L('label_downloader_down'), true);
 	_downloadIcon.addEventListener('click', _self.downloadHandler);
 	_self.add(_downloadIcon);
 
-	_removeIcon = createBigIcon("icon-remove", L('label_downloader_later'), false);
+	_removeIcon = createBigIcon("fa-times-circle", L('label_downloader_later'), false);
 	_removeIcon.addEventListener('click', _self.downloadLaterHandler);
 	_self.add(_removeIcon);
 
