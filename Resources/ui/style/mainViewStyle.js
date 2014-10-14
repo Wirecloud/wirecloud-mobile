@@ -19,7 +19,7 @@ var mainViewStyle = (function() {
     var _fontSize = Yaast.API.UI.getDefaultFontSize();
 
     _self.view = {
-        top: Yaast.API.UI.getDefaultStatusBar(),
+        top: 0,
         left: 0,
         height: heightView,
         width: Yaast.API.UI.getPlatformWidth(),

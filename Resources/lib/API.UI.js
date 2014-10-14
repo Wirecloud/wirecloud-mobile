@@ -22,6 +22,66 @@ var UI = function (APIReferences) {
      * @namespace */
     var _self = {};
 
+	var dipUnitsToPixels = function dipUnitsToPixels(dipUnits) {
+		var DENSITY_SMALL_LDPI = 120;
+		var DENSITY_BASELINE_MDPI = 160;
+		var DENSITY_HIGH_HDPI = 240;
+		var DENSITY_EXTRA_HIGH_XHDPI = 320;
+		var ret;
+
+		switch (Ti.Platform.displayCaps.dpi) {
+			case DENSITY_SMALL_LDPI:
+				ret = (dipUnits * (Ti.Platform.displayCaps.dpi / DENSITY_SMALL_LDPI));
+				break;
+
+			case DENSITY_BASELINE_MDPI:
+				ret = (dipUnits * (Ti.Platform.displayCaps.dpi / DENSITY_BASELINE_MDPI));
+				break;
+
+			case DENSITY_HIGH_HDPI:
+				ret = (dipUnits * (Ti.Platform.displayCaps.dpi / DENSITY_HIGH_HDPI));
+				break;
+
+			case DENSITY_EXTRA_HIGH_XHDPI:
+				ret = (dipUnits * (Ti.Platform.displayCaps.dpi / DENSITY_EXTRA_HIGH_XHDPI));
+				break;
+
+			default:
+				ret = dipUnits;
+		}
+		return ret;
+	};
+	 
+	var pixelsToDipUnits = function pixelsToDipUnits(pixels) {
+		var DENSITY_SMALL_LDPI = 120;
+		var DENSITY_BASELINE_MDPI = 160;
+		var DENSITY_HIGH_HDPI = 240;
+		var DENSITY_EXTRA_HIGH_XHDPI = 320;
+		var ret;
+
+		switch (Ti.Platform.displayCaps.dpi) {
+			case DENSITY_SMALL_LDPI:
+				ret = (dipUnits / (Ti.Platform.displayCaps.dpi / DENSITY_SMALL_LDPI));
+				break;
+
+			case DENSITY_BASELINE_MDPI:
+				ret = (dipUnits / (Ti.Platform.displayCaps.dpi / DENSITY_BASELINE_MDPI));
+				break;
+
+			case DENSITY_HIGH_HDPI:
+				ret = (dipUnits / (Ti.Platform.displayCaps.dpi / DENSITY_HIGH_HDPI));
+				break;
+
+			case DENSITY_EXTRA_HIGH_XHDPI:
+				ret = (dipUnits / (Ti.Platform.displayCaps.dpi / DENSITY_EXTRA_HIGH_XHDPI));
+				break;
+
+			default:
+				ret = dipUnits;
+		}
+		return ret;
+	};
+
     /** Get Screen Type of Android Device
      * @method
      * @return {String} */
@@ -124,7 +184,28 @@ var UI = function (APIReferences) {
 			if(Yaast.API.HW.System.isRetina()) return 40;
 			else return 20;
 		}
-		else return 12;
+		else {
+			var statusBarHeight;
+			 
+			switch (Ti.Platform.displayCaps.density ) {
+				case 160:
+				    statusBarHeight = 25;
+				    break;
+				case 120:
+				    statusBarHeight = 19;
+				    break;
+				case 240:
+				    statusBarHeight = 38;
+				    break;
+				case 320:
+				    statusBarHeight = 50;
+				    break;
+				default:
+				    statusBarHeight = 25;
+				    break;
+			}
+			return statusBarHeight;
+		}
     };
 
     /** Get Display Platform Width.

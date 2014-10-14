@@ -227,7 +227,7 @@ var appWindow = ( function() {
     removeCredentials();
     
     // Load Login
-    self.showLoginView();
+    //self.showLoginView();
 
     return self;
 

@@ -47,7 +47,8 @@ var Yaast = {
     	},
     	'defaultURL': "https://wirecloud.conwet.fi.upm.es/",
     	'defaultInstanceName': "Wirecloud CoNWeT",
-    	'currentURL': "https://wirecloud.conwet.fi.upm.es/"
+    	'currentURL': "https://wirecloud.conwet.fi.upm.es/",
+    	'windowHeight': null
     }
 };
 Yaast.API = require('lib/API');
@@ -81,8 +82,35 @@ Ti.API.info('Screen Density: ' + Yaast.API.UI.getScreenDensity());
 	}
 
     if (Yaast.API.HW.System.isTablet()) {
+    	var setWindowHeight = function setWindowHeight(e) {
+    		// Bug. incorrect height
+	    	Yaast.Sandbox.windowHeight = parseInt(Window.window.rect.height);
+	    	Ti.API.info('[open] Yaast.Sandbox.windowHeight = ' + Yaast.Sandbox.windowHeight);
+	    	Ti.API.info('[open] Window.window.rect.width = ' + parseInt(Window.window.rect.width));
+	    	Ti.API.info('[open] Window.window.size = ' + JSON.stringify(Window.window.size));
+	    	Ti.API.info('*e:  = ' + e);
+	    	if (e.type = 'open') {
+				setTimeout(function() {
+					Window.window.removeEventListener('open', setWindowHeight);
+					Window.window.removeEventListener('postlayout', windowLoaded);
+				   Window.showLoginView();
+				},500);
+			}
+    	};
+
+		var windowLoaded = function windowLoaded(e) {
+	    	Yaast.Sandbox.windowHeight = parseInt(Window.window.rect.height);
+	    	Ti.API.info('[postlayout] Yaast.Sandbox.windowHeight = ' + Yaast.Sandbox.windowHeight);
+	    	Ti.API.info('[postlayout] Window.window.rect.width = ' + parseInt(Window.window.rect.width));
+	    	Ti.API.info('[postlayout] Window.window.size = ' + JSON.stringify(Window.window.size));
+	    	Ti.API.info('[postlayout] postlayout event source.rect.height:  = ' + parseInt(e.source.rect.height));
+	    	Ti.API.info('*e:  = ' + e);
+	    };
         var Window = require('ui/window/appWindow');
         Window.window.open();
+        Window.window.addEventListener('postlayout', windowLoaded);
+        Window.window.addEventListener('open', setWindowHeight);
+        //Window.window.addEventListener('postlayout', windowLoaded);
     }
     else  alert("Wirecloud4Tablet has not compatibility with Smartphone's'");
 

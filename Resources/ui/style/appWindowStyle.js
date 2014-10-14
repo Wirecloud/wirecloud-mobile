@@ -10,13 +10,20 @@
 
 var appWindowStyle = (function() {
 
+	Ti.API.info('getPlatformHeight: ' + Yaast.API.UI.getPlatformHeight());
+	Ti.API.info('getPlatformWidth: ' + Yaast.API.UI.getPlatformWidth());
+	Ti.API.info('getDefaultStatusBar: ' + Yaast.API.UI.getDefaultStatusBar());
+	Ti.API.info('window HEIGHT: default');
+	Ti.API.info('window WIDTH: default');
+	Ti.API.info('window top: ' + parseInt(Yaast.API.UI.getDefaultStatusBar()));
     var _self = {
+    	top: 100,
         exitOnClose: true,
         navBarHidden: true,
-        backgroundColor: '#1F3346',
-        width: Yaast.API.UI.getPlatformWidth(),
-        height: Yaast.API.UI.getPlatformHeight(),
-        orientationModes: [Ti.UI.LANDSCAPE_LEFT, Ti.UI.LANDSCAPE_RIGHT]
+        backgroundColor: '#001F6F',
+        // Size test
+        borderWidth: 1,
+        borderColor: '#FFFFFF',
     };
 
     if(Yaast.API.HW.System.isApple() && parseFloat(Yaast.API.HW.System.getVersion(), 10) >= 7.0){

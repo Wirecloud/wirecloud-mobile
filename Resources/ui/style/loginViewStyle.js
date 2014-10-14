@@ -28,20 +28,26 @@ var loginViewStyle = (function() {
     _fontColor = '#EBEBEB',
     _fontColorButton = '#354B5D', // 1F3346
     _rowHeight = Yaast.API.UI.getDefaultRowHeight();
-    
-    
+    var viewHeight = Yaast.Sandbox.windowHeight;
+    var viewWidth = parseInt(Yaast.API.UI.getPlatformWidth());
+    Ti.API.info('loginView top: ' + ((viewHeight * 0.5) / 100));
+    Ti.API.info('loginView left: ' + ((viewHeight * 0.5) / 100));
+    Ti.API.info('loginView height: ' + (viewHeight - ((viewHeight * 0.5) / 100) * 2));
+    Ti.API.info('loginView width: ' + (viewHeight - ((viewHeight * 0.5) / 100) * 2));
 
     _self.view = {
-        top: Yaast.API.UI.getDefaultStatusBar(),
-        left: 0,
+        top: (viewHeight * 0.5) / 100,
+        left: (viewHeight * 0.5) / 100,
         backgroundColor: _background,
-        width: Yaast.API.UI.getPlatformWidth(),
-        height: Yaast.API.UI.getPlatformHeight() - Yaast.API.UI.getDefaultStatusBar() -10,
+        width: viewWidth - (((viewHeight * 0.5) / 100) * 2),
+        //width: '100%',
+        height: viewHeight - (((viewHeight * 0.5) / 100) * 2),
+        //height: '100%',
         // Size test
         borderWidth: 1,
         borderColor: _background3,
     };
-    _self.view.height = Yaast.API.UI.getPlatformHeight() - _self.view.top;
+    //_self.view.height = Yaast.API.UI.getPlatformHeight() - _self.view.top;
 
 	// General View
 

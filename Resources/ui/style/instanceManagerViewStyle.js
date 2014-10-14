@@ -29,7 +29,7 @@ var loginViewStyle = (function() {
 
 
     _self.view = {
-        top: Yaast.API.UI.getDefaultStatusBar(),
+        top: 0,
         left: 0,
         backgroundColor: _background,
         width: Yaast.API.UI.getPlatformWidth(),
