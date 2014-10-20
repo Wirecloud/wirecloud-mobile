@@ -12,12 +12,12 @@
 	<string name="label_widget_map_distance">Entfernung</string>
 	<string name="label_widget_map_time">Zeit</string>
 	<string name="label_widget_map_step">Anzeige</string>
-	<string name="label_downloader_desc_down">Loading Arbeitsbereich</string>
+	<string name="label_downloader_desc_down">Loading Dashboard</string>
 	<string name="label_downloader_desc_main_fl">Ein fehler ist aufgetreten, wenn sie versuchen zu visualisieren</string>
 	<string name="label_downloader_desc_main_ol">\n\nEs scheint, dass Widgets oder Betreiber fehlende cache Wirecloud4Tablet\n\nwird der download solcher abhängigkeiten gehen\n\nWeiter\?</string>
 	<string name="label_downloader_row_url">Überprüfung von abhängigkeiten in Wirecloud gespeichert</string>
 	<string name="label_downloader_row_wid">Widgets heruntergeladen zwischengespeichert oder betreiber</string>
-	<string name="label_downloader_row_wid_build">Konstruiert cache zugewiesenen ressourcen Workspace</string>
+	<string name="label_downloader_row_wid_build">Konstruiert cache zugewiesenen ressourcen Dashboard</string>
 	<string name="label_downloader_row_wait">Bitte warten Sie ...</string>
 	<string name="label_downloader_footer_error">Fehler aufgrund der abhängigkeit:</string>
 	<string name="label_downloader_footer_error_down">Download fehlgeschlagen abhängigkeit:</string>
@@ -37,7 +37,7 @@
 	<string name="alert_button_name">Name</string>
 	<string name="alert_button_vendor">Anbieter</string>
 	<string name="alert_button_author">Verfasser</string>
-	<string name="alert_button_addMashup">Arbeitsbereich neuer hinzufügen</string>
+	<string name="alert_button_addMashup">Dashboard neuer hinzufügen</string>
 	<string name="alert_button_deleteTab">Löschen sichtbaren registerkarte</string>
 	<string name="error_login_username">Der benutzername darf nicht leer sein</string>
 	<string name="error_login_password">Das kennwort darf nicht leer sein</string>

@@ -12,7 +12,7 @@
 	<string name="label_widget_map_distance">Distância</string>
 	<string name="label_widget_map_time">Tempo</string>
 	<string name="label_widget_map_step">Indicação</string>
-	<string name="label_downloader_desc_down">Carregando Workspace</string>
+	<string name="label_downloader_desc_down">Carregando Dashboard</string>
 	<string name="label_downloader_desc_main_fl">Ocorreu um erro ao tentar visualizar</string>
 	<string name="label_downloader_desc_main_ol">\n\nParece que widgets ou operadores ausentes Wirecloud4Tablet de cache\n\nprosseguirá para o download de tais dependências\n\nContinuar\?</string>
 	<string name="label_downloader_row_url">Verificação de dependência armazenado em Wirecloud</string>
@@ -21,7 +21,7 @@
 	<string name="label_downloader_row_wait">Por favor aguarde ...</string>
 	<string name="label_downloader_footer_error">Erro devido à dependência:</string>
 	<string name="label_downloader_footer_error_down">Baixar dependência falhou:</string>
-	<string name="label_downloader_footer_show">Mostrar Workspace</string>
+	<string name="label_downloader_footer_show">Mostrar Dashboard</string>
 	<string name="label_downloader_down">Dependências download</string>
 	<string name="label_downloader_later">Adiar</string>
 	<string name="button_slider_aworkspace">Marketplace</string>
@@ -37,7 +37,7 @@
 	<string name="alert_button_name">Nome</string>
 	<string name="alert_button_vendor">Vendedor</string>
 	<string name="alert_button_author">Autor</string>
-	<string name="alert_button_addMashup">Añadir nuevo Workspace</string>
+	<string name="alert_button_addMashup">Añadir nuevo Dashboard</string>
 	<string name="alert_button_deleteTab">Excluir guia visível</string>
 	<string name="error_login_username">A nome de usuário não pode estar vazio</string>
 	<string name="error_login_password">A senha não pode estar vazio</string>
