@@ -125,13 +125,6 @@ var UI = function (APIReferences) {
       		return 44;
       	} else {
       		return Ti.Platform.displayCaps.logicalDensityFactor * 44;
-  			/*var density = _self.getScreenDensity();
-			if(density === 'low') return 33;
-			else if(density === 'medium') return 44;
-			else if(density === 'high') return 72;
-			else if(density === 'xhigh') return 96;
-			else if(density === 'xxhigh') return 144;
-			else if(density === 'xxxhigh') return 192;*/
 		}
     };
 
