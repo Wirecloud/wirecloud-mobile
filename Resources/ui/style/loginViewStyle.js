@@ -29,20 +29,26 @@ var loginViewStyle = (function() {
     _fontColorButton = '#354B5D', // 1F3346
     _rowHeight = Yaast.API.UI.getDefaultRowHeight();
     var viewHeight = Yaast.Sandbox.windowHeight;
+    var baseTop = 0;
+    if (Yaast.API.HW.System.isApple()) {
+    	viewHeight = Yaast.Sandbox.windowHeight - Yaast.API.UI.getDefaultStatusBar();
+    	baseTop = Yaast.API.UI.getDefaultStatusBar();
+    } else {
+    	viewHeight = Yaast.Sandbox.windowHeight;
+    	baseTop = 0;
+    }
     var viewWidth = parseInt(Yaast.API.UI.getPlatformWidth());
-    Ti.API.info('loginView top: ' + ((viewHeight * 0.5) / 100));
-    Ti.API.info('loginView left: ' + ((viewHeight * 0.5) / 100));
-    Ti.API.info('loginView height: ' + (viewHeight - ((viewHeight * 0.5) / 100) * 2));
-    Ti.API.info('loginView width: ' + (viewHeight - ((viewHeight * 0.5) / 100) * 2));
+    Ti.API.info('loginView top: ' + parseInt(baseTop + (viewHeight * 0.5) / 100), 10);
+    Ti.API.info('loginView left: ' + parseInt(baseTop + (viewHeight * 0.5) / 100));
+    Ti.API.info('loginView height: ' + parseInt(viewHeight - ((viewHeight * 0.5) / 100) * 2), 10);
+    Ti.API.info('loginView width: ' + parseInt(viewHeight - ((viewHeight * 0.5) / 100) * 2), 10);
 
     _self.view = {
-        top: (viewHeight * 0.5) / 100,
-        left: (viewHeight * 0.5) / 100,
+        top: parseInt(baseTop +  ((viewHeight * 0.5) / 100), 10),
+        left: parseInt(baseTop +  ((viewHeight * 0.5) / 100), 10),
         backgroundColor: _background,
-        width: viewWidth - (((viewHeight * 0.5) / 100) * 2),
-        //width: '100%',
-        height: viewHeight - (((viewHeight * 0.5) / 100) * 2),
-        //height: '100%',
+        width: parseInt(viewWidth - (((viewHeight * 0.5) / 100) * 2), 10),
+        height: parseInt(viewHeight - (((viewHeight * 0.5) / 100) * 2), 10),
         // Size test
         borderWidth: 1,
         borderColor: _background3,
@@ -75,7 +81,7 @@ var loginViewStyle = (function() {
 
     _self.spinner = {
   		message: 'Checking Authorization',
-  		style:Ti.UI.ActivityIndicatorStyle.BIG_DARK,
+  		style: (Yaast.API.HW.System.isApple()) ? Ti.UI.iPhone.ActivityIndicatorStyle.BIG : Ti.UI.ActivityIndicatorStyle.BIG_DARK,
   		top: parseInt((_self.view.height/2)-(Yaast.API.UI.getDefaultRowHeight()/2), 10),
   		right:'7%',
   		color: _fontColor,

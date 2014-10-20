@@ -27,8 +27,6 @@ var mainViewDetailStyle = (function() {
         width: Yaast.API.UI.getPlatformWidth() * 0.5,
         height: heightView,
         backgroundColor: '#4F6C88',
-        borderWidth: 1,
-        borderColor: 'FFFFFF'
     };
 
 	_self.mainTitle = {
@@ -36,7 +34,7 @@ var mainViewDetailStyle = (function() {
 		height: rowHeight,
         font: {
             fontFamily: Yaast.FontAwesome.getFontFamily(),
-            fontSize: parseInt(rowFontSize) * 2.4
+            fontSize: parseInt(rowFontSize) * 2.2
         },
         shadowColor: '#aaa',
         shadowOffset: {x:0, y:0},
@@ -45,11 +43,11 @@ var mainViewDetailStyle = (function() {
 	};
 
 	_self.creatorLabel = {
-		color: '#FFFFFF',
+		color: '#D1D1D1',
 		height: rowHeight,
         font: {
             fontFamily: Yaast.FontAwesome.getFontFamily(),
-            fontSize: rowFontSize
+            fontSize: parseInt(_fontSize)
         },
         left: 15,
         top: parseInt(rowHeight) + 30
@@ -57,28 +55,28 @@ var mainViewDetailStyle = (function() {
 
 	_self.descriptionLabel = {
 		color: '#FFFFFF',
-		height: rowHeight,
+		height: parseInt(heightView * 60 / 100),
         font: {
             fontFamily: Yaast.FontAwesome.getFontFamily(),
-            fontSize: rowFontSize
+            fontSize: _fontSize
         },
         left: 15,
-        top: _self.creatorLabel.top + parseInt(rowHeight),
-        text: 'Description: '
+        top: _self.creatorLabel.top + parseInt(rowHeight * 1.5),
+        verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_TOP
 	};
-	
+
 	_self.loadButton = {
         font : {
-            fontSize : parseInt(rowFontSize) * 4,
+            fontSize : parseInt(_fontSize) * 3,
             fontFamily : Yaast.FontAwesome.getFontFamily()
         },
-        color: '#5679a4',
+        color: '#FFFFFF',
         shadowColor: '#aaa',
         shadowOffset: {x:0, y:0},
         shadowRadius: 3,
         textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER,
-        text: Yaast.FontAwesome.getCharCode('fa-external-link'),
-        top: _self.view.height / 2
+        text: "Show!  " + Yaast.FontAwesome.getCharCode('fa-external-link'),
+        top: parseInt(_self.descriptionLabel.top + _self.descriptionLabel.height)
 	};
 
 	// Default 

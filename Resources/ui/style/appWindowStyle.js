@@ -17,7 +17,7 @@ var appWindowStyle = (function() {
 	Ti.API.info('window WIDTH: default');
 	Ti.API.info('window top: ' + parseInt(Yaast.API.UI.getDefaultStatusBar()));
     var _self = {
-    	top: 100,
+    	top: Yaast.API.UI.getDefaultStatusBar(),
         exitOnClose: true,
         navBarHidden: true,
         backgroundColor: '#001F6F',
