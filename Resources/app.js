@@ -89,7 +89,7 @@ Ti.API.info('Screen Density: ' + Yaast.API.UI.getScreenDensity());
 	    	Ti.API.info('[open] Window.window.rect.width = ' + parseInt(Window.window.rect.width));
 	    	Ti.API.info('[open] Window.window.size = ' + JSON.stringify(Window.window.size));
 	    	Ti.API.info('*e:  = ' + e);
-	    	if (e.type = 'open') {
+	    	if (e.type === 'open') {
 				setTimeout(function() {
 					Window.window.removeEventListener('open', setWindowHeight);
 					Window.window.removeEventListener('postlayout', windowLoaded);
