@@ -72,12 +72,12 @@ mashup = {
 	
 	    // Creator
 	    var creatorLabel = Ti.UI.createLabel(theme.creatorLabel);
-	    creatorLabel.text = 'Mashup created by ' + mashup.creator;
+	    creatorLabel.text = 'Created by ' + mashup.creator;
 	 	_self.add(creatorLabel);
 	
 	    // Description
 	    var descriptionLabel = Ti.UI.createLabel(theme.descriptionLabel);
-	    //creatorLabel.text += mashup.longdescripton;
+	    descriptionLabel.html = mashup.longdescription;
 	 	_self.add(descriptionLabel);
 	
 	 	// loadButton
