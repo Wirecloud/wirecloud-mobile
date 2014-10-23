@@ -36,6 +36,7 @@ var mainView = function mainView(parentWindow, userName) {
 
     // Bind click ListView
     _self.clickRowListView = function clickRowListView(e) {
+    	Ti.API.info('e.section.getItemAt(e.itemIndex) : ' + JSON.stringify(e.section.getItemAt(e.itemIndex)));
     	Ti.API.info('e.section.getItemAt(e.itemIndex).id.text: ' + e.section.getItemAt(e.itemIndex).id.text);
         _self.showDetailView(e.section.getItemAt(e.itemIndex).id.text);
     };
@@ -207,15 +208,18 @@ var mainView = function mainView(parentWindow, userName) {
     	Ti.API.info('----reloadTable in MainView');
         var compFolder = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, Yaast.Sandbox.instanceDir + 'composition').getDirectoryListing();
         var i;
-        if(compFolder.length === 0) {
-        	Ti.API.info('----No offline Workspaces availables');
-        	// TODO esto no va, hay que usar secciones, ya que se trata de un listView
-            //ownWorkspacesView.setTouchEnabled(false);
-            //leftView.add(Ti.UI.createLabel(theme.leftListViewNoWorkspaces));
+        if(_isApple && typeof compFolder === 'undefined') {
+        	Ti.API.info('----iOS No dashboard metadata availables');
+        	// TODO create directory and write metadata
             _self.getWirecloudInfo();
-        }
-        else {
-        	// TODO entrar con cosas guardadas en los meta (antes hay que crear los metadatos.. los defino en la detailView)
+        } else if (!_isApple && compFolder.length === 0) {
+        	Ti.API.info('----Android No dashboard metadata availables');
+        	// TODO create directory and write metadata
+            _self.getWirecloudInfo();
+        } else {
+        	Ti.API.info('----TODO dashboard metadata availables, do something with me!');
+        	_self.getWirecloudInfo();
+        	/*// TODO entrar con cosas guardadas en los meta (antes hay que crear los metadatos.. los defino en la detailView)
             var compositions = Ti.UI.createListSection();
             var rows = [];
             for(i = 0; i < compFolder.length; i++){
@@ -248,7 +252,7 @@ var mainView = function mainView(parentWindow, userName) {
 	            _self,
 	            userName
 	        );
-	        rightView.add(_self.detailView);
+	        rightView.add(_self.detailView);*/
         }
         compFolder = null;
     };
