@@ -5,7 +5,11 @@ function widgetGeneric(dim, parameters, idWidget, userName) {
 
 	var _isApple = (Ti.Platform.osname == 'ipad');
 	var _self;
-	var _routeHTML = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, Yaast.Sandbox.instanceDir + userName + '/widgets/'+parameters.uri+'/index.html');
+	// TODO change this from wirecloud.
+	var mainhtmlName = parameters.contents.src.split('/');
+	mainhtmlName = mainhtmlName[mainhtmlName.length - 1];
+	var _routeHTML= Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, Yaast.Sandbox.instanceDir + userName + '/widgets/'+parameters.uri+'/' + mainhtmlName);
+
 	var _textHTML = _routeHTML.read().toString();
 	if(_textHTML.indexOf('wiringPlatform.js') < 0){
 		var _fileMashupPlatform = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, Yaast.Sandbox.instanceDir + userName + '/widgets/'+parameters.uri+'/wiringPlatform.js');
