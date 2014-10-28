@@ -46,7 +46,7 @@ function workspaceView(parameters, userName, returnCallback) {
 		});
 		_self.funEndScrollView = function funEndScrollView(e){
 			if (_currentPage != e.currentPage) {
-				_selfView.tabLabel.text = ' / ' + _selfView.platform.tabs[e.currentPage].name;
+				//_selfView.tabLabel.text = ' / ' + _selfView.platform.tabs[e.currentPage].name;
 				_currentPage = e.currentPage;
 			}
 		};
@@ -59,7 +59,7 @@ function workspaceView(parameters, userName, returnCallback) {
 	// Check Dependencies
 	var _widgets = new Array();
 	for (var i in _selfView.platform.widgetsInUseById){
-		if(_widgets.indexOf(_selfView.platform.widgetsInUseById[i].uri) === -1 && _selfView.platform.widgetsInUseById[i].name !== 'map-viewer'){
+		if(_widgets.indexOf(_selfView.platform.widgetsInUseById[i].uri) === -1){
 			_widgets.push(_selfView.platform.widgetsInUseById[i].uri);
 		}
 	}
@@ -176,7 +176,7 @@ function workspaceView(parameters, userName, returnCallback) {
 		}
 		var _h;
 		switch(data.meta.name){
-			case "cupon-updater":
+			/*case "cupon-updater":
 			case "open-updater":
 			case "user-info":
 			case "card-info":
@@ -185,7 +185,7 @@ function workspaceView(parameters, userName, returnCallback) {
 			case "order":
 			case "reserve":
 				_h = (dim.h/2) - 30;
-			break;
+			break;*/
 			default:
 				_h = dim.h - 30; // FullScreen Height
 			break;
