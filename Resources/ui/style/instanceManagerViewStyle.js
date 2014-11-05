@@ -125,7 +125,7 @@ var loginViewStyle = (function() {
     _self.instanceTitle = {
     	top: 10,
         left: '5%',
-        text: 'Instancias',
+        text: 'Instances',
         textAlign: Ti.UI.TEXT_ALIGNMENT_LEFT,
         color: _fontColor,
         font: {
