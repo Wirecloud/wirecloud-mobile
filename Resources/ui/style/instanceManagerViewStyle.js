@@ -109,7 +109,7 @@ var loginViewStyle = (function() {
             fontSize:  parseInt((Ti.Platform.displayCaps.platformHeight*9)/100, 10), // 32
             fontFamily: _font
        },
-        text: 'Configuración'
+        text: 'Configuration'
     };
 
 
