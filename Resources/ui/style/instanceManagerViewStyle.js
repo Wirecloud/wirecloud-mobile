@@ -90,7 +90,8 @@ var loginViewStyle = (function() {
         textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER,
 		height: parseInt((Ti.Platform.displayCaps.platformHeight*6)/100, 10)+15,
     	font: {
-    		fontSize: parseInt((Ti.Platform.displayCaps.platformHeight*2.5)/100, 10),
+    		fontSize: parseInt(Yaast.API.UI.getDefaultFontSize()), 
+    		/* fontSize: parseInt((Ti.Platform.displayCaps.platformHeight*2.5)/100, 10),*/
             fontFamily: _font
         }
     };
@@ -129,7 +130,8 @@ var loginViewStyle = (function() {
         textAlign: Ti.UI.TEXT_ALIGNMENT_LEFT,
         color: _fontColor,
         font: {
-            fontSize:  parseInt((Ti.Platform.displayCaps.platformHeight*8)/100, 10), // 32 -> 40%
+        	fontSize: parseInt(Yaast.API.UI.getDefaultFontSize())*2,
+            /* fontSize:  parseInt((Ti.Platform.displayCaps.platformHeight*8)/100, 10), // 32 -> 40% */
             fontFamily: _font
         }
     };

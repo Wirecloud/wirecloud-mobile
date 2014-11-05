@@ -215,9 +215,9 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
         		right: '52%',
 				title: 'Save config',
 				height: parseInt((Ti.Platform.displayCaps.platformHeight*7)/100, 10),
-		    	font: {
+		    	/* font: {
 		            fontSize: parseInt((Ti.Platform.displayCaps.platformHeight*6)/100, 10)
-		        }
+		       } */
 			}
 		));
 
@@ -242,9 +242,9 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
         		left: '52%',
 				title: 'back',
 				height: parseInt((Ti.Platform.displayCaps.platformHeight*7)/100, 10),
-		    	font: {
+		    	/* font: {
 		            fontSize: parseInt((Ti.Platform.displayCaps.platformHeight*6)/100, 10)
-		        }
+		        }*/
 			}
 		));
 		configurationFormBackButton.submit = function submit(){
@@ -264,8 +264,9 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
     	configurationFormIntancesContainer = Ti.UI.createView(Yaast.MergeObject(
         	theme.containerView, {
         		height: parentWindow.getHeight()-parseInt(((parentWindow.getHeight()*8)/100)*4, 10),
-        		left: '2%',
-        		width: parseInt((parentWindow.getWidth())-(parseInt((parentWindow.getWidth()*4)/100, 10)), 10),
+        		left: '10%',
+        		width : '80%',
+        		/* width: parseInt((parentWindow.getWidth())-(parseInt((parentWindow.getWidth()*4)/100, 10)), 10), */
         		//width: parseInt((parentWindow.getWidth()/2)-(parseInt((parentWindow.getWidth()*3)/100, 10)), 10), FIXME
         		bottom: parseInt((parentWindow.getHeight()*20)/100, 10),
         	}
@@ -282,9 +283,9 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
         		right: '3%',
 				title: 'Añadir',
 				height: parseInt((Ti.Platform.displayCaps.platformHeight*7)/100, 10),
-		    	font: {
+		    	/* font: {
 		            fontSize: parseInt((Ti.Platform.displayCaps.platformHeight*6)/100, 10)
-		        }
+		       } */
 			}
 		));
 
