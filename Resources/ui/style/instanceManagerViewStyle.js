@@ -27,18 +27,18 @@ var loginViewStyle = (function() {
     _fontColor = '#EBEBEB',
     _fontColorButton = '#354B5D'; // 1F3346
 
-
+	/* Main View Settings */
     _self.view = {
         top: 0,
         left: 0,
         backgroundColor: _background,
         width: Yaast.API.UI.getPlatformWidth(),
-        height: Yaast.API.UI.getPlatformHeight() - Yaast.API.UI.getDefaultStatusBar() -10,
-        // Size test
+        height: Yaast.API.UI.getPlatformHeight() - Yaast.API.UI.getDefaultStatusBar(),
+        /* Size test */
         borderWidth: 1,
         borderColor: _background3,
     };
-
+	/* Update height in case there is a top height */
     _self.view.height = Yaast.API.UI.getPlatformHeight() - _self.view.top;
 
     /*
@@ -46,16 +46,17 @@ var loginViewStyle = (function() {
      *  Generales
      * 
      */
-    
+   /* Container View Settings */
     _self.containerView = {
-        width: parseInt(((_self.view.width)/2) - (_self.view.width*0.04), 10),
+    	width: parseInt(_self.view.width * 0.46, 10),
+        /* width: parseInt(((_self.view.width)/2) - (_self.view.width*0.04), 10), */
         height: parseInt(((_self.view.height)/2), 10),
         borderRadius: 15,
         borderWidth: 1,
         borderColor: _background3,
         backgroundColor: _background2
     };
-
+	/* Input Text Field Settings */
     _self.inputTextField = {
         width: '90%',
         left: '5%',
@@ -67,17 +68,18 @@ var loginViewStyle = (function() {
         borderColor: _background3,
         paddingLeft: 5,
         borderStyle: Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
-        autocapitalization: false,
+        autocapitalization: Titanium.UI.TEXT_AUTOCAPITALIZATION_NONE,
         enableReturnKey: false,
         softKeyboardOnFocus: (Yaast.API.HW.System.isApple()) ? null :
             Ti.UI.Android.SOFT_KEYBOARD_SHOW_ON_FOCUS,
         autocorrect: false,
         font: {
-            fontSize: parseInt((Ti.Platform.displayCaps.platformHeight*3.5)/100, 10),
+        	fontSize: parseInt(Yaast.API.UI.getDefaultFontSize())*1.5,
+            /* fontSize: parseInt((Ti.Platform.displayCaps.platformHeight*3.5)/100, 10),*/
             fontFamily: _font
         }
     };
-    
+    /* Button Settings */
     _self.button = {
     	backgroundColor: _background3,
     	color: _fontColorButton,
@@ -88,7 +90,7 @@ var loginViewStyle = (function() {
         textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER,
 		height: parseInt((Ti.Platform.displayCaps.platformHeight*6)/100, 10)+15,
     	font: {
-            fontSize: parseInt((Ti.Platform.displayCaps.platformHeight*2.5)/100, 10),
+    		fontSize: parseInt((Ti.Platform.displayCaps.platformHeight*2.5)/100, 10),
             fontFamily: _font
         }
     };
