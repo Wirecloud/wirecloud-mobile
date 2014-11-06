@@ -20,8 +20,15 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 		confViewTitle = Ti.UI.createLabel(theme.configurationFormTitle); /* TODO: Change Style names */
 		confView.add(confViewTitle);
 		/* Create a Instance Container View */
-		confInstanceContainer = Ti.UI.createView(theme.containerView);
-		confInstanceContainerTitle = Ti.UI.createLabel(theme.configurationFormTitle);
+		confInstanceContainer = Ti.UI.createView(Yaast.MergeObject(theme.containerView, {
+			/* This should be in 'instanceManagerViewStyle' */
+			width: parentWindow.getWidth() * 0.9,
+			left: '5%',
+			height: parentWindow.getHeight() * 0.7,
+			bottom: '10%'
+			/* TODO: What append if there is a virtual navigationBar, bottom: '5%' doesn't work */
+		}));
+		confInstanceContainerTitle = Ti.UI.createLabel(theme.instanceTitle); /* TODO: Change Style names */
 		confInstanceContainer.add(confInstanceContainerTitle);
 		confView.add(confInstanceContainer);
 		/* Adding to parent window */
