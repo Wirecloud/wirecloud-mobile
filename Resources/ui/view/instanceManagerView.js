@@ -11,13 +11,19 @@
 var instanceManagerView = function (parentWindow, logo, systemLabel, formCallback) {
 	var theme = require('ui/style/instanceManagerViewStyle');
 	
-	var confView, confViewTitle;
+	var confView, confViewTitle,
+		confInstanceContainer, confInstanceContainerTitle;
 	
 	var createConfiguration = function createConfiguration() {
-		/* Creating the main configuration view */
+		/* Create the main configuration view */
 		confView = Ti.UI.createView(theme.view);
 		confViewTitle = Ti.UI.createLabel(theme.configurationFormTitle); /* TODO: Change Style names */
 		confView.add(confViewTitle);
+		/* Create a Instance Container View */
+		confInstanceContainer = Ti.UI.createView(theme.containerView);
+		confInstanceContainerTitle = Ti.UI.createLabel(theme.configurationFormTitle);
+		confInstanceContainer.add(confInstanceContainerTitle);
+		confView.add(confInstanceContainer);
 		/* Adding to parent window */
 		parentWindow.add(confView);
 	};
