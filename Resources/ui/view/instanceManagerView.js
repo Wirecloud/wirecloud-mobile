@@ -40,7 +40,13 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 		confInstanceContainer.add(confInstanceMainView);
 		
 		/* Create Instances List View */
-		confInstanceListView = Ti.UI.createListView();
+		confInstanceListView = Ti.UI.createListView({
+			templates: { /* Define diferentes style templates for items in the list view */
+				'template' : theme.connectionListViewTemplate,
+				'template_connected' : theme.connectionListViewTemplateConected  /* change for ...Connected */
+			},
+			defaultItemTemplate: 'template'
+		});
 		confInstanceMainView.add(confInstanceListView);
 		var section = []; /* Array of sections */
 		/* Private Instances Section */
@@ -51,6 +57,11 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 			text: 'Private'
 		})));
 		privateSection.setHeaderView(headerPrivate);
+		/* Add predefine instances */
+		privateSection.setItems([
+			/* TODO: Load info from archive or db */
+			{ template: 'template', connection: {text: 'Wirecloud CoNWeT'}, url: {text: 'https://wirecloud.conwet.fi.upm.es/'}, id: {text: '1'} },
+		]);
 		section.push(privateSection);
 		/* Public Instances Section */
 		var publicSection = Ti.UI.createListSection();
