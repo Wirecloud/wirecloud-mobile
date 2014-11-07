@@ -46,6 +46,7 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 		/* Private Instances Section */
 		var privateSection = Ti.UI.createListSection();
 		var headerPrivate = Ti.UI.createView(theme.headerView);
+		/* TODO: Adds '+' button to create new instance */
 		headerPrivate.add(Ti.UI.createLabel(Yaast.MergeObject(theme.headerViewLabel, {
 			text: 'Private'
 		})));
