@@ -40,8 +40,16 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 		confInstanceContainer.add(confInstanceMainView);
 		
 		/* Create Instances List View */
+		confInstanceListView = Ti.UI.createListView();
+		confInstanceMainView.add(confInstanceListView);
+		var section = []; /* Array of sections */
+		/* Private Instances Section */
+		var privateSection = Ti.UI.createListSection();
+		section.push(privateSection);
+		/* Public Instances Section */
+		var publicSection = Ti.UI.createListSection();
+		section.push(publicSection),
 		
-
 		/* Adding to parent window */
 		parentWindow.add(confView);
 	};
