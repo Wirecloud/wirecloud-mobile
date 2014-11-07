@@ -14,7 +14,7 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 		
 	var confView, confViewTitle,
 		confInstanceContainer, confInstanceContainerTitle,
-		confInstancesMainView;
+		confInstanceMainView, confInstanceListView;
 	
 	var createConfiguration = function createConfiguration() {
 		/* Create the main configuration view */
@@ -36,8 +36,11 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 		confView.add(confInstanceContainer);
 
 		/* Create Instaces Main View */
-		confInstancesMainView = Ti.UI.createView(theme.connectionView);
-		confInstanceContainer.add(confInstancesMainView);
+		confInstanceMainView = Ti.UI.createView(theme.connectionView);
+		confInstanceContainer.add(confInstanceMainView);
+		
+		/* Create Instances List View */
+		
 
 		/* Adding to parent window */
 		parentWindow.add(confView);
