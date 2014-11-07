@@ -45,10 +45,22 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 		var section = []; /* Array of sections */
 		/* Private Instances Section */
 		var privateSection = Ti.UI.createListSection();
+		var headerPrivate = Ti.UI.createView(theme.headerView);
+		headerPrivate.add(Ti.UI.createLabel(Yaast.MergeObject(theme.headerViewLabel, {
+			text: 'Private'
+		})));
+		privateSection.setHeaderView(headerPrivate);
 		section.push(privateSection);
 		/* Public Instances Section */
 		var publicSection = Ti.UI.createListSection();
+		var headerPublic = Ti.UI.createView(theme.headerView);
+		headerPublic.add(Ti.UI.createLabel(Yaast.MergeObject(theme.headerViewLabel, {
+			text: 'Public'
+		})));
+		publicSection.setHeaderView(headerPublic);
 		section.push(publicSection),
+		/* Apply sections */
+		confInstanceListView.sections = section;
 		
 		/* Adding to parent window */
 		parentWindow.add(confView);
