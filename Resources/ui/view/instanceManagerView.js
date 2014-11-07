@@ -10,15 +10,18 @@
 
 var instanceManagerView = function (parentWindow, logo, systemLabel, formCallback) {
 	var theme = require('ui/style/instanceManagerViewStyle');
-	
+	 /* TODO: Change Style names */
+		
 	var confView, confViewTitle,
-		confInstanceContainer, confInstanceContainerTitle;
+		confInstanceContainer, confInstanceContainerTitle,
+		confInstancesMainView;
 	
 	var createConfiguration = function createConfiguration() {
 		/* Create the main configuration view */
 		confView = Ti.UI.createView(theme.view);
-		confViewTitle = Ti.UI.createLabel(theme.configurationFormTitle); /* TODO: Change Style names */
+		confViewTitle = Ti.UI.createLabel(theme.configurationFormTitle);
 		confView.add(confViewTitle);
+		
 		/* Create a Instance Container View */
 		confInstanceContainer = Ti.UI.createView(Yaast.MergeObject(theme.containerView, {
 			/* This should be in 'instanceManagerViewStyle' */
@@ -28,9 +31,14 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 			bottom: '10%'
 			/* TODO: What append if there is a virtual navigationBar, bottom: '5%' doesn't work */
 		}));
-		confInstanceContainerTitle = Ti.UI.createLabel(theme.instanceTitle); /* TODO: Change Style names */
+		confInstanceContainerTitle = Ti.UI.createLabel(theme.instanceTitle);
 		confInstanceContainer.add(confInstanceContainerTitle);
 		confView.add(confInstanceContainer);
+
+		/* Create Instaces Main View */
+		confInstancesMainView = Ti.UI.createView(theme.connectionView);
+		confInstanceContainer.add(confInstancesMainView);
+
 		/* Adding to parent window */
 		parentWindow.add(confView);
 	};
