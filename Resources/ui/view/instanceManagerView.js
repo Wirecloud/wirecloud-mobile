@@ -52,9 +52,19 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 		/* Private Instances Section */
 		var privateSection = Ti.UI.createListSection();
 		var headerPrivate = Ti.UI.createView(theme.headerView);
-		/* TODO: Add '+' button to create new instance */
 		headerPrivate.add(Ti.UI.createLabel(Yaast.MergeObject(theme.headerViewLabel, {
-			text: 'Private'
+			text: 'Private',
+			left: '0',
+			width: '100%',
+			textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER
+		})));
+		/* Add '+' label to create new instance */
+		headerPrivate.add(Ti.UI.createLabel(Yaast.MergeObject(theme.headerViewButton, {
+			right: '1',
+			width: '5%',
+			height: headerPrivate.height,
+			text: '' + Yaast.FontAwesome.getCharCode('fa-plus-circle'),
+			textAlign: Ti.UI.TEX_ALIGNMENT_LEFT
 		})));
 		privateSection.setHeaderView(headerPrivate);
 		/* Add predefine instances */
