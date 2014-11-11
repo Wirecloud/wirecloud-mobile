@@ -52,7 +52,7 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 		/* Private Instances Section */
 		var privateSection = Ti.UI.createListSection();
 		var headerPrivate = Ti.UI.createView(theme.headerView);
-		/* TODO: Adds '+' button to create new instance */
+		/* TODO: Add '+' button to create new instance */
 		headerPrivate.add(Ti.UI.createLabel(Yaast.MergeObject(theme.headerViewLabel, {
 			text: 'Private'
 		})));
@@ -60,7 +60,7 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 		/* Add predefine instances */
 		privateSection.setItems([
 			/* TODO: Load info from archive or db */
-			{ template: 'template', connection: {text: 'Wirecloud CoNWeT'}, url: {text: 'https://wirecloud.conwet.fi.upm.es/'}, id: {text: '1'} },
+			{connection: {text: 'Wirecloud CoNWeT'}, url: {text: 'https://wirecloud.conwet.fi.upm.es/'}, id: {text: '1'} }
 		]);
 		section.push(privateSection);
 		/* Public Instances Section */
@@ -70,6 +70,12 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 			text: 'Public'
 		})));
 		publicSection.setHeaderView(headerPublic);
+		/* Add predefine instances */
+		publicSection.setItems([
+			/* TODO: Load info from archive or db */
+			{connection: {text: 'Wirecloud CoNWeT'}, url: {text: 'https://wirecloud.conwet.fi.upm.es/'}, id: {text: '1'} },
+			{connection: {text: 'Mashups Fi Lab 2'}, url: {text: 'http://wirecloud2.conwet.fi.upm.es/'}, id: {text: '2'} }
+		]);
 		section.push(publicSection),
 		/* Apply sections */
 		confInstanceListView.sections = section;
