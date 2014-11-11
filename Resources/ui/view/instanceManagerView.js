@@ -52,13 +52,14 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 		/* Private Instances Section */
 		var privateSection = Ti.UI.createListSection();
 		var headerPrivate = Ti.UI.createView(theme.headerView);
+		/* Add section title */
 		headerPrivate.add(Ti.UI.createLabel(Yaast.MergeObject(theme.headerViewLabel, {
 			text: 'Private',
 			left: '0',
 			width: '100%',
 			textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER
 		})));
-		/* Add '+' label to create new instance */
+		/* Add '+' button to create new instance */
 		headerPrivate.add(Ti.UI.createButton(Yaast.MergeObject(theme.headerViewButton, {
 			right: '1',
 			width: '6%',
@@ -74,8 +75,18 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 		/* Public Instances Section */
 		var publicSection = Ti.UI.createListSection();
 		var headerPublic = Ti.UI.createView(theme.headerView);
+		/* Add section title */
 		headerPublic.add(Ti.UI.createLabel(Yaast.MergeObject(theme.headerViewLabel, {
-			text: 'Public'
+			text: 'Public',
+			left: '0',
+			width: '100%',
+			textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER
+		})));
+		/* Add '+' button to create new instance */
+		headerPublic.add(Ti.UI.createButton(Yaast.MergeObject(theme.headerViewButton, {
+			right: '1',
+			width: '6%',
+			title: Yaast.FontAwesome.getCharCode('fa-plus-circle'),
 		})));
 		publicSection.setHeaderView(headerPublic);
 		/* Add predefine instances */
