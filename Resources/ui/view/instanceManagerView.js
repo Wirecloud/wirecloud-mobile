@@ -31,6 +31,7 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		instanceTitle = Ti.UI.createLabel(theme.instanceTitle);
 		instanceView.add(instanceTitle);
 		confView.add(instanceView);
+		
 		parentWindow.add(confView);
 };
 		var _self = {};
