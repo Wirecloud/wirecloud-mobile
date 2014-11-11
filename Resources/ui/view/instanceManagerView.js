@@ -59,12 +59,10 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 			textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER
 		})));
 		/* Add '+' label to create new instance */
-		headerPrivate.add(Ti.UI.createLabel(Yaast.MergeObject(theme.headerViewButton, {
+		headerPrivate.add(Ti.UI.createButton(Yaast.MergeObject(theme.headerViewButton, {
 			right: '1',
-			width: '5%',
-			height: headerPrivate.height,
-			text: '' + Yaast.FontAwesome.getCharCode('fa-plus-circle'),
-			textAlign: Ti.UI.TEX_ALIGNMENT_LEFT
+			width: '6%',
+			title: Yaast.FontAwesome.getCharCode('fa-plus-circle'),
 		})));
 		privateSection.setHeaderView(headerPrivate);
 		/* Add predefine instances */

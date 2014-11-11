@@ -150,13 +150,16 @@ var loginViewStyle = ( function() {
 		};
 
 		_self.headerViewButton = {
+			backgroundColor : _background3,
 			color : _background,
+			textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER,
+			height : _self.headerView.height - 2,
 			font : {
 				fontFamily : Yaast.FontAwesome.getFontFamily(),
-				fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 5) / 100, 10)
+				fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 6) / 100, 10)
 			}
 		};
-
+		
 		_self.connectionListViewTemplate = {
 			childTemplates : [{
 				type : 'Ti.UI.Label',
