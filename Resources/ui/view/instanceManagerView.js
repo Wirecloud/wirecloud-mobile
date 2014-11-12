@@ -77,6 +77,61 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 			width : '6%',
 			title : Yaast.FontAwesome.getCharCode('fa-plus-circle'),
 		}));
+		privateAddButton.press = function press() {
+			//a window
+			newInstance = Ti.UI.createView(Yaast.MergeObject(theme.containerView, {
+				left : '20%',
+				width : '60%'
+			}));
+			//a field for the text
+			newInstanceName = Ti.UI.createTextField(Yaast.MergeObject(theme.inputTextField, {
+				top : parseInt(newInstance.getHeight() * 0.15, 10),
+				keyboardType : Ti.UI.KEYBOARD_DEFAULT,
+				returnKeyType : Ti.UI.RETURNKEY_NEXT,
+				hintText : "Instance Name"
+			}));
+			//a field for the url
+			newInstanceURL = Ti.UI.createTextField(Yaast.MergeObject(theme.inputTextField, {
+				top : parseInt(newInstance.getHeight() * 0.4, 10),
+				keyboardType : Ti.UI.KEYBOARD_URL,
+				returnKeyType : Ti.UI.RETURNKEY_DONE,
+				hintText : "Instance URL"
+			}));
+			//so far, i don't know what the heck is done here
+			newInstanceName.getText = function getText() {
+				newInstanceName.blur();
+			};
+			newInstanceURL.getText = function getText() {
+				newInstanceURL.blur();
+			};
+			//listeners for the proper return key 
+			newInstanceName.addEventListener('return', newInstanceName.getText);
+			newInstanceURL.addEventListener('return', newInstanceURL.getText);
+			//added to the window
+			newInstance.add(newInstanceName);
+			newInstance.add(newInstanceURL);
+			//the "done" button
+ 			newInstanceDoneButton = Ti.UI.createButton(Yaast.MergeObject(theme.button), {
+				title : 'Done',
+				left : '5%',
+				bottom : '15%'
+			});
+			newInstanceDoneButton.press = function press() {
+				if (newInstanceName.value.lenght != 0 && newInstanceURL.value.lenght != 0) {
+					//instance adde, TODO: contact with a database or something to make it persistent?
+					privateSection.appendItems([{
+						connection: { text: newInstanceName.value}, url: {text: newInstanceURL.value}},]);
+					section.push(privateSection);
+					parentWindow.remove(newInstance);
+					newInstance= null;
+				}
+			};
+			newInstanceDoneButton.addEventListener('click',newInstanceDoneButton.press);
+			//added to the window
+			newInstance.add(newInstanceDoneButton);
+			parentWindow.add(newInstance);
+		};
+		privateAddButton.addEventListener('click', privateAddButton.press);
 		headerPrivate.add(privateAddButton);
 		privateSection.setHeaderView(headerPrivate);
 		/* Add predefine instances */
@@ -110,44 +165,59 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 			width : '6%',
 			title : Yaast.FontAwesome.getCharCode('fa-plus-circle'),
 		}));
+		//adding new instance starts here:
 		publicAddButton.press = function press() {
+			//a window
 			newInstance = Ti.UI.createView(Yaast.MergeObject(theme.containerView, {
 				left : '20%',
 				width : '60%'
 			}));
+			//a field for the text
 			newInstanceName = Ti.UI.createTextField(Yaast.MergeObject(theme.inputTextField, {
-				top : parseInt(instanceFormContainer.getHeight() * 0.15, 10),
+				top : parseInt(newInstance.getHeight() * 0.15, 10),
 				keyboardType : Ti.UI.KEYBOARD_DEFAULT,
 				returnKeyType : Ti.UI.RETURNKEY_NEXT,
 				hintText : "Instance Name"
 			}));
+			//a field for the url
 			newInstanceURL = Ti.UI.createTextField(Yaast.MergeObject(theme.inputTextField, {
-				top : parseInt(instanceFormContainer.getHeight() * 0.4, 10),
+				top : parseInt(newInstance.getHeight() * 0.4, 10),
 				keyboardType : Ti.UI.KEYBOARD_URL,
 				returnKeyType : Ti.UI.RETURNKEY_DONE,
 				hintText : "Instance URL"
 			}));
+			//so far, i don't know what the heck is done here
 			newInstanceName.getText = function getText() {
 				newInstanceName.blur();
 			};
 			newInstanceURL.getText = function getText() {
 				newInstanceURL.blur();
 			};
+			//listeners for the proper return key 
 			newInstanceName.addEventListener('return', newInstanceName.getText);
 			newInstanceURL.addEventListener('return', newInstanceURL.getText);
-			newInstanceDoneButton = Ti.UI.createButton(Yaast.MergeObject(theme.button), {
+			//added to the window
+			newInstance.add(newInstanceName);
+			newInstance.add(newInstanceURL);
+			//the "done" button
+ 			newInstanceDoneButton = Ti.UI.createButton(Yaast.MergeObject(theme.button), {
 				title : 'Done',
 				left : '5%',
 				bottom : '15%'
 			});
 			newInstanceDoneButton.press = function press() {
 				if (newInstanceName.value.lenght != 0 && newInstanceURL.value.lenght != 0) {
-					publicSection.setItems([{
+					//instance adde, TODO: contact with a database or something to make it persistent?
+					publicSection.appendItems([{
 						connection: { text: newInstanceName.value}, url: {text: newInstanceURL.value}},]);
 					section.push(publicSection);
+					parentWindow.remove(newInstance);
+					newInstance= null;
 				}
 			};
 			newInstanceDoneButton.addEventListener('click',newInstanceDoneButton.press);
+			//added to the window
+			newInstance.add(newInstanceDoneButton);
 			parentWindow.add(newInstance);
 		};
 		publicAddButton.addEventListener('click', publicAddButton.press);
