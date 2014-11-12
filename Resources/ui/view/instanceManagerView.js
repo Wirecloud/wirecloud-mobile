@@ -14,7 +14,11 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 		
 	var confView, confViewTitle,
 		confInstanceContainer, confInstanceContainerTitle,
-		confInstanceMainView, confInstanceListView;
+		confInstanceMainView, confInstanceListView,
+		privateAddButton, publicAddButton;
+	
+	/* Testing Purpos*/
+	var myTestFunction = function myTestFunction() { confViewTitle.text = 'HAS HECHO CLICK'; };
 	
 	var createConfiguration = function createConfiguration() {
 		/* Create the main configuration view */
@@ -56,7 +60,9 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 		/* Add section title */
 		headerPrivate.add(Ti.UI.createLabel(Yaast.MergeObject(theme.headerViewLabel, { text: 'Private' })));
 		/* Add '+' button to create new instance */
-		headerPrivate.add(Ti.UI.createButton(theme.headerViewButton));
+		privateAddButton = Ti.UI.createButton(theme.headerViewButton);
+		privateAddButton.addEventListener('click', myTestFunction);
+		headerPrivate.add(privateAddButton);
 		privateSection.setHeaderView(headerPrivate);
 		/* Add predefine instances */
 		privateSection.setItems([
@@ -70,7 +76,9 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 		/* Add section title */
 		headerPublic.add(Ti.UI.createLabel(Yaast.MergeObject(theme.headerViewLabel, { text: 'Public' })));
 		/* Add '+' button to create new instance */
-		headerPublic.add(Ti.UI.createButton(theme.headerViewButton));
+		publicAddButton = Ti.UI.createButton(theme.headerViewButton);
+		publicAddButton.addEventListener('click', myTestFunction);
+		headerPublic.add(publicAddButton);
 		publicSection.setHeaderView(headerPublic);
 		/* Add predefine instances */
 		publicSection.setItems([
@@ -78,7 +86,7 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 			{connection: {text: 'Wirecloud CoNWeT'}, url: {text: 'https://wirecloud.conwet.fi.upm.es/'}, id: {text: '1'} },
 			{connection: {text: 'Mashups Fi Lab 2'}, url: {text: 'http://wirecloud2.conwet.fi.upm.es/'}, id: {text: '2'} }
 		]);
-		section.push(publicSection),
+		section.push(publicSection);
 		/* Apply sections */
 		confInstanceListView.sections = section;
 		
