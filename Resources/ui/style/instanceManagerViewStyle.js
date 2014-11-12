@@ -19,6 +19,7 @@ var loginViewStyle = ( function() {
 		    _background3 = '#D5E4F1',
 		    _backgroundRed = '#FF8888',
 		    _backgroundGreen = '#99FF99',
+		    _backgroundGreen2 = '#187D1B',
 		    _editColor = "#FFA500",
 		    _editColor2 = "#CA7000",
 		    _deleteColor = "#FF5555",
@@ -140,27 +141,86 @@ var loginViewStyle = ( function() {
 			width : '100%',
 			height : parseInt((Ti.Platform.displayCaps.platformHeight * 8) / 100, 10) // 32 -> 40%
 		};
-
+		
+		/* Style for the title */
 		_self.headerViewLabel = {
 			color : _background,
+			left: '0',
+			width: '100%',
+			textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER,
 			font : {
 				fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 5) / 100, 10), // 32 -> 40%
 				fontFamily : _font
 			}
 		};
-
+		
+		/* Style for the button '+' in title's sections */
 		_self.headerViewButton = {
 			backgroundColor : _background3,
 			color : _background,
 			textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER,
 			height : _self.headerView.height - 2,
+			right: '1',
+			width: '6%',
+			title: Yaast.FontAwesome.getCharCode('fa-plus-circle'),
 			font : {
 				fontFamily : Yaast.FontAwesome.getFontFamily(),
 				fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 6) / 100, 10)
 			}
 		};
 		
-		_self.connectionListViewTemplate = {
+		 /* Template for Private Items in Private Section with Edit-Button */
+		_self.connectionListPrivateViewTemplate = {
+			childTemplates : [{
+				type : 'Ti.UI.Label',
+				bindId : 'connection',
+				properties : {
+					layout : 'horizontal',
+					color : _background,
+					font : {
+						fontFamily : _font,
+						fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 5.5) / 100, 10)
+					},
+					left : '5%',
+					textAlign : Ti.UI.TEXT_ALIGNMENT_LEFT
+				}
+			}, {
+				type: 'Ti.UI.Button',
+				bindId: 'edit-button',
+				properties: {
+					backgroundColor: 'transparent ',
+					color: _backgroundGreen2,
+					font: {
+						fontFamily: Yaast.FontAwesome.getFontFamily(),
+						fontSize: parseInt((Ti.Platform.displayCaps.platformHeight * 5) / 100, 10)
+					},
+					right: 1,
+					widht: '4%',
+					title: Yaast.FontAwesome.getCharCode('fa-edit'),
+					textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER
+				}
+			}, {
+				type : 'Ti.UI.Label',
+				bindId : 'url',
+				properties : {
+					visible : false
+				}
+			}, {
+				type : 'Ti.UI.Label',
+				bindId : 'id',
+				properties : {
+					visible : false
+				}
+			}],
+			properties : {
+				backgroundColor : '#FFFFFF',
+				selectedBackgroundColor : _background3
+			},
+			events : {}
+		};
+		
+		 /* Template for Public Items in Public Section without Edit-Button */
+		_self.connectionListPublicViewTemplate = {
 			childTemplates : [{
 				type : 'Ti.UI.Label',
 				bindId : 'connection',

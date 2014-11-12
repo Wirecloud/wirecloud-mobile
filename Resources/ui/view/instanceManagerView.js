@@ -42,10 +42,11 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 		/* Create Instances List View */
 		confInstanceListView = Ti.UI.createListView({
 			templates: { /* Define diferentes style templates for items in the list view */
-				'template' : theme.connectionListViewTemplate,
+				'template-public' : theme.connectionListPublicViewTemplate,
+				'template-private' : theme.connectionListPrivateViewTemplate,
 				'template_connected' : theme.connectionListViewTemplateConected  /* change for ...Connected */
 			},
-			defaultItemTemplate: 'template'
+			defaultItemTemplate: 'template-public'
 		});
 		confInstanceMainView.add(confInstanceListView);
 		var section = []; /* Array of sections */
@@ -53,41 +54,23 @@ var instanceManagerView = function (parentWindow, logo, systemLabel, formCallbac
 		var privateSection = Ti.UI.createListSection();
 		var headerPrivate = Ti.UI.createView(theme.headerView);
 		/* Add section title */
-		headerPrivate.add(Ti.UI.createLabel(Yaast.MergeObject(theme.headerViewLabel, {
-			text: 'Private',
-			left: '0',
-			width: '100%',
-			textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER
-		})));
+		headerPrivate.add(Ti.UI.createLabel(Yaast.MergeObject(theme.headerViewLabel, { text: 'Private' })));
 		/* Add '+' button to create new instance */
-		headerPrivate.add(Ti.UI.createButton(Yaast.MergeObject(theme.headerViewButton, {
-			right: '1',
-			width: '6%',
-			title: Yaast.FontAwesome.getCharCode('fa-plus-circle'),
-		})));
+		headerPrivate.add(Ti.UI.createButton(theme.headerViewButton));
 		privateSection.setHeaderView(headerPrivate);
 		/* Add predefine instances */
 		privateSection.setItems([
 			/* TODO: Load info from archive or db */
-			{connection: {text: 'Wirecloud CoNWeT'}, url: {text: 'https://wirecloud.conwet.fi.upm.es/'}, id: {text: '1'} }
+			{template: 'template-private', connection: {text: 'Wirecloud CoNWeT'}, url: {text: 'https://wirecloud.conwet.fi.upm.es/'}, id: {text: '1'} }
 		]);
 		section.push(privateSection);
 		/* Public Instances Section */
 		var publicSection = Ti.UI.createListSection();
 		var headerPublic = Ti.UI.createView(theme.headerView);
 		/* Add section title */
-		headerPublic.add(Ti.UI.createLabel(Yaast.MergeObject(theme.headerViewLabel, {
-			text: 'Public',
-			left: '0',
-			width: '100%',
-			textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER
-		})));
+		headerPublic.add(Ti.UI.createLabel(Yaast.MergeObject(theme.headerViewLabel, { text: 'Public' })));
 		/* Add '+' button to create new instance */
-		headerPublic.add(Ti.UI.createButton(Yaast.MergeObject(theme.headerViewButton, {
-			right: '1',
-			width: '6%',
-			title: Yaast.FontAwesome.getCharCode('fa-plus-circle'),
-		})));
+		headerPublic.add(Ti.UI.createButton(theme.headerViewButton));
 		publicSection.setHeaderView(headerPublic);
 		/* Add predefine instances */
 		publicSection.setItems([
