@@ -132,7 +132,6 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 			parentWindow.add(newInstance);
 		};
 		privateAddButton.addEventListener('click', privateAddButton.press);
-
 		headerPrivate.add(privateAddButton);
 		privateSection.setHeaderView(headerPrivate);
 		/* Add predefine instances */
@@ -215,9 +214,8 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		]);
 		section.push(publicSection);
 		/* Apply sections */
-		confInstanceListView.sections =
-		section;
-
+		confInstanceListView.sections = section;
+		//confInstanceListView.addEventListener('itemclick', myTestFunction());
 		/* Adding to parent window */
 		parentWindow.add(confView);
 	};
