@@ -23,6 +23,7 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 	    newInstanceName,
 	    newInstanceURL,
 	    newInstanceDoneButton,
+	    newInstanceCloseButton,
 	    publicSection,
 	    privateSection;
 	    
@@ -111,24 +112,40 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 			newInstance.add(newInstanceName);
 			newInstance.add(newInstanceURL);
 			//the "done" button
- 			newInstanceDoneButton = Ti.UI.createButton(Yaast.MergeObject(theme.button), {
+ 			newInstanceDoneButton = Ti.UI.createButton(Yaast.MergeObject(theme.button, {
 				title : 'Done',
 				left : '5%',
-				bottom : '15%'
-			});
+				bottom : '15%',
+				fontSize : parseInt(Yaast.API.UI.getDefaultFontSize())*2
+			}));
+			newInstanceCloseButton = Ti.UI.createButton(Yaast.MergeObject(theme.button, {
+				title:'Back',
+				right:'5%',
+				bottom:'15%',
+				fontSize : parseInt(Yaast.API.UI.getDefaultFontSize())*2
+				}));
 			newInstanceDoneButton.press = function press() {
-				if (newInstanceName.value.lenght != 0 && newInstanceURL.value.lenght != 0) {
+				if(newInstanceName.value.length === 0 || newInstanceURL.value.length === 0) {//show error
+		    	}
+	        else{
+				
 					//instance adde, TODO: contact with a database or something to make it persistent?
 					privateSection.appendItems([{
-						connection: { text: newInstanceName.value}, url: {text: newInstanceURL.value}},]);
+						connection: { template: 'template-private',text: newInstanceName.value}, url: {text: newInstanceURL.value}},]);
 					section.push(privateSection);
 					parentWindow.remove(newInstance);
 					newInstance= null;
 				}
 			};
+			newInstanceCloseButton.press = function press(){
+				parentWindow.remove(newInstance);
+				newInstance =null;
+			};
 			newInstanceDoneButton.addEventListener('click',newInstanceDoneButton.press);
+			newInstanceCloseButton.addEventListener('click',newInstanceCloseButton.press);
 			//added to the window
 			newInstance.add(newInstanceDoneButton);
+			newInstance.add(newInstanceCloseButton);
 			parentWindow.add(newInstance);
 		};
 		privateAddButton.addEventListener('click', privateAddButton.press);
@@ -183,13 +200,23 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 			newInstance.add(newInstanceName);
 			newInstance.add(newInstanceURL);
 			//the "done" button
- 			newInstanceDoneButton = Ti.UI.createButton(Yaast.MergeObject(theme.button), {
+ 			newInstanceDoneButton = Ti.UI.createButton(Yaast.MergeObject(theme.button, {
 				title : 'Done',
 				left : '5%',
-				bottom : '15%'
-			});
+				bottom : '15%',
+				fontSize : parseInt(Yaast.API.UI.getDefaultFontSize())*2
+			}));
+			newInstanceCloseButton = Ti.UI.createButton(Yaast.MergeObject(theme.button, {
+				title:'Back',
+				right:'5%',
+				bottom:'15%',
+				fontSize : parseInt(Yaast.API.UI.getDefaultFontSize())*2
+				}));
 			newInstanceDoneButton.press = function press() {
-				if (newInstanceName.value.lenght != 0 && newInstanceURL.value.lenght != 0) {
+		    if(newInstanceName.value.length === 0 || newInstanceURL.value.length === 0) {//show error
+		    	}
+	        else{
+				
 					//instance adde, TODO: contact with a database or something to make it persistent?
 					publicSection.appendItems([{
 						connection: { text: newInstanceName.value}, url: {text: newInstanceURL.value}},]);
@@ -198,9 +225,15 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 					newInstance= null;
 				}
 			};
+			newInstanceCloseButton.press = function press(){
+				parentWindow.remove(newInstance);
+				newInstance =null;
+			};
 			newInstanceDoneButton.addEventListener('click',newInstanceDoneButton.press);
+			newInstanceCloseButton.addEventListener('click',newInstanceCloseButton.press);
 			//added to the window
 			newInstance.add(newInstanceDoneButton);
+			newInstance.add(newInstanceCloseButton);
 			parentWindow.add(newInstance);
 		};
 		publicAddButton.addEventListener('click', publicAddButton.press);

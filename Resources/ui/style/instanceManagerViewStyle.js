@@ -14,6 +14,7 @@ var loginViewStyle = ( function() {
 		    _version = (_os === 'Android') ? " ~ " + Yaast.API.HW.System.getVersionString() : "",
 		    _self = {},
 		    _font = 'Comfortaa',
+		    _fontSize = Yaast.API.UI.getDefaultFontSize(),
 		    _background = '#2B3E50',
 		    _background2 = '#456082',
 		    _background3 = '#D5E4F1',
@@ -91,7 +92,7 @@ var loginViewStyle = ( function() {
 			textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER,
 			height : parseInt((Ti.Platform.displayCaps.platformHeight * 6) / 100, 10) + 15,
 			font : {
-				fontSize : parseInt(Yaast.API.UI.getDefaultFontSize()),
+				fontSize : _fontSize *2,
 				/* fontSize: parseInt((Ti.Platform.displayCaps.platformHeight*2.5)/100, 10),*/
 				fontFamily : _font
 			}
@@ -203,7 +204,14 @@ var loginViewStyle = ( function() {
 				type : 'Ti.UI.Label',
 				bindId : 'url',
 				properties : {
-					visible : false
+					layout : 'horizontal',
+					color : _background,
+					font : {
+						fontFamily : _font,
+						fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 3) / 100, 10)
+					},
+					right:'10%',
+					textAlign : Ti.UI.TEXT_ALIGNMENT_LEFT
 				}
 			}, {
 				type : 'Ti.UI.Label',
@@ -238,7 +246,14 @@ var loginViewStyle = ( function() {
 				type : 'Ti.UI.Label',
 				bindId : 'url',
 				properties : {
-					visible : false
+					layout : 'horizontal',
+					color : _background,
+					font : {
+						fontFamily : _font,
+						fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 3) / 100, 10)
+					},
+					right:'10%',
+					textAlign : Ti.UI.TEXT_ALIGNMENT_LEFT
 				}
 			}, {
 				type : 'Ti.UI.Label',
