@@ -98,12 +98,7 @@ var loginViewStyle = ( function() {
 			}
 		};
 
-		/*
-		 *
-		 * Configuration Form
-		 *
-		 */
-
+		/* Configuration Form */
 		_self.configurationFormTitle = {
 			top : parseInt((_self.containerView.height * 2) / 100),
 			color : _fontColor,
@@ -118,10 +113,10 @@ var loginViewStyle = ( function() {
 		// Configuration Form Instances
 
 		_self.connectionView = {
-			bottom : parseInt((_self.containerView.height * 3.75) / 100), // 60 -> 7.5 %
-			width : '94%',
-			left : '3%',
+			bottom : parseInt(_self.containerView.height * 0.1, 10),
 			height : parseInt(_self.containerView.height * 0.80, 10),
+			left : parseInt(_self.containerView.width * 0.03, 10),
+			width : parseInt(_self.containerView.width * 0.94, 10)
 		};
 
 		_self.instanceTitle = {
