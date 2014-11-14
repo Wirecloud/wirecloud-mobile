@@ -177,7 +177,7 @@ var loginViewStyle = ( function() {
 						fontFamily : _font,
 						fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 5.5) / 100, 10)
 					},
-					left : '5%',
+					left : parseInt(_self.connectionView.width * 0.05, 10),
 					textAlign : Ti.UI.TEXT_ALIGNMENT_LEFT
 				}
 			}, {
@@ -191,7 +191,7 @@ var loginViewStyle = ( function() {
 						fontSize: parseInt((Ti.Platform.displayCaps.platformHeight * 5) / 100, 10)
 					},
 					right: 1,
-					widht: '4%',
+					widht: parseInt(_self.connectionView.width * 0.04, 10),
 					title: Yaast.FontAwesome.getCharCode('fa-edit'),
 					textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER
 				}
