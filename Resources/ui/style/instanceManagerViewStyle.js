@@ -121,12 +121,12 @@ var loginViewStyle = ( function() {
 
 		_self.instanceTitle = {
 			top : 10,
-			left : '5%',
+			left : parseInt(_self.connectionView.width * 0.05, 10),
 			text : 'Instances',
 			textAlign : Ti.UI.TEXT_ALIGNMENT_LEFT,
 			color : _fontColor,
 			font : {
-				fontSize : parseInt(Yaast.API.UI.getDefaultFontSize()) * 2,
+				fontSize : parseInt(Yaast.API.UI.getDefaultFontSize() * 2) ,
 				/* fontSize:  parseInt((Ti.Platform.displayCaps.platformHeight*8)/100, 10), // 32 -> 40% */
 				fontFamily : _font
 			}
@@ -134,15 +134,15 @@ var loginViewStyle = ( function() {
 
 		_self.headerView = {
 			backgroundColor : _background3,
-			width : '100%',
+			width : _self.connectionView.width,
 			height : parseInt((Ti.Platform.displayCaps.platformHeight * 8) / 100, 10) // 32 -> 40%
 		};
 		
 		/* Style for the title */
 		_self.headerViewLabel = {
 			color : _background,
-			left: '0',
-			width: '100%',
+			left: 0,
+			width: _self.headerView.width,
 			textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER,
 			font : {
 				fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 5) / 100, 10), // 32 -> 40%
@@ -157,7 +157,7 @@ var loginViewStyle = ( function() {
 			textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER,
 			height : parseInt(_self.headerView.height - 2),
 			right: '1',
-			width: '6%',
+			width: parseInt(_self.headerView.width * 0.06, 10),
 			title: Yaast.FontAwesome.getCharCode('fa-plus-circle'),
 			font : {
 				fontFamily : Yaast.FontAwesome.getFontFamily(),

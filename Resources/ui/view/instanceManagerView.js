@@ -47,7 +47,7 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 
 		/* Create Instances List View */
 		confInstanceListView = Ti.UI.createListView({
-			templates: { /* Define diferentes style templates for items in the list view */
+			templates: { /* Define diferent style templates for items in the list view */
 				'template' : theme.connectionListViewTemplate,
 				'template_connected' : theme.connectionListViewTemplateConected  /* change for ...Connected */
 			},
