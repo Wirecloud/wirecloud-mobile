@@ -220,7 +220,31 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		parentWindow.add(confView);
 	};
 
+	var destroyConfiguration = function destroyConfiguration() {
+		/* Delete events Listeners */
+		privateAddButton.removeEventListener('click', privateAddButton.press);
+		delete privateAddButton.press;
+	    publicAddButton.removeEventListener('click', publicAddButton.press);
+	    delete publicAddButton.press;
+	    /* Delete views */
+	   	confInstanceMainView.remove(confInstanceListView);
+	   	confInstanceListView = null;
+	   	confInstanceContainer.remove(confInstanceMainView);
+	   	confInstanceMainView = null;
+	   	confInstanceContainer.remove(confInstanceContainerTitle);
+	   	confInstanceContainerTitle = null;
+	   	confView.remove(confInstanceContainer);
+	   	confInstanceContainer = null;
+	   	confView.remove(confViewTitle);
+	   	confViewTitle = null;
+	   	parentWindow.remove(confView);
+	   	confView = null;
+	};
 	var _self = {};
+	_self.destroy = function destroy() {
+		/* Delete all view configuration */
+		
+	};
 	createConfiguration();
 	return _self;
 };
