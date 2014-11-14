@@ -165,8 +165,8 @@ var loginViewStyle = ( function() {
 			}
 		};
 		
-		 /* Template for Private Items in Private Section with Edit-Button */
-		_self.connectionListPrivateViewTemplate = {
+		 /* Template with Edit-Button */
+		_self.connectionListViewTemplate = {
 			childTemplates : [{
 				type : 'Ti.UI.Label',
 				bindId : 'connection',
@@ -194,41 +194,6 @@ var loginViewStyle = ( function() {
 					widht: '4%',
 					title: Yaast.FontAwesome.getCharCode('fa-edit'),
 					textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER
-				}
-			}, {
-				type : 'Ti.UI.Label',
-				bindId : 'url',
-				properties : {
-					visible : false
-				}
-			}, {
-				type : 'Ti.UI.Label',
-				bindId : 'id',
-				properties : {
-					visible : false
-				}
-			}],
-			properties : {
-				backgroundColor : '#FFFFFF',
-				selectedBackgroundColor : _background3
-			},
-			events : {}
-		};
-		
-		 /* Template for Public Items in Public Section without Edit-Button */
-		_self.connectionListPublicViewTemplate = {
-			childTemplates : [{
-				type : 'Ti.UI.Label',
-				bindId : 'connection',
-				properties : {
-					layout : 'horizontal',
-					color : _background,
-					font : {
-						fontFamily : _font,
-						fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 5.5) / 100, 10)
-					},
-					left : '5%',
-					textAlign : Ti.UI.TEXT_ALIGNMENT_LEFT
 				}
 			}, {
 				type : 'Ti.UI.Label',
