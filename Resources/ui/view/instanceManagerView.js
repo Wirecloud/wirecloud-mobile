@@ -36,14 +36,7 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		confView.add(confViewTitle);
 
 		/* Create a Instance Container View */
-		confInstanceContainer = Ti.UI.createView(Yaast.MergeObject(theme.containerView, {
-			/* This should be in 'instanceManagerViewStyle' */
-			width : parentWindow.getWidth() * 0.9,
-			left : '5%',
-			height : parentWindow.getHeight() * 0.7,
-			bottom : '10%'
-			/* TODO: What append if there is a virtual navigationBar, bottom: '5%' doesn't work */
-		}));
+		confInstanceContainer = Ti.UI.createView(theme.containerView);
 		confInstanceContainerTitle = Ti.UI.createLabel(theme.instanceTitle);
 		confInstanceContainer.add(confInstanceContainerTitle);
 		confView.add(confInstanceContainer);
@@ -243,7 +236,7 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 	var _self = {};
 	_self.destroy = function destroy() {
 		/* Delete all view configuration */
-		
+		destroyConfiguration();
 	};
 	createConfiguration();
 	return _self;

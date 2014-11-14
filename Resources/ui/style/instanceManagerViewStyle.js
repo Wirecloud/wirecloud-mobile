@@ -50,13 +50,14 @@ var loginViewStyle = ( function() {
 		 */
 		/* Container View Settings */
 		_self.containerView = {
-			width : parseInt(_self.view.width * 0.46, 10),
-			/* width: parseInt(((_self.view.width)/2) - (_self.view.width*0.04), 10), */
-			height : parseInt(((_self.view.height) / 2), 10),
+			width : parseInt(_self.view.width * 0.9, 10), 
+			left : parseInt(_self.view.width * 0.05, 10),
+			height : parseInt(_self.view.height * 0.7, 10) ,
+			bottom : parseInt(_self.view.height * 0.1, 10),
 			borderRadius : 15,
-			borderWidth : 1,
+			borderWidth	: 2,
 			borderColor : _background3,
-			backgroundColor : _background2
+			backgroundColor	: _background2
 		};
 		/* Input Text Field Settings */
 		_self.inputTextField = {
@@ -159,7 +160,7 @@ var loginViewStyle = ( function() {
 			backgroundColor : _background3,
 			color : _background,
 			textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER,
-			height : _self.headerView.height - 2,
+			height : parseInt(_self.headerView.height - 2),
 			right: '1',
 			width: '6%',
 			title: Yaast.FontAwesome.getCharCode('fa-plus-circle'),
