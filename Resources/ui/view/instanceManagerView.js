@@ -117,8 +117,19 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 				fontSize : parseInt(Yaast.API.UI.getDefaultFontSize())*2
 				}));
 			newInstanceDoneButton.press = function press() {
-				if(newInstanceName.value.length === 0 || newInstanceURL.value.length === 0) {//show error
-		    	}
+				if(newInstanceName.value.length === 0 || newInstanceURL.value.length === 0) {
+				var dialog = Ti.UI.createAlertDialog({
+		        cancel : 0,
+		        buttonNames : ['Aceptar'],
+            	message : 'There is no name or URL',
+            	title : '-- W4T --'
+		    });
+		    dialog.addEventListener('click', function() {
+            dialog.hide();
+            dialog = null;
+        	});
+       		 dialog.show();
+        }
 	        else{
 				
 					//instance adde, TODO: contact with a database or something to make it persistent?
@@ -205,7 +216,18 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 				fontSize : parseInt(Yaast.API.UI.getDefaultFontSize())*2
 				}));
 			newInstanceDoneButton.press = function press() {
-		    if(newInstanceName.value.length === 0 || newInstanceURL.value.length === 0) {//show error
+		    if(newInstanceName.value.length === 0 || newInstanceURL.value.length === 0) {
+		    	var dialog = Ti.UI.createAlertDialog({
+		        cancel : 0,
+		        buttonNames : ['Aceptar'],
+            	message : 'There is no name or URL',
+            	title : '-- W4T --'
+		    });
+		    dialog.addEventListener('click', function() {
+            dialog.hide();
+            dialog = null;
+        	});
+       		 dialog.show();
 		    	}
 	        else{
 				
