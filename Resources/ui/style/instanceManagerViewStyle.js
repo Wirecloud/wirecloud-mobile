@@ -179,6 +179,7 @@ var loginViewStyle = ( function() {
 						fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 5.5) / 100, 10)
 					},
 					left : parseInt(_self.connectionView.width * 0.05, 10),
+					width: parseInt(_self.connectionView.width * 0.43, 10),
 					textAlign : Ti.UI.TEXT_ALIGNMENT_LEFT
 				}
 			}, {
@@ -203,10 +204,11 @@ var loginViewStyle = ( function() {
 					layout : 'horizontal',
 					color : _background,
 					font : {
-						fontFamily : _font,
+						fontFamily : Yaast.FontAwesome.getFontFamily(),
 						fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 3) / 100, 10)
 					},
-					right:'10%',
+					right: parseInt(_self.connectionView.width * 0.06, 10), 
+					width: parseInt(_self.connectionView.width * 0.48, 10),
 					textAlign : Ti.UI.TEXT_ALIGNMENT_LEFT
 				}
 			}, {

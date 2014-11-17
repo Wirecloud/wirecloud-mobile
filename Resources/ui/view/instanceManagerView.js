@@ -64,12 +64,7 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		headerPrivate.add(Ti.UI.createLabel(Yaast.MergeObject(theme.headerViewLabel, { text: 'Private' })));
 		/* Add '+' button to create new instance */
 		privateAddButton = Ti.UI.createButton(theme.headerViewButton);
-		/* Add '+' button to create new instance */
-		privateAddButton = Ti.UI.createButton(Yaast.MergeObject(theme.headerViewButton, {
-			right : '1',
-			width : '6%',
-			title : Yaast.FontAwesome.getCharCode('fa-plus-circle'),
-		}));
+		/* Add handler on click */
 		privateAddButton.press = function press() {
 			//a window
 			newInstance = Ti.UI.createView(Yaast.MergeObject(theme.containerView, {
