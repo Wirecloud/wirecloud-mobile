@@ -29,6 +29,98 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 	    
 	/* Testing Purpos*/
 	var myTestFunction = function myTestFunction() { confViewTitle.text = 'HAS HECHO CLICK'; };
+	
+	var createNewInstance = function createNewInstance(publicEntry) {
+		/* newInstance main view */
+		newInstance = Ti.UI.createView(Yaast.MergeObject(theme.containerView, {
+			left : parseInt(theme.view.width * 0.2, 10),
+			width : parseInt(theme.view.width * 0.6, 10)
+		}));
+		/* Text Field for the Instance Name */
+		newInstanceName = Ti.UI.createTextField(Yaast.MergeObject(theme.inputTextField, {
+			top : parseInt(newInstance.getHeight() * 0.15, 10),
+			keyboardType : Ti.UI.KEYBOARD_DEFAULT,
+			returnKeyType : Ti.UI.RETURNKEY_NEXT,
+			hintText : "Instance Name"
+		}));
+		/* Text Field for the Instance Url */
+		newInstanceURL = Ti.UI.createTextField(Yaast.MergeObject(theme.inputTextField, {
+			top : parseInt(newInstance.getHeight() * 0.4, 10),
+			keyboardType : Ti.UI.KEYBOARD_URL,
+			returnKeyType : Ti.UI.RETURNKEY_DONE,
+			hintText : "Instance URL"
+		}));
+		//so far, i don't know what the heck is done here
+		newInstanceName.getText = function getText() {
+			newInstanceName.blur();
+		};
+		newInstanceURL.getText = function getText() {
+			newInstanceURL.blur();
+		};
+		/* Listeners */
+		newInstanceName.addEventListener('return', newInstanceName.getText);
+		newInstanceURL.addEventListener('return', newInstanceURL.getText);
+		/* Add Text Fields to the view */
+		newInstance.add(newInstanceName);
+		newInstance.add(newInstanceURL);
+		/* Add Done button */
+		/* TODO: improve style */
+ 		newInstanceDoneButton = Ti.UI.createButton(Yaast.MergeObject(theme.button, {
+			title: 'Done',
+			left: parseInt(newInstance.width * 0.05, 10),
+			bottom: parseInt(newInstance.width * 0.15, 10),
+			fontSize: parseInt(Yaast.API.UI.getDefaultFontSize())*2
+		}));
+		/* Add Back button */
+		newInstanceCloseButton = Ti.UI.createButton(Yaast.MergeObject(theme.button, {
+			title:'Back',
+			right: parseInt(newInstance.width * 0.05, 10),
+			bottom: parseInt(newInstance.width * 0.15, 10),
+			fontSize: parseInt(Yaast.API.UI.getDefaultFontSize())*2
+		}));
+		newInstanceDoneButton.press = function press() {
+			if(newInstanceName.value.length === 0 || newInstanceURL.value.length === 0) {
+				/* Create dialog to alert that there is a empty text field */
+				var dialog = Ti.UI.createAlertDialog({
+	        		cancel : 0,
+	      		 	buttonNames : ['Aceptar'],
+					message : 'There is no name or URL',
+          	 		title : '-- W4T --'
+	    		});
+	    		dialog.addEventListener('click', function() {
+           		 	dialog.hide();
+           		 	dialog = null;
+       			});
+       			dialog.show();
+        	}
+	        else {
+	        	if (publicEntry == true) {
+	        		publicSection.appendItems([
+	        			{ connection: {text: newInstanceName.value}, url: {text: newInstanceURL.value} }
+	        		]);
+	        		section.push(publicSection);
+	        	} else {
+	        		privateSection.appendItems([
+	        			{ connection: {text: newInstanceName.value}, url: {text: newInstanceURL.value} }
+					]);
+					section.push(privateSection);
+	        	}
+	        	parentWindow.remove(newInstance);
+				newInstance= null;
+				//instance adde, TODO: contact with a database or something to make it persistent?
+			}
+		};
+		newInstanceCloseButton.press = function press(){
+			parentWindow.remove(newInstance);
+			newInstance =null;
+		};
+		newInstanceDoneButton.addEventListener('click',newInstanceDoneButton.press);
+		newInstanceCloseButton.addEventListener('click',newInstanceCloseButton.press);
+		//added to the window
+		newInstance.add(newInstanceDoneButton);
+		newInstance.add(newInstanceCloseButton);
+		parentWindow.add(newInstance);
+	};
 
 	var createConfiguration = function createConfiguration() {
 		/* Create the main configuration view */
@@ -66,87 +158,9 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		privateAddButton = Ti.UI.createButton(theme.headerViewButton);
 		/* Add handler on click */
 		privateAddButton.press = function press() {
-			//a window
-			newInstance = Ti.UI.createView(Yaast.MergeObject(theme.containerView, {
-				left : '20%',
-				width : '60%'
-			}));
-			//a field for the text
-			newInstanceName = Ti.UI.createTextField(Yaast.MergeObject(theme.inputTextField, {
-				top : parseInt(newInstance.getHeight() * 0.15, 10),
-				keyboardType : Ti.UI.KEYBOARD_DEFAULT,
-				returnKeyType : Ti.UI.RETURNKEY_NEXT,
-				hintText : "Instance Name"
-			}));
-			//a field for the url
-			newInstanceURL = Ti.UI.createTextField(Yaast.MergeObject(theme.inputTextField, {
-				top : parseInt(newInstance.getHeight() * 0.4, 10),
-				keyboardType : Ti.UI.KEYBOARD_URL,
-				returnKeyType : Ti.UI.RETURNKEY_DONE,
-				hintText : "Instance URL"
-			}));
-			//so far, i don't know what the heck is done here
-			newInstanceName.getText = function getText() {
-				newInstanceName.blur();
-			};
-			newInstanceURL.getText = function getText() {
-				newInstanceURL.blur();
-			};
-			//listeners for the proper return key 
-			newInstanceName.addEventListener('return', newInstanceName.getText);
-			newInstanceURL.addEventListener('return', newInstanceURL.getText);
-			//added to the window
-			newInstance.add(newInstanceName);
-			newInstance.add(newInstanceURL);
-			//the "done" button
- 			newInstanceDoneButton = Ti.UI.createButton(Yaast.MergeObject(theme.button, {
-				title : 'Done',
-				left : '5%',
-				bottom : '15%',
-				fontSize : parseInt(Yaast.API.UI.getDefaultFontSize())*2
-			}));
-			newInstanceCloseButton = Ti.UI.createButton(Yaast.MergeObject(theme.button, {
-				title:'Back',
-				right:'5%',
-				bottom:'15%',
-				fontSize : parseInt(Yaast.API.UI.getDefaultFontSize())*2
-				}));
-			newInstanceDoneButton.press = function press() {
-				if(newInstanceName.value.length === 0 || newInstanceURL.value.length === 0) {
-				var dialog = Ti.UI.createAlertDialog({
-		        cancel : 0,
-		        buttonNames : ['Aceptar'],
-            	message : 'There is no name or URL',
-            	title : '-- W4T --'
-		    });
-		    dialog.addEventListener('click', function() {
-            dialog.hide();
-            dialog = null;
-        	});
-       		 dialog.show();
-        }
-	        else{
-				
-					//instance adde, TODO: contact with a database or something to make it persistent?
-					privateSection.appendItems([{
-						connection: { template: 'template-private',text: newInstanceName.value}, url: {text: newInstanceURL.value}},]);
-					section.push(privateSection);
-					parentWindow.remove(newInstance);
-					newInstance= null;
-				}
-			};
-			newInstanceCloseButton.press = function press(){
-				parentWindow.remove(newInstance);
-				newInstance =null;
-			};
-			newInstanceDoneButton.addEventListener('click',newInstanceDoneButton.press);
-			newInstanceCloseButton.addEventListener('click',newInstanceCloseButton.press);
-			//added to the window
-			newInstance.add(newInstanceDoneButton);
-			newInstance.add(newInstanceCloseButton);
-			parentWindow.add(newInstance);
+			createNewInstance(false);
 		};
-		privateAddButton.addEventListener('click', privateAddButton.press);
+		privateAddButton.addEventListener('click', createNewInstance(false));
 		headerPrivate.add(privateAddButton);
 		privateSection.setHeaderView(headerPrivate);
 		/* Add predefine instances */
@@ -165,85 +179,7 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		publicAddButton = Ti.UI.createButton(theme.headerViewButton);
 		//adding new instance starts here:
 		publicAddButton.press = function press() {
-			//a window
-			newInstance = Ti.UI.createView(Yaast.MergeObject(theme.containerView, {
-				left : '20%',
-				width : '60%'
-			}));
-			//a field for the text
-			newInstanceName = Ti.UI.createTextField(Yaast.MergeObject(theme.inputTextField, {
-				top : parseInt(newInstance.getHeight() * 0.15, 10),
-				keyboardType : Ti.UI.KEYBOARD_DEFAULT,
-				returnKeyType : Ti.UI.RETURNKEY_NEXT,
-				hintText : "Instance Name"
-			}));
-			//a field for the url
-			newInstanceURL = Ti.UI.createTextField(Yaast.MergeObject(theme.inputTextField, {
-				top : parseInt(newInstance.getHeight() * 0.4, 10),
-				keyboardType : Ti.UI.KEYBOARD_URL,
-				returnKeyType : Ti.UI.RETURNKEY_DONE,
-				hintText : "Instance URL"
-			}));
-			//so far, i don't know what the heck is done here
-			newInstanceName.getText = function getText() {
-				newInstanceName.blur();
-			};
-			newInstanceURL.getText = function getText() {
-				newInstanceURL.blur();
-			};
-			//listeners for the proper return key 
-			newInstanceName.addEventListener('return', newInstanceName.getText);
-			newInstanceURL.addEventListener('return', newInstanceURL.getText);
-			//added to the window
-			newInstance.add(newInstanceName);
-			newInstance.add(newInstanceURL);
-			//the "done" button
- 			newInstanceDoneButton = Ti.UI.createButton(Yaast.MergeObject(theme.button, {
-				title : 'Done',
-				left : '5%',
-				bottom : '15%',
-				fontSize : parseInt(Yaast.API.UI.getDefaultFontSize())*2
-			}));
-			newInstanceCloseButton = Ti.UI.createButton(Yaast.MergeObject(theme.button, {
-				title:'Back',
-				right:'5%',
-				bottom:'15%',
-				fontSize : parseInt(Yaast.API.UI.getDefaultFontSize())*2
-				}));
-			newInstanceDoneButton.press = function press() {
-		    if(newInstanceName.value.length === 0 || newInstanceURL.value.length === 0) {
-		    	var dialog = Ti.UI.createAlertDialog({
-		        cancel : 0,
-		        buttonNames : ['Aceptar'],
-            	message : 'There is no name or URL',
-            	title : '-- W4T --'
-		    });
-		    dialog.addEventListener('click', function() {
-            dialog.hide();
-            dialog = null;
-        	});
-       		 dialog.show();
-		    	}
-	        else{
-				
-					//instance adde, TODO: contact with a database or something to make it persistent?
-					publicSection.appendItems([{
-						connection: { text: newInstanceName.value}, url: {text: newInstanceURL.value}},]);
-					section.push(publicSection);
-					parentWindow.remove(newInstance);
-					newInstance= null;
-				}
-			};
-			newInstanceCloseButton.press = function press(){
-				parentWindow.remove(newInstance);
-				newInstance =null;
-			};
-			newInstanceDoneButton.addEventListener('click',newInstanceDoneButton.press);
-			newInstanceCloseButton.addEventListener('click',newInstanceCloseButton.press);
-			//added to the window
-			newInstance.add(newInstanceDoneButton);
-			newInstance.add(newInstanceCloseButton);
-			parentWindow.add(newInstance);
+			createNewInstance(true);
 		};
 		publicAddButton.addEventListener('click', publicAddButton.press);
 		headerPublic.add(publicAddButton);
