@@ -26,11 +26,13 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 	    newInstanceCloseButton,
 	    publicSection,
 	    privateSection;
-	    
+	var section = []; /* Array of sections */
+		
 	/* Testing Purpos*/
 	var myTestFunction = function myTestFunction() { confViewTitle.text = 'HAS HECHO CLICK'; };
 	
-	var createNewInstance = function createNewInstance(publicEntry) {
+	var createNewInstance = function createNewInstance(e) {
+		var button = e.source;
 		/* newInstance main view */
 		newInstance = Ti.UI.createView(Yaast.MergeObject(theme.containerView, {
 			left : parseInt(theme.view.width * 0.2, 10),
@@ -94,23 +96,51 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
        			dialog.show();
         	}
 	        else {
-	        	if (publicEntry == true) {
+	        	if (button.yesPublic) {
+	        		 Ti.API.warn("yes!");
 	        		publicSection.appendItems([
 	        			{ connection: {text: newInstanceName.value}, url: {text: newInstanceURL.value} }
 	        		]);
 	        		section.push(publicSection);
 	        	} else {
+	        		Ti.API.warn("no!");
 	        		privateSection.appendItems([
 	        			{ connection: {text: newInstanceName.value}, url: {text: newInstanceURL.value} }
 					]);
 					section.push(privateSection);
 	        	}
+	        	newInstance.removeEventListener('click',createNewInstance);
+	        	newInstanceDoneButton.removeEventListener('click', newInstanceDoneButton.press);
+	        	newInstanceCloseButton.removeEventListener('click', newInstanceCloseButton.press);
+	        	newInstanceName.removeEventListener('return', newInstanceName.getText);
+	        	newInstanceURL.removeEventListener('return', newInstanceURL.getText);
+	        	newInstance.remove(newInstanceDoneButton);
+	        	newInstance.remove(newInstanceCloseButton);
+	        	newInstance.remove(newInstanceName);
+	        	newInstance.remove(newInstanceURL);
+	        	newInstanceDoneButton = null;
+	        	newInstanceCloseButton = null;
+	        	newInstanceName = null;
+	        	newInstanceURL = null;
 	        	parentWindow.remove(newInstance);
 				newInstance= null;
 				//instance adde, TODO: contact with a database or something to make it persistent?
 			}
 		};
 		newInstanceCloseButton.press = function press(){
+			newInstance.removeEventListener('click',createNewInstance);
+	        newInstanceDoneButton.removeEventListener('click', newInstanceDoneButton.press);
+	        newInstanceCloseButton.removeEventListener('click', newInstanceCloseButton.press);
+	        newInstanceName.removeEventListener('return', newInstanceName.getText);
+	        newInstanceURL.removeEventListener('return', newInstanceURL.getText);
+	        newInstance.remove(newInstanceDoneButton);
+	        newInstance.remove(newInstanceCloseButton);
+	        newInstance.remove(newInstanceName);
+	        newInstance.remove(newInstanceURL);
+	        newInstanceDoneButton = null;
+	        newInstanceCloseButton = null;
+	        newInstanceName = null;
+	        newInstanceURL = null;
 			parentWindow.remove(newInstance);
 			newInstance =null;
 		};
@@ -147,20 +177,16 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 			defaultItemTemplate: 'template'
 		});
 		confInstanceMainView.add(confInstanceListView);
-		var section = [];
-		/* Array of sections */
+		
 		/* Private Instances Section */
 		privateSection = Ti.UI.createListSection();
 		var headerPrivate = Ti.UI.createView(theme.headerView);
 		/* Add section title */
-		headerPrivate.add(Ti.UI.createLabel(Yaast.MergeObject(theme.headerViewLabel, { text: 'Private' })));
+		headerPrivate.add(Ti.UI.createLabel(Yaast.MergeObject(theme.headerViewLabel, { text: 'Private'})));
 		/* Add '+' button to create new instance */
-		privateAddButton = Ti.UI.createButton(theme.headerViewButton);
+		privateAddButton = Ti.UI.createButton(Yaast.MergeObject(theme.headerViewButton, {yesPublic: false}));
 		/* Add handler on click */
-		privateAddButton.press = function press() {
-			createNewInstance(false);
-		};
-		privateAddButton.addEventListener('click', createNewInstance(false));
+		privateAddButton.addEventListener('click', createNewInstance);
 		headerPrivate.add(privateAddButton);
 		privateSection.setHeaderView(headerPrivate);
 		/* Add predefine instances */
@@ -176,12 +202,9 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		/* Add section title */
 		headerPublic.add(Ti.UI.createLabel(Yaast.MergeObject(theme.headerViewLabel, { text: 'Public' })));
 		/* Add '+' button to create new instance */
-		publicAddButton = Ti.UI.createButton(theme.headerViewButton);
-		//adding new instance starts here:
-		publicAddButton.press = function press() {
-			createNewInstance(true);
-		};
-		publicAddButton.addEventListener('click', publicAddButton.press);
+		publicAddButton = Ti.UI.createButton(Yaast.MergeObject(theme.headerViewButton, {yesPublic: true}));
+		//adding new instance starts here: 
+		publicAddButton.addEventListener('click', createNewInstance);
 		headerPublic.add(publicAddButton);
 		publicSection.setHeaderView(headerPublic);
 		/* Add predefine instances */

@@ -163,7 +163,8 @@ var loginViewStyle = ( function() {
 			font : {
 				fontFamily : Yaast.FontAwesome.getFontFamily(),
 				fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 6) / 100, 10)
-			}
+			},
+			yesPublic:true
 		};
 		
 		 /* Template with Edit-Button */
