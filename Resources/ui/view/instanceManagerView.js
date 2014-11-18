@@ -31,20 +31,34 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 	    editInstanceCloseButton,
 	    publicSection,
 	    privateSection;
-	var section = []; /* Array of sections */
-		
+	var section = [];
+	/* Array of sections */
+
 	/* Testing Purpose */
-	var myTestFunction = function myTestFunction(e) { 
-		if (e.bindId != null && e.bindId == 'edit_button') { /* When edit button is pressed */
+	var myTestFunction = function myTestFunction(e) {
+		if (e.bindId != null && e.bindId == 'edit_button') {/* When edit button is pressed */
 			/* TODO: Show edit view */
 			confViewTitle.text = 'HAS HECHO CLICK';
-		} else { /* Other cases */
+		} else {/* Other cases */
 			Ti.API.warn('pressed id: ' + e.bindId);
 		}
 	};
-	
-	
-	
+
+	var sectionClicked = function sectionClicked(e) {
+		if (e.bindId != null && e.bindId == 'edit_button') {
+			editInstanceMethod(e);
+		} else if (e.bindId != null && e.bindId == 'delete_button') {
+		} else if (e.bindId != null) {
+			selectInstance(e);
+		}
+	};
+	var selectInstance = function selectInstance(e) {
+		Yaast.Sandbox.currentURL = section[e.sectionIndex].getItemAt(e.itemIndex).url.text;
+		Yaast.Sandbox.appConfig.config.lastInstanceName = section[e.sectionIndex].getItemAt(e.itemIndex).connection.text;
+		Yaast.Sandbox.appConfig.config.lastInstanceURL = section[e.sectionIndex].getItemAt(e.itemIndex).url.text;
+		formCallback();
+		destroyConfiguration();
+	};
 	/* View for create new instances */
 	var createNewInstance = function createNewInstance(e) {
 		var button = e.source;
@@ -82,91 +96,100 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		newInstance.add(newInstanceURL);
 		/* Add Done button */
 		/* TODO: improve style */
- 		newInstanceDoneButton = Ti.UI.createButton(Yaast.MergeObject(theme.button, {
-			title: 'Done',
-			left: parseInt(newInstance.width * 0.05, 10),
-			bottom: parseInt(newInstance.width * 0.15, 10),
-			fontSize: parseInt(Yaast.API.UI.getDefaultFontSize())*2
+		newInstanceDoneButton = Ti.UI.createButton(Yaast.MergeObject(theme.button, {
+			title : 'Done',
+			left : parseInt(newInstance.width * 0.05, 10),
+			bottom : parseInt(newInstance.width * 0.15, 10),
+			fontSize : parseInt(Yaast.API.UI.getDefaultFontSize()) * 2
 		}));
 		/* Add Back button */
 		newInstanceCloseButton = Ti.UI.createButton(Yaast.MergeObject(theme.button, {
-			title:'Back',
-			right: parseInt(newInstance.width * 0.05, 10),
-			bottom: parseInt(newInstance.width * 0.15, 10),
-			fontSize: parseInt(Yaast.API.UI.getDefaultFontSize())*2
+			title : 'Back',
+			right : parseInt(newInstance.width * 0.05, 10),
+			bottom : parseInt(newInstance.width * 0.15, 10),
+			fontSize : parseInt(Yaast.API.UI.getDefaultFontSize()) * 2
 		}));
 		newInstanceDoneButton.press = function press() {
-			if(newInstanceName.value.length === 0 || newInstanceURL.value.length === 0) {
+			if (newInstanceName.value.length === 0 || newInstanceURL.value.length === 0) {
 				/* Create dialog to alert that there is a empty text field */
 				var dialog = Ti.UI.createAlertDialog({
-	        		cancel : 0,
-	      		 	buttonNames : ['Aceptar'],
+					cancel : 0,
+					buttonNames : ['Aceptar'],
 					message : 'There is no name or URL',
-          	 		title : '-- W4T --'
-	    		});
-	    		dialog.addEventListener('click', function() {
-           		 	dialog.hide();
-           		 	dialog = null;
-       			});
-       			dialog.show();
-        	}
-	        else {
-	        	if (button.yesPublic) {
-	        		 Ti.API.warn("yes!");
-	        		publicSection.appendItems([
-	        			{ connection: {text: newInstanceName.value}, url: {text: newInstanceURL.value} }
-	        		]);
-	        		section.push(publicSection);
-	        	} else {
-	        		Ti.API.warn("no!");
-	        		privateSection.appendItems([
-	        			{ connection: {text: newInstanceName.value}, url: {text: newInstanceURL.value} }
-					]);
+					title : '-- W4T --'
+				});
+				dialog.addEventListener('click', function() {
+					dialog.hide();
+					dialog = null;
+				});
+				dialog.show();
+			} else {
+				if (button.yesPublic) {
+					Ti.API.warn("yes!");
+					publicSection.appendItems([{
+						connection : {
+							text : newInstanceName.value
+						},
+						url : {
+							text : newInstanceURL.value
+						}
+					}]);
+					section.push(publicSection);
+				} else {
+					Ti.API.warn("no!");
+					privateSection.appendItems([{
+						connection : {
+							text : newInstanceName.value
+						},
+						url : {
+							text : newInstanceURL.value
+						}
+					}]);
 					section.push(privateSection);
-	        	}
-	        	newInstance.removeEventListener('click',createNewInstance);
-	        	newInstanceDoneButton.removeEventListener('click', newInstanceDoneButton.press);
-	        	newInstanceCloseButton.removeEventListener('click', newInstanceCloseButton.press);
-	        	newInstanceName.removeEventListener('return', newInstanceName.getText);
-	        	newInstanceURL.removeEventListener('return', newInstanceURL.getText);
-	        	newInstance.remove(newInstanceDoneButton);
-	        	newInstance.remove(newInstanceCloseButton);
-	        	newInstance.remove(newInstanceName);
-	        	newInstance.remove(newInstanceURL);
-	        	newInstanceDoneButton = null;
-	        	newInstanceCloseButton = null;
-	        	newInstanceName = null;
-	        	newInstanceURL = null;
-	        	parentWindow.remove(newInstance);
-				newInstance= null;
+				}
+				newInstance.removeEventListener('click', createNewInstance);
+				newInstanceDoneButton.removeEventListener('click', newInstanceDoneButton.press);
+				newInstanceCloseButton.removeEventListener('click', newInstanceCloseButton.press);
+				newInstanceName.removeEventListener('return', newInstanceName.getText);
+				newInstanceURL.removeEventListener('return', newInstanceURL.getText);
+				newInstance.remove(newInstanceDoneButton);
+				newInstance.remove(newInstanceCloseButton);
+				newInstance.remove(newInstanceName);
+				newInstance.remove(newInstanceURL);
+				newInstanceDoneButton = null;
+				newInstanceCloseButton = null;
+				newInstanceName = null;
+				newInstanceURL = null;
+				parentWindow.remove(newInstance);
+				newInstance = null;
 				//instance adde, TODO: contact with a database or something to make it persistent?
 			}
 		};
-		newInstanceCloseButton.press = function press(){
-			newInstance.removeEventListener('click',createNewInstance);
-	        newInstanceDoneButton.removeEventListener('click', newInstanceDoneButton.press);
-	        newInstanceCloseButton.removeEventListener('click', newInstanceCloseButton.press);
-	        newInstanceName.removeEventListener('return', newInstanceName.getText);
-	        newInstanceURL.removeEventListener('return', newInstanceURL.getText);
-	        newInstance.remove(newInstanceDoneButton);
-	        newInstance.remove(newInstanceCloseButton);
-	        newInstance.remove(newInstanceName);
-	        newInstance.remove(newInstanceURL);
-	        newInstanceDoneButton = null;
-	        newInstanceCloseButton = null;
-	        newInstanceName = null;
-	        newInstanceURL = null;
+		newInstanceCloseButton.press = function press() {
+			newInstance.removeEventListener('click', createNewInstance);
+			newInstanceDoneButton.removeEventListener('click', newInstanceDoneButton.press);
+			newInstanceCloseButton.removeEventListener('click', newInstanceCloseButton.press);
+			newInstanceName.removeEventListener('return', newInstanceName.getText);
+			newInstanceURL.removeEventListener('return', newInstanceURL.getText);
+			newInstance.remove(newInstanceDoneButton);
+			newInstance.remove(newInstanceCloseButton);
+			newInstance.remove(newInstanceName);
+			newInstance.remove(newInstanceURL);
+			newInstanceDoneButton = null;
+			newInstanceCloseButton = null;
+			newInstanceName = null;
+			newInstanceURL = null;
 			parentWindow.remove(newInstance);
-			newInstance =null;
+			newInstance = null;
 		};
-		newInstanceDoneButton.addEventListener('click',newInstanceDoneButton.press);
-		newInstanceCloseButton.addEventListener('click',newInstanceCloseButton.press);
+		newInstanceDoneButton.addEventListener('click', newInstanceDoneButton.press);
+		newInstanceCloseButton.addEventListener('click', newInstanceCloseButton.press);
 		//added to the window
 		newInstance.add(newInstanceDoneButton);
 		newInstance.add(newInstanceCloseButton);
 		parentWindow.add(newInstance);
 	};
-	
+
 	/* View for edit instances */
 	var editInstanceMethod = function editInstanceMethod(e) {
 		/* editInstance main view */
@@ -179,20 +202,20 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 			top : parseInt(editInstance.getHeight() * 0.15, 10),
 			keyboardType : Ti.UI.KEYBOARD_DEFAULT,
 			returnKeyType : Ti.UI.RETURNKEY_NEXT,
-			value: section[e.sectionIndex].getItemAt(e.itemIndex).connection.text
+			value : section[e.sectionIndex].getItemAt(e.itemIndex).connection.text
 		}));
 		/* Text Field for the Instance Url */
 		editInstanceURL = Ti.UI.createTextField(Yaast.MergeObject(theme.inputTextField, {
 			top : parseInt(editInstance.getHeight() * 0.4, 10),
 			keyboardType : Ti.UI.KEYBOARD_URL,
 			returnKeyType : Ti.UI.RETURNKEY_DONE,
-			value: section[e.sectionIndex].getItemAt(e.itemIndex).url.text
+			value : section[e.sectionIndex].getItemAt(e.itemIndex).url.text
 		}));
 		/* editInstanceName.getText = function getText() {
-			editInstanceName.blur();
+		editInstanceName.blur();
 		};
 		editInstanceURL.getText = function getText() {
-			editInstanceURL.blur();
+		editInstanceURL.blur();
 		}; */
 		/* Listeners */
 		//editInstanceName.addEventListener('return', editInstanceName.getText);
@@ -202,87 +225,100 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		editInstance.add(editInstanceURL);
 		/* Add Done button */
 		/* TODO: improve style */
- 		editInstanceDoneButton = Ti.UI.createButton(Yaast.MergeObject(theme.button, {
-			title: 'Done',
-			left: parseInt(editInstance.width * 0.05, 10),
-			bottom: parseInt(editInstance.width * 0.15, 10),
-			fontSize: parseInt(Yaast.API.UI.getDefaultFontSize())*2
+		editInstanceDoneButton = Ti.UI.createButton(Yaast.MergeObject(theme.button, {
+			title : 'Done',
+			left : parseInt(editInstance.width * 0.05, 10),
+			bottom : parseInt(editInstance.width * 0.15, 10),
+			fontSize : parseInt(Yaast.API.UI.getDefaultFontSize()) * 2
 		}));
 		/* Add Back button */
 		editInstanceCloseButton = Ti.UI.createButton(Yaast.MergeObject(theme.button, {
-			title:'Back',
-			right: parseInt(editInstance.width * 0.05, 10),
-			bottom: parseInt(editInstance.width * 0.15, 10),
-			fontSize: parseInt(Yaast.API.UI.getDefaultFontSize())*2
+			title : 'Back',
+			right : parseInt(editInstance.width * 0.05, 10),
+			bottom : parseInt(editInstance.width * 0.15, 10),
+			fontSize : parseInt(Yaast.API.UI.getDefaultFontSize()) * 2
 		}));
 		editInstanceDoneButton.press = function press() {
 			/* Create dialog to alert that there is a empty text field */
-			if(editInstanceName.value.length === 0 || editInstanceURL.value.length === 0) {
+			if (editInstanceName.value.length === 0 || editInstanceURL.value.length === 0) {
 				var dialog = Ti.UI.createAlertDialog({
-	        		cancel : 0,
-	      		 	buttonNames : ['Aceptar'],
+					cancel : 0,
+					buttonNames : ['Aceptar'],
 					message : 'There is no name or URL',
-          	 		title : '-- W4T --'
-	    		});
-	    		dialog.addEventListener('click', function() {
-           		 	dialog.hide();
-           		 	dialog = null;
-       			});
-       			dialog.show();
-        	}
-	        else {
-	        	if (e.sectionIndex == 1) {
-	        		Ti.API.warn("yes!");
-	        		publicSection.updateItemAt(e.itemIndex, { connection: {text: editInstanceName.value}, url: {text: editInstanceURL.value} });
-	        		section.push(publicSection);
-	        	} else {
-	        		Ti.API.warn("no!");
-	        		privateSection.updateItemAt(e.itemIndex, { connection: {text: editInstanceName.value}, url: {text: editInstanceURL.value} });
+					title : '-- W4T --'
+				});
+				dialog.addEventListener('click', function() {
+					dialog.hide();
+					dialog = null;
+				});
+				dialog.show();
+			} else {
+				if (e.sectionIndex == 1) {
+					Ti.API.warn("yes!");
+					publicSection.updateItemAt(e.itemIndex, {
+						connection : {
+							text : editInstanceName.value
+						},
+						url : {
+							text : editInstanceURL.value
+						}
+					});
+					section.push(publicSection);
+				} else {
+					Ti.API.warn("no!");
+					privateSection.updateItemAt(e.itemIndex, {
+						connection : {
+							text : editInstanceName.value
+						},
+						url : {
+							text : editInstanceURL.value
+						}
+					});
 					section.push(privateSection);
-	        	}
-	        	editInstance.removeEventListener('click',editInstanceMethod);
-	        	editInstanceDoneButton.removeEventListener('click', editInstanceDoneButton.press);
-	        	editInstanceCloseButton.removeEventListener('click', editInstanceCloseButton.press);
-	        	//editInstanceName.removeEventListener('return', editInstanceName.getText);
-	        	//editInstanceURL.removeEventListener('return', editInstanceURL.getText);
-	        	editInstance.remove(editInstanceDoneButton);
-	        	editInstance.remove(editInstanceCloseButton);
-	        	editInstance.remove(editInstanceName);
-	        	editInstance.remove(editInstanceURL);
-	        	editInstanceDoneButton = null;
-	        	editInstanceCloseButton = null;
-	        	editInstanceName = null;
-	        	editInstanceURL = null;
-	        	parentWindow.remove(editInstance);
-				editInstance= null;
+				}
+				editInstance.removeEventListener('click', editInstanceMethod);
+				editInstanceDoneButton.removeEventListener('click', editInstanceDoneButton.press);
+				editInstanceCloseButton.removeEventListener('click', editInstanceCloseButton.press);
+				//editInstanceName.removeEventListener('return', editInstanceName.getText);
+				//editInstanceURL.removeEventListener('return', editInstanceURL.getText);
+				editInstance.remove(editInstanceDoneButton);
+				editInstance.remove(editInstanceCloseButton);
+				editInstance.remove(editInstanceName);
+				editInstance.remove(editInstanceURL);
+				editInstanceDoneButton = null;
+				editInstanceCloseButton = null;
+				editInstanceName = null;
+				editInstanceURL = null;
+				parentWindow.remove(editInstance);
+				editInstance = null;
 				//instance adde, TODO: contact with a database or something to make it persistent?
 			}
 		};
-		editInstanceCloseButton.press = function press(){
-			editInstance.removeEventListener('click',editInstanceMethod);
-	        editInstanceDoneButton.removeEventListener('click', editInstanceDoneButton.press);
-	        editInstanceCloseButton.removeEventListener('click', editInstanceCloseButton.press);
-	        //editInstanceName.removeEventListener('return', editInstanceName.getText);
-	        //editInstanceURL.removeEventListener('return', editInstanceURL.getText);
-	        editInstance.remove(editInstanceDoneButton);
-	        editInstance.remove(editInstanceCloseButton);
-	        editInstance.remove(editInstanceName);
-	        editInstance.remove(editInstanceURL);
-	        editInstanceDoneButton = null;
-	        editInstanceCloseButton = null;
-	        editInstanceName = null;
-	        editInstanceURL = null;
+		editInstanceCloseButton.press = function press() {
+			editInstance.removeEventListener('click', editInstanceMethod);
+			editInstanceDoneButton.removeEventListener('click', editInstanceDoneButton.press);
+			editInstanceCloseButton.removeEventListener('click', editInstanceCloseButton.press);
+			//editInstanceName.removeEventListener('return', editInstanceName.getText);
+			//editInstanceURL.removeEventListener('return', editInstanceURL.getText);
+			editInstance.remove(editInstanceDoneButton);
+			editInstance.remove(editInstanceCloseButton);
+			editInstance.remove(editInstanceName);
+			editInstance.remove(editInstanceURL);
+			editInstanceDoneButton = null;
+			editInstanceCloseButton = null;
+			editInstanceName = null;
+			editInstanceURL = null;
 			parentWindow.remove(editInstance);
-			editInstance =null;
+			editInstance = null;
 		};
-		editInstanceDoneButton.addEventListener('click',editInstanceDoneButton.press);
-		editInstanceCloseButton.addEventListener('click',editInstanceCloseButton.press);
+		editInstanceDoneButton.addEventListener('click', editInstanceDoneButton.press);
+		editInstanceCloseButton.addEventListener('click', editInstanceCloseButton.press);
 		//added to the window
 		editInstance.add(editInstanceDoneButton);
 		editInstance.add(editInstanceCloseButton);
 		parentWindow.add(editInstance);
 	};
-	
+
 	var createConfiguration = function createConfiguration() {
 		/* Create the main configuration view */
 		confView = Ti.UI.createView(theme.view);
@@ -301,76 +337,116 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 
 		/* Create Instances List View */
 		confInstanceListView = Ti.UI.createListView({
-			templates: { /* Define diferent style templates for items in the list view */
+			templates : {/* Define diferent style templates for items in the list view */
 				'template' : theme.connectionListViewTemplate,
-				'template_connected' : theme.connectionListViewTemplateConected  /* change for ...Connected */
+				'template_connected' : theme.connectionListViewTemplateConected /* change for ...Connected */
 			},
-			defaultItemTemplate: 'template'
+			defaultItemTemplate : 'template'
 		});
 		confInstanceMainView.add(confInstanceListView);
-		
+
 		/* Private Instances Section */
 		privateSection = Ti.UI.createListSection();
 		var headerPrivate = Ti.UI.createView(theme.headerView);
 		/* Add section title */
-		headerPrivate.add(Ti.UI.createLabel(Yaast.MergeObject(theme.headerViewLabel, { text: 'Private'})));
+		headerPrivate.add(Ti.UI.createLabel(Yaast.MergeObject(theme.headerViewLabel, {
+			text : 'Private'
+		})));
 		/* Add '+' button to create new instance */
-		privateAddButton = Ti.UI.createButton(Yaast.MergeObject(theme.headerViewButton, {yesPublic: false}));
+		privateAddButton = Ti.UI.createButton(Yaast.MergeObject(theme.headerViewButton, {
+			yesPublic : false
+		}));
 		/* Add handler on click */
 		privateAddButton.addEventListener('click', createNewInstance);
 		headerPrivate.add(privateAddButton);
 		privateSection.setHeaderView(headerPrivate);
 		/* Add predefine instances */
 		privateSection.setItems([
-			/* TODO: Load info from archive or db */
-			{connection: {text: 'Wirecloud CoNWeT'}, url: {text: 'https://wirecloud.conwet.fi.upm.es/'}, id: {text: '1'} }
-		]);
+		/* TODO: Load info from archive or db */
+		{
+			connection : {
+				text : 'Wirecloud CoNWeT'
+			},
+			url : {
+				text : 'https://wirecloud.conwet.fi.upm.es/'
+			},
+			id : {
+				text : '1'
+			}
+		}]);
 		section.push(privateSection);
-		
+
 		/* Public Instances Section */
 		publicSection = Ti.UI.createListSection();
 		var headerPublic = Ti.UI.createView(theme.headerView);
 		/* Add section title */
-		headerPublic.add(Ti.UI.createLabel(Yaast.MergeObject(theme.headerViewLabel, { text: 'Public' })));
+		headerPublic.add(Ti.UI.createLabel(Yaast.MergeObject(theme.headerViewLabel, {
+			text : 'Public'
+		})));
 		/* Add '+' button to create new instance */
-		publicAddButton = Ti.UI.createButton(Yaast.MergeObject(theme.headerViewButton, {yesPublic: true}));
-		//adding new instance starts here: 
+		publicAddButton = Ti.UI.createButton(Yaast.MergeObject(theme.headerViewButton, {
+			yesPublic : true
+		}));
+		//adding new instance starts here:
 		publicAddButton.addEventListener('click', createNewInstance);
 		headerPublic.add(publicAddButton);
 		publicSection.setHeaderView(headerPublic);
 		/* Add predefine instances */
 		publicSection.setItems([
-			/* TODO: Load info from archive or db */
-			{connection: {text: 'Wirecloud CoNWeT'}, url: {text: 'https://wirecloud.conwet.fi.upm.es/'}, id: {text: '1'} },
-			{connection: {text: 'Mashups Fi Lab 2'}, url: {text: 'http://wirecloud2.conwet.fi.upm.es/'}, id: {text: '2'} }
-		]);
+		/* TODO: Load info from archive or db */
+		{
+			connection : {
+				text : 'Wirecloud CoNWeT'
+			},
+			url : {
+				text : 'https://wirecloud.conwet.fi.upm.es/'
+			},
+			id : {
+				text : '1'
+			}
+		}, {
+			connection : {
+				text : 'Mashups Fi Lab 2'
+			},
+			url : {
+				text : 'http://wirecloud2.conwet.fi.upm.es/'
+			},
+			id : {
+				text : '2'
+			}
+		}]);
 		section.push(publicSection);
 		/* Apply sections */
 		confInstanceListView.sections = section;
-		confInstanceListView.addEventListener('itemclick', editInstanceMethod);
+		confInstanceListView.addEventListener('itemclick', sectionClicked);
 		/* Adding to parent window */
 		parentWindow.add(confView);
 	};
 
 	var destroyConfiguration = function destroyConfiguration() {
 		/* Delete events Listeners */
-		privateAddButton.removeEventListener('click', privateAddButton.press);
+		if (privateAddButton.press != null) {
+			privateAddButton.removeEventListener('click', privateAddButton.press);
+		}
 		delete privateAddButton.press;
-	    publicAddButton.removeEventListener('click', publicAddButton.press);
-	    delete publicAddButton.press;
-	    /* Delete views */
-	   	confInstanceMainView.remove(confInstanceListView);
-	   	confInstanceListView = null;
-	   	confInstanceContainer.remove(confInstanceMainView);
-	   	confInstanceMainView = null;
-	   	confInstanceContainer.remove(confInstanceContainerTitle);
-	   	confInstanceContainerTitle = null;
-	   	confView.remove(confInstanceContainer);
-	   	confInstanceContainer = null;
-	   	confView.remove(confViewTitle);
-	   	confViewTitle = null;
-	   	parentWindow.remove(confView);
-	   	confView = null;
+		if (publicAddButton.press != null) {
+			publicAddButton.removeEventListener('click', publicAddButton.press);
+		}
+		delete publicAddButton.press;
+		/* Delete views */
+		confInstanceListView.removeEventListener('itemclick', sectionClicked);
+		confInstanceMainView.remove(confInstanceListView);
+		confInstanceListView = null;
+		confInstanceContainer.remove(confInstanceMainView);
+		confInstanceMainView = null;
+		confInstanceContainer.remove(confInstanceContainerTitle);
+		confInstanceContainerTitle = null;
+		confView.remove(confInstanceContainer);
+		confInstanceContainer = null;
+		confView.remove(confViewTitle);
+		confViewTitle = null;
+		parentWindow.remove(confView);
+		confView = null;
 	};
 	var _self = {};
 	_self.destroy = function destroy() {
