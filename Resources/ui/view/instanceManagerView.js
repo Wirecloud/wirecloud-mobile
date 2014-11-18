@@ -24,6 +24,11 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 	    newInstanceURL,
 	    newInstanceDoneButton,
 	    newInstanceCloseButton,
+	    editInstance,
+	    editInstanceName,
+	    editInstanceURL,
+	    editInstanceDoneButton,
+	    editInstanceCloseButton,
 	    publicSection,
 	    privateSection;
 	var section = []; /* Array of sections */
@@ -38,6 +43,9 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		}
 	};
 	
+	
+	
+	/* View for create new instances */
 	var createNewInstance = function createNewInstance(e) {
 		var button = e.source;
 		/* newInstance main view */
@@ -158,7 +166,123 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		newInstance.add(newInstanceCloseButton);
 		parentWindow.add(newInstance);
 	};
-
+	
+	/* View for edit instances */
+	var editInstanceMethod = function editInstanceMethod(e) {
+		/* editInstance main view */
+		editInstance = Ti.UI.createView(Yaast.MergeObject(theme.containerView, {
+			left : parseInt(theme.view.width * 0.2, 10),
+			width : parseInt(theme.view.width * 0.6, 10)
+		}));
+		/* Text Field for the Instance Name */
+		editInstanceName = Ti.UI.createTextField(Yaast.MergeObject(theme.inputTextField, {
+			top : parseInt(editInstance.getHeight() * 0.15, 10),
+			keyboardType : Ti.UI.KEYBOARD_DEFAULT,
+			returnKeyType : Ti.UI.RETURNKEY_NEXT,
+			value: section[e.sectionIndex].getItemAt(e.itemIndex).connection.text
+		}));
+		/* Text Field for the Instance Url */
+		editInstanceURL = Ti.UI.createTextField(Yaast.MergeObject(theme.inputTextField, {
+			top : parseInt(editInstance.getHeight() * 0.4, 10),
+			keyboardType : Ti.UI.KEYBOARD_URL,
+			returnKeyType : Ti.UI.RETURNKEY_DONE,
+			value: section[e.sectionIndex].getItemAt(e.itemIndex).url.text
+		}));
+		/* editInstanceName.getText = function getText() {
+			editInstanceName.blur();
+		};
+		editInstanceURL.getText = function getText() {
+			editInstanceURL.blur();
+		}; */
+		/* Listeners */
+		//editInstanceName.addEventListener('return', editInstanceName.getText);
+		//editInstanceURL.addEventListener('return', editInstanceURL.getText);
+		/* Add Text Fields to the view */
+		editInstance.add(editInstanceName);
+		editInstance.add(editInstanceURL);
+		/* Add Done button */
+		/* TODO: improve style */
+ 		editInstanceDoneButton = Ti.UI.createButton(Yaast.MergeObject(theme.button, {
+			title: 'Done',
+			left: parseInt(editInstance.width * 0.05, 10),
+			bottom: parseInt(editInstance.width * 0.15, 10),
+			fontSize: parseInt(Yaast.API.UI.getDefaultFontSize())*2
+		}));
+		/* Add Back button */
+		editInstanceCloseButton = Ti.UI.createButton(Yaast.MergeObject(theme.button, {
+			title:'Back',
+			right: parseInt(editInstance.width * 0.05, 10),
+			bottom: parseInt(editInstance.width * 0.15, 10),
+			fontSize: parseInt(Yaast.API.UI.getDefaultFontSize())*2
+		}));
+		editInstanceDoneButton.press = function press() {
+			/* Create dialog to alert that there is a empty text field */
+			if(editInstanceName.value.length === 0 || editInstanceURL.value.length === 0) {
+				var dialog = Ti.UI.createAlertDialog({
+	        		cancel : 0,
+	      		 	buttonNames : ['Aceptar'],
+					message : 'There is no name or URL',
+          	 		title : '-- W4T --'
+	    		});
+	    		dialog.addEventListener('click', function() {
+           		 	dialog.hide();
+           		 	dialog = null;
+       			});
+       			dialog.show();
+        	}
+	        else {
+	        	if (e.sectionIndex == 1) {
+	        		Ti.API.warn("yes!");
+	        		publicSection.updateItemAt(e.itemIndex, { connection: {text: editInstanceName.value}, url: {text: editInstanceURL.value} });
+	        		section.push(publicSection);
+	        	} else {
+	        		Ti.API.warn("no!");
+	        		privateSection.updateItemAt(e.itemIndex, { connection: {text: editInstanceName.value}, url: {text: editInstanceURL.value} });
+					section.push(privateSection);
+	        	}
+	        	editInstance.removeEventListener('click',editInstanceMethod);
+	        	editInstanceDoneButton.removeEventListener('click', editInstanceDoneButton.press);
+	        	editInstanceCloseButton.removeEventListener('click', editInstanceCloseButton.press);
+	        	//editInstanceName.removeEventListener('return', editInstanceName.getText);
+	        	//editInstanceURL.removeEventListener('return', editInstanceURL.getText);
+	        	editInstance.remove(editInstanceDoneButton);
+	        	editInstance.remove(editInstanceCloseButton);
+	        	editInstance.remove(editInstanceName);
+	        	editInstance.remove(editInstanceURL);
+	        	editInstanceDoneButton = null;
+	        	editInstanceCloseButton = null;
+	        	editInstanceName = null;
+	        	editInstanceURL = null;
+	        	parentWindow.remove(editInstance);
+				editInstance= null;
+				//instance adde, TODO: contact with a database or something to make it persistent?
+			}
+		};
+		editInstanceCloseButton.press = function press(){
+			editInstance.removeEventListener('click',editInstanceMethod);
+	        editInstanceDoneButton.removeEventListener('click', editInstanceDoneButton.press);
+	        editInstanceCloseButton.removeEventListener('click', editInstanceCloseButton.press);
+	        //editInstanceName.removeEventListener('return', editInstanceName.getText);
+	        //editInstanceURL.removeEventListener('return', editInstanceURL.getText);
+	        editInstance.remove(editInstanceDoneButton);
+	        editInstance.remove(editInstanceCloseButton);
+	        editInstance.remove(editInstanceName);
+	        editInstance.remove(editInstanceURL);
+	        editInstanceDoneButton = null;
+	        editInstanceCloseButton = null;
+	        editInstanceName = null;
+	        editInstanceURL = null;
+			parentWindow.remove(editInstance);
+			editInstance =null;
+		};
+		editInstanceDoneButton.addEventListener('click',editInstanceDoneButton.press);
+		editInstanceCloseButton.addEventListener('click',editInstanceCloseButton.press);
+		//added to the window
+		editInstance.add(editInstanceDoneButton);
+		editInstance.add(editInstanceCloseButton);
+		parentWindow.add(editInstance);
+	};
+	
 	var createConfiguration = function createConfiguration() {
 		/* Create the main configuration view */
 		confView = Ti.UI.createView(theme.view);
@@ -223,7 +347,7 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		section.push(publicSection);
 		/* Apply sections */
 		confInstanceListView.sections = section;
-		confInstanceListView.addEventListener('itemclick', myTestFunction);
+		confInstanceListView.addEventListener('itemclick', editInstanceMethod);
 		/* Adding to parent window */
 		parentWindow.add(confView);
 	};
