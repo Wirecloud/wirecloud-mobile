@@ -188,15 +188,6 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 			returnKeyType : Ti.UI.RETURNKEY_DONE,
 			value: section[e.sectionIndex].getItemAt(e.itemIndex).url.text
 		}));
-		/* editInstanceName.getText = function getText() {
-			editInstanceName.blur();
-		};
-		editInstanceURL.getText = function getText() {
-			editInstanceURL.blur();
-		}; */
-		/* Listeners */
-		//editInstanceName.addEventListener('return', editInstanceName.getText);
-		//editInstanceURL.addEventListener('return', editInstanceURL.getText);
 		/* Add Text Fields to the view */
 		editInstance.add(editInstanceName);
 		editInstance.add(editInstanceURL);
@@ -215,9 +206,9 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 			bottom: parseInt(editInstance.width * 0.15, 10),
 			fontSize: parseInt(Yaast.API.UI.getDefaultFontSize())*2
 		}));
-		editInstanceDoneButton.press = function press() {
-			/* Create dialog to alert that there is a empty text field */
+		editInstanceDoneButton.press = function press() {	
 			if(editInstanceName.value.length === 0 || editInstanceURL.value.length === 0) {
+				/* Create dialog to alert that there is a empty text field */
 				var dialog = Ti.UI.createAlertDialog({
 	        		cancel : 0,
 	      		 	buttonNames : ['Aceptar'],
@@ -243,8 +234,6 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 	        	editInstance.removeEventListener('click',editInstanceMethod);
 	        	editInstanceDoneButton.removeEventListener('click', editInstanceDoneButton.press);
 	        	editInstanceCloseButton.removeEventListener('click', editInstanceCloseButton.press);
-	        	//editInstanceName.removeEventListener('return', editInstanceName.getText);
-	        	//editInstanceURL.removeEventListener('return', editInstanceURL.getText);
 	        	editInstance.remove(editInstanceDoneButton);
 	        	editInstance.remove(editInstanceCloseButton);
 	        	editInstance.remove(editInstanceName);
@@ -262,8 +251,6 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 			editInstance.removeEventListener('click',editInstanceMethod);
 	        editInstanceDoneButton.removeEventListener('click', editInstanceDoneButton.press);
 	        editInstanceCloseButton.removeEventListener('click', editInstanceCloseButton.press);
-	        //editInstanceName.removeEventListener('return', editInstanceName.getText);
-	        //editInstanceURL.removeEventListener('return', editInstanceURL.getText);
 	        editInstance.remove(editInstanceDoneButton);
 	        editInstance.remove(editInstanceCloseButton);
 	        editInstance.remove(editInstanceName);
@@ -281,6 +268,11 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		editInstance.add(editInstanceDoneButton);
 		editInstance.add(editInstanceCloseButton);
 		parentWindow.add(editInstance);
+	};
+	
+	var deleteInstance = function deleteInstance(e) {
+		/* TODO: Doesn't work */
+		section[e.sectionIndex].deleteItemAt(e.itemIndex);
 	};
 	
 	var createConfiguration = function createConfiguration() {
@@ -347,7 +339,7 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		section.push(publicSection);
 		/* Apply sections */
 		confInstanceListView.sections = section;
-		confInstanceListView.addEventListener('itemclick', editInstanceMethod);
+		confInstanceListView.addEventListener('itemclick', deleteInstance);
 		/* Adding to parent window */
 		parentWindow.add(confView);
 	};
