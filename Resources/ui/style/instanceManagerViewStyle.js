@@ -185,7 +185,7 @@ var loginViewStyle = ( function() {
 				}
 			}, {
 				type: 'Ti.UI.Button',
-				bindId: 'edit-button',
+				bindId: 'edit_button',
 				properties: {
 					backgroundColor: 'transparent ',
 					color: _backgroundGreen2,

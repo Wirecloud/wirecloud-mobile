@@ -28,8 +28,15 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 	    privateSection;
 	var section = []; /* Array of sections */
 		
-	/* Testing Purpos*/
-	var myTestFunction = function myTestFunction() { confViewTitle.text = 'HAS HECHO CLICK'; };
+	/* Testing Purpose */
+	var myTestFunction = function myTestFunction(e) { 
+		if (e.bindId != null && e.bindId == 'edit_button') { /* When edit button is pressed */
+			/* TODO: Show edit view */
+			confViewTitle.text = 'HAS HECHO CLICK';
+		} else { /* Other cases */
+			Ti.API.warn('pressed id: ' + e.bindId);
+		}
+	};
 	
 	var createNewInstance = function createNewInstance(e) {
 		var button = e.source;
@@ -216,7 +223,7 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		section.push(publicSection);
 		/* Apply sections */
 		confInstanceListView.sections = section;
-		//confInstanceListView.addEventListener('itemclick', myTestFunction());
+		confInstanceListView.addEventListener('itemclick', myTestFunction);
 		/* Adding to parent window */
 		parentWindow.add(confView);
 	};
