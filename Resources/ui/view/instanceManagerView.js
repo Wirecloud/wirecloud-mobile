@@ -272,7 +272,7 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 	
 	var deleteInstance = function deleteInstance(e) {
 		/* TODO: Doesn't work */
-		section[e.sectionIndex].deleteItemAt(e.itemIndex);
+		e.section.deleteItemsAt(e.itemIndex, 1);
 	};
 	
 	var createConfiguration = function createConfiguration() {
