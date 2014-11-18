@@ -19,6 +19,7 @@ var loginViewStyle = ( function() {
 		    _background2 = '#456082',
 		    _background3 = '#D5E4F1',
 		    _backgroundRed = '#FF8888',
+		    _backgroundRed2 = '#DF0101',
 		    _backgroundGreen = '#99FF99',
 		    _backgroundGreen2 = '#187D1B',
 		    _editColor = "#FFA500",
@@ -196,6 +197,21 @@ var loginViewStyle = ( function() {
 					right: 1,
 					widht: parseInt(_self.connectionView.width * 0.04, 10),
 					title: Yaast.FontAwesome.getCharCode('fa-edit'),
+					textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER
+				}
+			}, {
+				type: 'Ti.UI.Button',
+				bindId: 'delete_button',
+				properties: {
+					backgroundColor: 'transparent ',
+					color: _backgroundRed2,
+					font: {
+						fontFamily: Yaast.FontAwesome.getFontFamily(),
+						fontSize: parseInt((Ti.Platform.displayCaps.platformHeight * 5) / 100, 10)
+					},
+					right: parseInt(_self.connectionView.width * 0.06, 10),
+					widht: parseInt(_self.connectionView.width * 0.04, 10),
+					title: Yaast.FontAwesome.getCharCode('fa-ban'),
 					textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER
 				}
 			}, {
