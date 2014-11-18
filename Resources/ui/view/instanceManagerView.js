@@ -47,8 +47,11 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 	var sectionClicked = function sectionClicked(e) {
 		if (e.bindId != null && e.bindId == 'edit_button') {
 			editInstanceMethod(e);
-		} else if (e.bindId != null && e.bindId == 'delete_button') {
-		} else if (e.bindId != null) {
+		}
+		if (e.bindId != null && e.bindId == 'delete_button') {
+			deleteInstance(e);
+		}
+		if (e.bindId != null && e.bindId != 'edit_button' && e.bindId != 'delete_button') {
 			selectInstance(e);
 		}
 	};
@@ -59,6 +62,10 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		formCallback();
 		destroyConfiguration();
 	};
+		var deleteInstance = function deleteInstance(e) {
+		e.section.deleteItemsAt(e.itemIndex, 1);
+	};
+
 	/* View for create new instances */
 	var createNewInstance = function createNewInstance(e) {
 		var button = e.source;
@@ -211,15 +218,7 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 			returnKeyType : Ti.UI.RETURNKEY_DONE,
 			value : section[e.sectionIndex].getItemAt(e.itemIndex).url.text
 		}));
-		/* editInstanceName.getText = function getText() {
-		editInstanceName.blur();
-		};
-		editInstanceURL.getText = function getText() {
-		editInstanceURL.blur();
-		}; */
-		/* Listeners */
-		//editInstanceName.addEventListener('return', editInstanceName.getText);
-		//editInstanceURL.addEventListener('return', editInstanceURL.getText);
+
 		/* Add Text Fields to the view */
 		editInstance.add(editInstanceName);
 		editInstance.add(editInstanceURL);
@@ -238,9 +237,10 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 			bottom : parseInt(editInstance.width * 0.15, 10),
 			fontSize : parseInt(Yaast.API.UI.getDefaultFontSize()) * 2
 		}));
+
 		editInstanceDoneButton.press = function press() {
-			/* Create dialog to alert that there is a empty text field */
 			if (editInstanceName.value.length === 0 || editInstanceURL.value.length === 0) {
+				/* Create dialog to alert that there is a empty text field */
 				var dialog = Ti.UI.createAlertDialog({
 					cancel : 0,
 					buttonNames : ['Aceptar'],
@@ -298,8 +298,22 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 			editInstance.removeEventListener('click', editInstanceMethod);
 			editInstanceDoneButton.removeEventListener('click', editInstanceDoneButton.press);
 			editInstanceCloseButton.removeEventListener('click', editInstanceCloseButton.press);
-			//editInstanceName.removeEventListener('return', editInstanceName.getText);
-			//editInstanceURL.removeEventListener('return', editInstanceURL.getText);
+			editInstance.remove(editInstanceDoneButton);
+			editInstance.remove(editInstanceCloseButton);
+			editInstance.remove(editInstanceName);
+			editInstance.remove(editInstanceURL);
+			editInstanceDoneButton = null;
+			editInstanceCloseButton = null;
+			editInstanceName = null;
+			editInstanceURL = null;
+			parentWindow.remove(editInstance);
+			editInstance = null;
+			//instance adde, TODO: contact with a database or something to make it persistent?
+		};
+		editInstanceCloseButton.press = function press() {
+			editInstance.removeEventListener('click', editInstanceMethod);
+			editInstanceDoneButton.removeEventListener('click', editInstanceDoneButton.press);
+			editInstanceCloseButton.removeEventListener('click', editInstanceCloseButton.press);
 			editInstance.remove(editInstanceDoneButton);
 			editInstance.remove(editInstanceCloseButton);
 			editInstance.remove(editInstanceName);
@@ -318,6 +332,7 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		editInstance.add(editInstanceCloseButton);
 		parentWindow.add(editInstance);
 	};
+
 
 	var createConfiguration = function createConfiguration() {
 		/* Create the main configuration view */
@@ -418,8 +433,9 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		section.push(publicSection);
 		/* Apply sections */
 		confInstanceListView.sections = section;
+
 		confInstanceListView.addEventListener('itemclick', sectionClicked);
-		/* Adding to parent window */
+
 		parentWindow.add(confView);
 	};
 
