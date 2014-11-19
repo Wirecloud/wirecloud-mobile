@@ -203,7 +203,7 @@ var loginViewStyle = ( function() {
 				type: 'Ti.UI.Button',
 				bindId: 'delete_button',
 				properties: {
-					backgroundColor: _backgroundRed2,
+					backgroundColor: 'transparent',
 					color: _backgroundRed2,
 					font: {
 						fontFamily: Yaast.FontAwesome.getFontFamily(),
@@ -224,8 +224,8 @@ var loginViewStyle = ( function() {
 						fontFamily : Yaast.FontAwesome.getFontFamily(),
 						fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 3) / 100, 10)
 					},
-					right: parseInt(_self.connectionView.width * 0.06, 10), 
-					width: parseInt(_self.connectionView.width * 0.48, 10),
+					right: parseInt(_self.connectionView.width * 0.1, 10), 
+					width: parseInt(_self.connectionView.width * 0.44, 10),
 					textAlign : Ti.UI.TEXT_ALIGNMENT_LEFT
 				}
 			}, {

@@ -45,13 +45,15 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 	};
 
 	var sectionClicked = function sectionClicked(e) {
+		Ti.API.warn('Pressed id: ' + e.bindId);
 		if (e.bindId != null && e.bindId == 'edit_button') {
 			editInstanceMethod(e);
 		}
-		if (e.bindId != null && e.bindId == 'delete_button') {
+		else if (e.bindId != null && e.bindId == 'delete_button') {
 			deleteInstance(e);
 		}
-		if (e.bindId != null && e.bindId != 'edit_button' && e.bindId != 'delete_button') {
+		else {
+		//if (e.bindId != null && e.bindId != 'edit_button' && e.bindId != 'delete_button') {
 			selectInstance(e);
 		}
 	};
