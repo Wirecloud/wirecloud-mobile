@@ -61,10 +61,24 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 	
 	/* Method to delete an instance */
 	var deleteInstance = function deleteInstance(e) {
-		/* TODO: Delete from the personal archive or db */
-		e.section.deleteItemsAt(e.itemIndex, 1);
+		var myEvent = e;
+		var dialog = Ti.UI.createAlertDialog({
+			cancel : 0,
+			buttonNames : ['No','Yes'],
+			message : 'Do you wanna delete it?',
+			title : 'Wirecloud 4 Tablet'
+		});
+		dialog.addEventListener('click', function(e) {
+			if (e.index == 1) {
+				// TODO: Delete from the personal archive or db */
+				myEvent.section.deleteItemsAt(myEvent.itemIndex, 1);
+			}
+			dialog.hide();
+			dialog = null;
+		});
+		dialog.show();
 	};
-
+	
 	/* Method to create new instances */
 	var createNewInstance = function createNewInstance(e) {
 		var button = e.source;
@@ -121,7 +135,7 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 				// Create dialog to alert that there is a empty text field
 				var dialog = Ti.UI.createAlertDialog({
 					cancel : 0,
-					buttonNames : ['Aceptar'],
+					buttonNames : ['Ok'],
 					message : 'There is no name or URL',
 					title : '-- W4T --'
 				});
