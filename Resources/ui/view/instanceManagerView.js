@@ -161,6 +161,7 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 				}
 				// TODO: Improve delete view because the user can see it
 				// Remove view and listeners
+				parentWindow.remove(newInstance);
 				newInstance.removeEventListener('click', createNewInstance);
 				newInstanceDoneButton.removeEventListener('click', newInstanceDoneButton.press);
 				newInstanceCloseButton.removeEventListener('click', newInstanceCloseButton.press);
@@ -174,13 +175,14 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 				newInstanceCloseButton = null;
 				newInstanceName = null;
 				newInstanceURL = null;
-				parentWindow.remove(newInstance);
+				
 				newInstance = null;
 			}
 		};
 		// Method for the listener of Close Button
 		newInstanceCloseButton.press = function press() {
 			// Remove view and listeners
+			parentWindow.remove(newInstance);
 			newInstance.removeEventListener('click', createNewInstance);
 			newInstanceDoneButton.removeEventListener('click', newInstanceDoneButton.press);
 			newInstanceCloseButton.removeEventListener('click', newInstanceCloseButton.press);
@@ -194,7 +196,7 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 			newInstanceCloseButton = null;
 			newInstanceName = null;
 			newInstanceURL = null;
-			parentWindow.remove(newInstance);
+			
 			newInstance = null;
 		};
 		// Add listeners to the buttons
@@ -277,6 +279,7 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 				}
 				// TODO: Update also the instance to the personal archive or db
 				// Remove view and listeners
+				parentWindow.remove(editInstance);
 				editInstance.removeEventListener('click', editInstanceMethod);
 				editInstanceDoneButton.removeEventListener('click', editInstanceDoneButton.press);
 				editInstanceCloseButton.removeEventListener('click', editInstanceCloseButton.press);
@@ -288,12 +291,13 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 				editInstanceCloseButton = null;
 				editInstanceName = null;
 				editInstanceURL = null;
-				parentWindow.remove(editInstance);
+				
 				editInstance = null;
 			}
 		};
 		// Method for the listener of Close Button
 		editInstanceCloseButton.press = function press() {
+			parentWindow.remove(editInstance);
 			editInstance.removeEventListener('click', editInstanceMethod);
 			editInstanceDoneButton.removeEventListener('click', editInstanceDoneButton.press);
 			editInstanceCloseButton.removeEventListener('click', editInstanceCloseButton.press);
@@ -305,7 +309,7 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 			editInstanceCloseButton = null;
 			editInstanceName = null;
 			editInstanceURL = null;
-			parentWindow.remove(editInstance);
+			
 			editInstance = null;
 		};
 		// Add listeners to buttons
