@@ -326,19 +326,18 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 	var createConfiguration = function createConfiguration() {
 		// Create the main configuration view
 		confView = Ti.UI.createView(theme.view);
-		confViewTitle = Ti.UI.createLabel(theme.configurationFormTitle);
+		confViewTitle = Ti.UI.createLabel(theme.viewTitle);
 		confView.add(confViewTitle);
 		
 		// Create a Instance Container View
-		confInstanceContainer = Ti.UI.createView(theme.containerView);
-		confInstanceContainerTitle = Ti.UI.createLabel(theme.instanceTitle);
+		confInstanceContainer = Ti.UI.createView(theme.instanceContainerView);
+		confInstanceContainerTitle = Ti.UI.createLabel(theme.instanceContainerViewTitle);
 		confInstanceContainer.add(confInstanceContainerTitle);
 		confView.add(confInstanceContainer);
 
 		// Create Instaces Main View 
-		confInstanceMainView = Ti.UI.createView(theme.connectionView);
+		confInstanceMainView = Ti.UI.createView(theme.instanceMainView);
 		confInstanceContainer.add(confInstanceMainView);
-
 		// Create Instances List View: Define diferent style templates for items in the list view
 		confInstanceListView = Ti.UI.createListView({
 			templates : {

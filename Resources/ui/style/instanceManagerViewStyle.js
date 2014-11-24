@@ -29,29 +29,35 @@ var loginViewStyle = ( function() {
 		    _fontColorGreen = "#00AA00",
 		    _fontColor = '#EBEBEB',
 		    _fontColorButton = '#354B5D';
-		// 1F3346
-
-		/* Main View Settings */
+		
+		/* Main Instance Manager View */
 		_self.view = {
 			top : 0,
 			left : 0,
 			backgroundColor : _background,
 			width : Yaast.API.UI.getPlatformWidth(),
 			height : Yaast.API.UI.getPlatformHeight() - Yaast.API.UI.getDefaultStatusBar(),
-			/* Size test */
+			// Size test
 			borderWidth : 1,
 			borderColor : _background3,
 		};
 		/* Update height in case there is a top height */
 		_self.view.height = Yaast.API.UI.getPlatformHeight() - _self.view.top;
-
-		/*
-		 *
-		 *  Generales
-		 *
-		 */
-		/* Container View Settings */
-		_self.containerView = {
+		
+		/* Main Instance Manager View Title */
+		_self.viewTitle = {
+			top : parseInt((_self.view.height * 2) / 100),
+			color : _fontColor,
+			textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER,
+			font : {
+				fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 9) / 100, 10), // 32
+				fontFamily : _font
+			},
+			text : 'Configuration'
+		};
+		
+		/* Instance Container View Settings */
+		_self.instanceContainerView = {
 			width : parseInt(_self.view.width * 0.9, 10), 
 			left : parseInt(_self.view.width * 0.05, 10),
 			height : parseInt(_self.view.height * 0.7, 10) ,
@@ -61,6 +67,142 @@ var loginViewStyle = ( function() {
 			borderColor : _background3,
 			backgroundColor	: _background2
 		};
+		
+		/* Container View Title */
+		_self.instanceContainerViewTitle = {
+			top : 10,
+			left : parseInt(_self.instanceContainerView.width * 0.05, 10),
+			text : 'Instances',
+			textAlign : Ti.UI.TEXT_ALIGNMENT_LEFT,
+			color : _fontColor,
+			font : {
+				fontSize : parseInt(Yaast.API.UI.getDefaultFontSize() * 2) ,
+				/* fontSize:  parseInt((Ti.Platform.displayCaps.platformHeight*8)/100, 10), // 32 -> 40% */
+				fontFamily : _font
+			}
+		};
+		
+		/* Instance List Main View */
+		_self.instanceMainView = {
+			bottom : parseInt(_self.instanceContainerView.height * 0.1, 10),
+			height : parseInt(_self.instanceContainerView.height * 0.80, 10),
+			left : parseInt(_self.instanceContainerView.width * 0.03, 10),
+			width : parseInt(_self.instanceContainerView.width * 0.94, 10)
+		};
+		
+		/* Header view label */
+		_self.headerView = {
+			backgroundColor : _background3,
+			width : _self.instanceMainView.width,
+			height : parseInt((Ti.Platform.displayCaps.platformHeight * 8) / 100, 10) // 32 -> 40%
+		};
+		
+		/* Style for the title */
+		_self.headerViewLabel = {
+			color : _background,
+			left: 0,
+			width: _self.headerView.width,
+			textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER,
+			font : {
+				fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 5) / 100, 10), // 32 -> 40%
+				fontFamily : _font
+			}
+		};
+		
+		/* Style for the button '+' in title's sections */
+		_self.headerViewButton = {
+			backgroundColor : _background3,
+			color : _background,
+			textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER,
+			height : parseInt(_self.headerView.height - 2),
+			right: '1',
+			width: parseInt(_self.headerView.width * 0.06, 10),
+			title: Yaast.FontAwesome.getCharCode('fa-plus-circle'),
+			font : {
+				fontFamily : Yaast.FontAwesome.getFontFamily(),
+				fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 6) / 100, 10)
+			},
+			yesPublic: true
+		};
+		
+		/*
+		 * Templates for List View
+		 */
+		/* Template with Edit-Button */
+		_self.connectionListViewTemplate = {
+			childTemplates : [{
+				type : 'Ti.UI.Label',
+				bindId : 'connection',
+				properties : {
+					layout : 'horizontal',
+					color : _background,
+					font : {
+						fontFamily : _font,
+						fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 5.5) / 100, 10)
+					},
+					left : parseInt(_self.instanceMainView.width * 0.05, 10),
+					width: parseInt(_self.instanceMainView.width * 0.43, 10),
+					textAlign : Ti.UI.TEXT_ALIGNMENT_LEFT
+				}
+			}, {
+				type: 'Ti.UI.Button',
+				bindId: 'edit_button',
+				properties: {
+					backgroundColor: 'transparent ',
+					color: _backgroundGreen2,
+					font: {
+						fontFamily: Yaast.FontAwesome.getFontFamily(),
+						fontSize: parseInt((Ti.Platform.displayCaps.platformHeight * 5) / 100, 10)
+					},
+					right: 1,
+					widht: parseInt(_self.instanceMainView.width * 0.04, 10),
+					title: Yaast.FontAwesome.getCharCode('fa-edit'),
+					textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER
+				}
+			}, {
+				type: 'Ti.UI.Button',
+				bindId: 'delete_button',
+				properties: {
+					backgroundColor: 'transparent',
+					color: _backgroundRed2,
+					font: {
+						fontFamily: Yaast.FontAwesome.getFontFamily(),
+						fontSize: parseInt((Ti.Platform.displayCaps.platformHeight * 5) / 100, 10)
+					},
+					right: parseInt(_self.instanceMainView.width * 0.06, 10),
+					widht: parseInt(_self.instanceMainView.width * 0.04, 10),
+					title: Yaast.FontAwesome.getCharCode('fa-ban'),
+					textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER
+				}
+			}, {
+				type : 'Ti.UI.Label',
+				bindId : 'url',
+				properties : {
+					layout : 'horizontal',
+					color : _background,
+					font : {
+						fontFamily : Yaast.FontAwesome.getFontFamily(),
+						fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 3) / 100, 10)
+					},
+					right: parseInt(_self.instanceMainView.width * 0.1, 10), 
+					width: parseInt(_self.instanceMainView.width * 0.44, 10),
+					textAlign : Ti.UI.TEXT_ALIGNMENT_LEFT
+				}
+			}, {
+				type : 'Ti.UI.Label',
+				bindId : 'id',
+				properties : {
+					visible : false
+				}
+			}],
+			properties : {
+				backgroundColor : '#FFFFFF',
+				selectedBackgroundColor : _background3
+			},
+			events : {}
+		};
+		
+		/** Checked everthing until here **/
 		/* Input Text Field Settings */
 		_self.inputTextField = {
 			width : '90%',
@@ -100,148 +242,7 @@ var loginViewStyle = ( function() {
 			}
 		};
 
-		/* Configuration Form */
-		_self.configurationFormTitle = {
-			top : parseInt((_self.containerView.height * 2) / 100),
-			color : _fontColor,
-			textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER,
-			font : {
-				fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 9) / 100, 10), // 32
-				fontFamily : _font
-			},
-			text : 'Configuration'
-		};
-
-		// Configuration Form Instances
-
-		_self.connectionView = {
-			bottom : parseInt(_self.containerView.height * 0.1, 10),
-			height : parseInt(_self.containerView.height * 0.80, 10),
-			left : parseInt(_self.containerView.width * 0.03, 10),
-			width : parseInt(_self.containerView.width * 0.94, 10)
-		};
-
-		_self.instanceTitle = {
-			top : 10,
-			left : parseInt(_self.connectionView.width * 0.05, 10),
-			text : 'Instances',
-			textAlign : Ti.UI.TEXT_ALIGNMENT_LEFT,
-			color : _fontColor,
-			font : {
-				fontSize : parseInt(Yaast.API.UI.getDefaultFontSize() * 2) ,
-				/* fontSize:  parseInt((Ti.Platform.displayCaps.platformHeight*8)/100, 10), // 32 -> 40% */
-				fontFamily : _font
-			}
-		};
-
-		_self.headerView = {
-			backgroundColor : _background3,
-			width : _self.connectionView.width,
-			height : parseInt((Ti.Platform.displayCaps.platformHeight * 8) / 100, 10) // 32 -> 40%
-		};
-		
-		/* Style for the title */
-		_self.headerViewLabel = {
-			color : _background,
-			left: 0,
-			width: _self.headerView.width,
-			textAlign: Ti.UI.TEXT_ALIGNMENT_CENTER,
-			font : {
-				fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 5) / 100, 10), // 32 -> 40%
-				fontFamily : _font
-			}
-		};
-		
-		/* Style for the button '+' in title's sections */
-		_self.headerViewButton = {
-			backgroundColor : _background3,
-			color : _background,
-			textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER,
-			height : parseInt(_self.headerView.height - 2),
-			right: '1',
-			width: parseInt(_self.headerView.width * 0.06, 10),
-			title: Yaast.FontAwesome.getCharCode('fa-plus-circle'),
-			font : {
-				fontFamily : Yaast.FontAwesome.getFontFamily(),
-				fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 6) / 100, 10)
-			},
-			yesPublic:true
-		};
-		
-		 /* Template with Edit-Button */
-		_self.connectionListViewTemplate = {
-			childTemplates : [{
-				type : 'Ti.UI.Label',
-				bindId : 'connection',
-				properties : {
-					layout : 'horizontal',
-					color : _background,
-					font : {
-						fontFamily : _font,
-						fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 5.5) / 100, 10)
-					},
-					left : parseInt(_self.connectionView.width * 0.05, 10),
-					width: parseInt(_self.connectionView.width * 0.43, 10),
-					textAlign : Ti.UI.TEXT_ALIGNMENT_LEFT
-				}
-			}, {
-				type: 'Ti.UI.Button',
-				bindId: 'edit_button',
-				properties: {
-					backgroundColor: 'transparent ',
-					color: _backgroundGreen2,
-					font: {
-						fontFamily: Yaast.FontAwesome.getFontFamily(),
-						fontSize: parseInt((Ti.Platform.displayCaps.platformHeight * 5) / 100, 10)
-					},
-					right: 1,
-					widht: parseInt(_self.connectionView.width * 0.04, 10),
-					title: Yaast.FontAwesome.getCharCode('fa-edit'),
-					textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER
-				}
-			}, {
-				type: 'Ti.UI.Button',
-				bindId: 'delete_button',
-				properties: {
-					backgroundColor: 'transparent',
-					color: _backgroundRed2,
-					font: {
-						fontFamily: Yaast.FontAwesome.getFontFamily(),
-						fontSize: parseInt((Ti.Platform.displayCaps.platformHeight * 5) / 100, 10)
-					},
-					right: parseInt(_self.connectionView.width * 0.06, 10),
-					widht: parseInt(_self.connectionView.width * 0.04, 10),
-					title: Yaast.FontAwesome.getCharCode('fa-ban'),
-					textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER
-				}
-			}, {
-				type : 'Ti.UI.Label',
-				bindId : 'url',
-				properties : {
-					layout : 'horizontal',
-					color : _background,
-					font : {
-						fontFamily : Yaast.FontAwesome.getFontFamily(),
-						fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 3) / 100, 10)
-					},
-					right: parseInt(_self.connectionView.width * 0.1, 10), 
-					width: parseInt(_self.connectionView.width * 0.44, 10),
-					textAlign : Ti.UI.TEXT_ALIGNMENT_LEFT
-				}
-			}, {
-				type : 'Ti.UI.Label',
-				bindId : 'id',
-				properties : {
-					visible : false
-				}
-			}],
-			properties : {
-				backgroundColor : '#FFFFFF',
-				selectedBackgroundColor : _background3
-			},
-			events : {}
-		};
-		
+		// Configuration Form Instances		
 		_self.connectionListViewTemplateConected = {
 			childTemplates : [{
 				type : 'Ti.UI.Label',
