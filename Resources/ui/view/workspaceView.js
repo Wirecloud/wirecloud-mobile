@@ -137,7 +137,8 @@ function workspaceView(parameters, userName, returnCallback) {
 		});
 		var componentPos = {};
 		for(var i in dataTab){
-			var _dimWidgetO = getDimensionWidget({h: _tabView.height, w: _tabView.width}, dataTab[i]);
+			//var _dimWidgetO = getDimensionWidget({h: _tabView.height, w: _tabView.width}, dataTab[i]);
+			var _dimWidgetO = dataTab[i].dimensions;
 			componentPos[i] = _dimWidgetO;
 			var _widgetClass = require("workspace/widgetGeneric");
 			var _widgetO = _widgetClass(_dimWidgetO, dataTab[i].meta, i, userName);
@@ -161,48 +162,6 @@ function workspaceView(parameters, userName, returnCallback) {
 		Yaast.Sandbox.tabView = _tabView;
 		Yaast.Sandbox.componentPos = componentPos;
 		return _tabView;
-	};
-
-	/** @title: getDimensionWidget (Function)
-	 *  @parameters: dim (tabView size) data (JSON iWidget)
-	 *  @usage: return dimensions and position of Widget */
-	function getDimensionWidget(dim, data){
-		var _w = parseInt(((data.dimensions.width * 8) / _selfView.columnRatio) * (dim.w/8), 10);
-		var _l = parseInt(((data.dimensions.left * 8) / _selfView.columnRatio) * (dim.w/8), 10);
-		var _t;
-		if(_l > 0) {
-			_l = _l + 10;
-			_w = _w - 10;
-		}
-		var _h;
-		switch(data.meta.name){
-			/*case "cupon-updater":
-			case "open-updater":
-			case "user-info":
-			case "card-info":
-			case "carousel":
-			case "category-filter-demo":
-			case "order":
-			case "reserve":
-				_h = (dim.h/2) - 30;
-			break;*/
-			default:
-				_h = dim.h - 30; // FullScreen Height
-			break;
-		}
-		if(data.meta.name === 'open-updater' || data.meta.name === 'card-info' || data.meta.name === 'carousel'){
-			_t = (dim.h/2) + 30;
-		}
-		else{
-			_t = 30;
-		}
-
-		return{
-			width: _w,
-			height: _h,
-			left: _l,
-			top: _t
-		};
 	};
 
 	// Handler that take each event launched by any widget or operator
