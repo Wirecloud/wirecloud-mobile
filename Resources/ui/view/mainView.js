@@ -17,11 +17,11 @@ var mainView = function mainView(parentWindow, userName) {
     var topBar = Ti.UI.createView(theme.topBar);
     var wirecloudLogo = Ti.UI.createWebView(theme.logo);
     var buttonLogout = Ti.UI.createLabel(Yaast.MergeObject(theme.button, {
-        left: (_isApple) ? 14 : 12,
+        left: parseInt(theme.view.width * 0.90, 10),
         text: Yaast.FontAwesome.getCharCode('fa-sign-out')
     }));
     var buttonStore = Ti.UI.createLabel(Yaast.MergeObject(theme.button, {
-        left: (_isApple) ? 14 : 12,
+        left:  parseInt(theme.view.width * 0.80, 10),
         text: Yaast.FontAwesome.getCharCode('fa-cloud')
     }));
     var leftView = Ti.UI.createView(theme.leftView);
@@ -174,15 +174,13 @@ var mainView = function mainView(parentWindow, userName) {
         _self.view.add(Ti.UI.createView(theme.line));
     }
     topBar.add(buttonLogout);
-    buttonLogout.setLeft(topBar.getWidth() - 140);
-    buttonStore.setLeft(buttonLogout.getLeft() - 150);
     topBar.add(buttonStore);
     topBar.add(Ti.UI.createLabel(Yaast.MergeObject(theme.labelButton, {
-        left: buttonLogout.getLeft() + 50,
-        text: ' logOut'
+        left: buttonLogout.getLeft() + parseInt(theme.view.width *0.04,10),
+        text: 'logOut'
     })));
     topBar.add(Ti.UI.createLabel(Yaast.MergeObject(theme.labelButton, {
-        left: buttonStore.getLeft() + 50,
+        left: buttonStore.getLeft()+ parseInt(theme.view.width *0.035,10),
         text: ' Store'
     })));
     topBar.add(wirecloudLogo);

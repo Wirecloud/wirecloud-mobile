@@ -37,7 +37,7 @@ var mainViewStyle = (function() {
     _self.topBar = {
         top: 0,
         left: 0,
-        height: 50,
+        height: parseInt(_self.view.height * 0.05, 10),
         width: _self.view.width,
         backgroundColor: '#FFFFFF',
         verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
@@ -70,9 +70,10 @@ var mainViewStyle = (function() {
 
     _self.logo = {
         url: (Yaast.API.HW.System.isApple()) ? Ti.Filesystem.getResourcesDirectory()  + 'images/logo_tab.svg' : '../../images/logo_tab.svg',
-        height: (_isApple) ? 30 : '40dp',
-        width: '60dp',
-        left: 15,
+        top:  parseInt(_self.topBar.height * 0.01, 10),
+        height: parseInt(_self.topBar.height * 1.5, 10),
+        width: parseInt(_self.topBar.height * 1.5, 10),
+        left: parseInt(_self.view.width * 0.02, 10) ,
         enableZoomControls: false,
         showScrollbars: false,
         touchEnabled: false,
@@ -98,7 +99,7 @@ var mainViewStyle = (function() {
 	_self.welcomeLabel = {
 		color: '#3F566D',
 		height: rowHeight,
-		left: parseInt(_self.logo.left) + parseInt(_self.logo.width) + 40,
+		left: parseInt(_self.logo.left) + parseInt(_self.logo.width) + parseInt(_self.topBar.width)*0.01,
         font: {
             fontFamily: Yaast.FontAwesome.getFontFamily(),
             fontSize: parseInt(rowFontSize) * 2
