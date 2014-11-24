@@ -202,12 +202,8 @@ var loginViewStyle = ( function() {
 			events : {}
 		};
 		
-		/** Checked everthing until here **/
 		/* Input Text Field Settings */
 		_self.inputTextField = {
-			width : '90%',
-			left : '5%',
-			height : '20%',
 			color : '#354B5D',
 			backgroundColor : '#FFFFFF',
 			borderRadius : 5,
@@ -225,6 +221,9 @@ var loginViewStyle = ( function() {
 				fontFamily : _font
 			}
 		};
+		
+		/** Checked everthing until here **/
+		
 		/* Button Settings */
 		_self.button = {
 			backgroundColor : _background3,

@@ -83,20 +83,26 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 	var createNewInstance = function createNewInstance(e) {
 		var button = e.source;
 		// newInstance main view
-		newInstance = Ti.UI.createView(Yaast.MergeObject(theme.containerView, {
+		newInstance = Ti.UI.createView(Yaast.MergeObject(theme.instanceContainerView, {
 			left : parseInt(theme.view.width * 0.2, 10),
 			width : parseInt(theme.view.width * 0.6, 10)
 		}));
 		// Text Field for the Instance Name
 		newInstanceName = Ti.UI.createTextField(Yaast.MergeObject(theme.inputTextField, {
-			top : parseInt(newInstance.getHeight() * 0.15, 10),
-			keyboardType : Ti.UI.KEYBOARD_DEFAULT,
-			returnKeyType : Ti.UI.RETURNKEY_NEXT,
-			hintText : "Instance Name"
+			width: parseInt(newInstance.width * 0.9, 10),
+			left: parseInt(newInstance.width * 0.05, 10),
+			height: parseInt(newInstance.height * 0.2, 10),
+			top: parseInt(newInstance.height * 0.15, 10),
+			keyboardType: Ti.UI.KEYBOARD_DEFAULT,
+			returnKeyType: Ti.UI.RETURNKEY_NEXT,
+			hintText: "Instance Name"
 		}));
 		// Text Field for the Instance Url
 		newInstanceURL = Ti.UI.createTextField(Yaast.MergeObject(theme.inputTextField, {
 			top : parseInt(newInstance.getHeight() * 0.4, 10),
+			width: parseInt(newInstance.width * 0.9, 10),
+			left: parseInt(newInstance.width * 0.05, 10),
+			height: parseInt(newInstance.height * 0.2, 10),
 			keyboardType : Ti.UI.KEYBOARD_URL,
 			returnKeyType : Ti.UI.RETURNKEY_DONE,
 			hintText : "Instance URL"
@@ -175,7 +181,6 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 				newInstanceCloseButton = null;
 				newInstanceName = null;
 				newInstanceURL = null;
-				
 				newInstance = null;
 			}
 		};
@@ -196,7 +201,6 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 			newInstanceCloseButton = null;
 			newInstanceName = null;
 			newInstanceURL = null;
-			
 			newInstance = null;
 		};
 		// Add listeners to the buttons
