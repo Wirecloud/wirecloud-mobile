@@ -68,14 +68,18 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 			message : 'Do you wanna delete it?',
 			title : 'Wirecloud 4 Tablet'
 		});
-		dialog.addEventListener('click', function(e) {
+		dialog.press = function press(e) {
 			if (e.index == 1) {
 				// TODO: Delete from the personal archive or db */
 				myEvent.section.deleteItemsAt(myEvent.itemIndex, 1);
 			}
 			dialog.hide();
+			// Destroy dialog
+			dialog.removeEventListener('click', dialog.press);
+			delete dialog.press;
 			dialog = null;
-		});
+		};
+		dialog.addEventListener('click', dialog.press);
 		dialog.show();
 	};
 	
