@@ -264,14 +264,16 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 				// Create dialog to alert that there is a empty text field
 				var dialog = Ti.UI.createAlertDialog({
 					cancel : 0,
-					buttonNames : ['Aceptar'],
+					buttonNames : ['Ok'],
 					message : 'There is no name or URL',
 					title : '-- W4T --'
 				});
-				dialog.addEventListener('click', function() {
+				dialog.press = function press() {
 					dialog.hide();
+					dialog.removeEventListener('click', dialog.press);
 					dialog = null;
-				});
+				};
+				dialog.addEventListener('click', dialog.press);
 				dialog.show();
 			} else {
 				if (e.sectionIndex == 1) {
