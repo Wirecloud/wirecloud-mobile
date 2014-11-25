@@ -82,10 +82,10 @@ var mainView = function mainView(parentWindow, userName) {
 		}
 		var result = {
             'title': {
-                text: data.creator + '/' + data.name
+                text: " "+ data.creator + '/' + data.name
             },
             'icon': {
-            	text : (data.shared) ? Yaast.FontAwesome.getCharCode('fa-globe') :
+            	text : (data.shared) ? Yaast.FontAwesome.getCharCode('fa-globe'):
                        Yaast.FontAwesome.getCharCode('fa-shield')
             },
             'id':{
