@@ -49,20 +49,20 @@ var mainViewDetailStyle = (function() {
             fontFamily: Yaast.FontAwesome.getFontFamily(),
             fontSize: parseInt(_fontSize)
         },
-        left: parseInt(_self.view.width)* 0.05,
-        top: _self.mainTitle.top + _self.mainTitle.height + parseInt(_self.view.height) * 0.05
+        left: parseInt(_self.view.width* 0.05,10),
+        top: _self.mainTitle.top + _self.mainTitle.height + parseInt(_self.view.height* 0.05,10) 
 	};
 
 	_self.descriptionLabel = {
 		color: '#FFFFFF',
-		height: _self.view.height * 0.6,
-		width : parseInt(_self.view.width) * 0.84,
+		height: parseInt(_self.view.height * 0.6,10),
+		width : parseInt(_self.view.width* 0.84,10) ,
         font: {
             fontFamily: Yaast.FontAwesome.getFontFamily(),
             fontSize: _fontSize
         },
-        left: parseInt(_self.view.width)* 0.08,
-        top: _self.creatorLabel.top + _self.creatorLabel.height + parseInt(_self.view.height)  * 0.05,
+        left: parseInt(_self.view.width* 0.08,10),
+        top: _self.creatorLabel.top + _self.creatorLabel.height + parseInt(_self.view.height* 0.05,10)  ,
         verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_TOP
 	};
 
@@ -147,6 +147,15 @@ var mainViewDetailStyle = (function() {
             fontFamily: Yaast.FontAwesome.getFontFamily(),
             fontSize: _fontSize *1.5
         },
+	};
+	_self.screenShot = {
+		image: /*TODO*/ filler,
+        width: parseInt(Yaast.API.UI.getPlatformHeight()/4 , 10),
+        height: parseInt(Yaast.API.UI.getPlatformWidth()/4 , 10),
+        enableZoomControls: false, 
+        touchEnabled: false,
+        top: filler
+		
 	};
 
     return _self;
