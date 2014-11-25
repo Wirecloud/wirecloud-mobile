@@ -257,6 +257,7 @@ var mainView = function mainView(parentWindow, userName) {
 
     // Create Details View of Composition
     _self.showDetailView = function showDetailView(idComposition) {
+    	
     	if (_self.detailView !== null) {
     		rightView.remove(_self.detailView);
     		_self.detailView.destroy();

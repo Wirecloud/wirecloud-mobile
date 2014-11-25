@@ -19,6 +19,8 @@ mashup = {
 	...
 }
 */
+	
+    
 	var _isApple = Yaast.API.HW.System.isApple();
 	var _isIOS7 = (_isApple && Ti.Platform.version.split('.')[0] === '7') ? true : false;
 
@@ -65,6 +67,9 @@ mashup = {
 		_self.add(wirecloudLink);
 
 	} else {
+		
+    	var file = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory+"/"+mashup.name);
+    	Ti.API.warn(file.getNativePath());
 	    // Main title
 	    var mainTitle = Ti.UI.createLabel(theme.mainTitle);
 	    mainTitle.text = mashup.name;
