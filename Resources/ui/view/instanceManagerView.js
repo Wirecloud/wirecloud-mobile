@@ -177,7 +177,6 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		// Destroy newInstance elements
 		function destroy() {
 			parentWindow.remove(newInstance);
-			newInstance.removeEventListener('click', createNewInstance);
 			newInstanceDoneButton.removeEventListener('click', newInstanceDoneButton.press);
 			newInstanceCloseButton.removeEventListener('click', newInstanceCloseButton.press);
 			newInstanceName.removeEventListener('return', newInstanceName.getText);
@@ -275,26 +274,14 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 					section.push(privateSection);
 				}
 				// TODO: Update also the instance to the personal archive or db
-				// Remove view and listeners
-				parentWindow.remove(editInstance);
-				editInstance.removeEventListener('click', editInstanceMethod);
-				editInstanceDoneButton.removeEventListener('click', editInstanceDoneButton.press);
-				editInstanceCloseButton.removeEventListener('click', editInstanceCloseButton.press);
-				editInstance.remove(editInstanceDoneButton);
-				editInstance.remove(editInstanceCloseButton);
-				editInstance.remove(editInstanceName);
-				editInstance.remove(editInstanceURL);
-				editInstanceDoneButton = null;
-				editInstanceCloseButton = null;
-				editInstanceName = null;
-				editInstanceURL = null;
-				editInstance = null;
+				destroy();
 			}
 		};
 		// Method for the listener of Close Button
-		editInstanceCloseButton.press = function press() {
+		editInstanceCloseButton.press = function press() { destroy(); };
+		// Delete editInstanceMethod elements
+		function destroy() {
 			parentWindow.remove(editInstance);
-			editInstance.removeEventListener('click', editInstanceMethod);
 			editInstanceDoneButton.removeEventListener('click', editInstanceDoneButton.press);
 			editInstanceCloseButton.removeEventListener('click', editInstanceCloseButton.press);
 			editInstance.remove(editInstanceDoneButton);
@@ -306,7 +293,7 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 			editInstanceName = null;
 			editInstanceURL = null;
 			editInstance = null;
-		};
+		}
 		// Add listeners to buttons
 		editInstanceDoneButton.addEventListener('click', editInstanceDoneButton.press);
 		editInstanceCloseButton.addEventListener('click', editInstanceCloseButton.press);
