@@ -169,28 +169,13 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 					}]);
 					section.push(privateSection);
 				}
-				// TODO: Improve delete view because the user can see it
-				// Remove view and listeners
-				parentWindow.remove(newInstance);
-				newInstance.removeEventListener('click', createNewInstance);
-				newInstanceDoneButton.removeEventListener('click', newInstanceDoneButton.press);
-				newInstanceCloseButton.removeEventListener('click', newInstanceCloseButton.press);
-				newInstanceName.removeEventListener('return', newInstanceName.getText);
-				newInstanceURL.removeEventListener('return', newInstanceURL.getText);
-				newInstance.remove(newInstanceDoneButton);
-				newInstance.remove(newInstanceCloseButton);
-				newInstance.remove(newInstanceName);
-				newInstance.remove(newInstanceURL);
-				newInstanceDoneButton = null;
-				newInstanceCloseButton = null;
-				newInstanceName = null;
-				newInstanceURL = null;
-				newInstance = null;
+				destroy();
 			}
 		};
 		// Method for the listener of Close Button
-		newInstanceCloseButton.press = function press() {
-			// Remove view and listeners
+		newInstanceCloseButton.press = function press(){ destroy(); };
+		// Destroy newInstance elements
+		function destroy() {
 			parentWindow.remove(newInstance);
 			newInstance.removeEventListener('click', createNewInstance);
 			newInstanceDoneButton.removeEventListener('click', newInstanceDoneButton.press);
