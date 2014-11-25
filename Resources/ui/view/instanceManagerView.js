@@ -125,15 +125,13 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		newInstanceDoneButton = Ti.UI.createButton(Yaast.MergeObject(theme.button, {
 			title : 'Done',
 			left : parseInt(newInstance.width * 0.05, 10),
-			bottom : parseInt(newInstance.width * 0.15, 10),
-			fontSize : parseInt(Yaast.API.UI.getDefaultFontSize()) * 2
+			bottom : parseInt(newInstance.width * 0.15, 10)
 		}));
 		//Add Back button
 		newInstanceCloseButton = Ti.UI.createButton(Yaast.MergeObject(theme.button, {
 			title : 'Back',
 			right : parseInt(newInstance.width * 0.05, 10),
-			bottom : parseInt(newInstance.width * 0.15, 10),
-			fontSize : parseInt(Yaast.API.UI.getDefaultFontSize()) * 2
+			bottom : parseInt(newInstance.width * 0.15, 10)
 		}));
 		// Method for the listener of Done Button
 		newInstanceDoneButton.press = function press() {
@@ -216,22 +214,24 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 	/* Method to edit instances */
 	var editInstanceMethod = function editInstanceMethod(e) {
 		// editInstance main view
-		editInstance = Ti.UI.createView(Yaast.MergeObject(theme.containerView, {
+		editInstance = Ti.UI.createView(Yaast.MergeObject(theme.instanceContainerView, {
 			left : parseInt(theme.view.width * 0.2, 10),
 			width : parseInt(theme.view.width * 0.6, 10)
 		}));
 		// Text Field for the Instance Name
 		editInstanceName = Ti.UI.createTextField(Yaast.MergeObject(theme.inputTextField, {
-			top : parseInt(editInstance.getHeight() * 0.15, 10),
-			keyboardType : Ti.UI.KEYBOARD_DEFAULT,
-			returnKeyType : Ti.UI.RETURNKEY_NEXT,
+			width: parseInt(editInstance.width * 0.9, 10),
+			left: parseInt(editInstance.width * 0.05, 10),
+			height: parseInt(editInstance.height * 0.2, 10),
+			top: parseInt(editInstance.height * 0.15, 10),
 			value : section[e.sectionIndex].getItemAt(e.itemIndex).connection.text
 		}));
 		// Text Field for the Instance Url
 		editInstanceURL = Ti.UI.createTextField(Yaast.MergeObject(theme.inputTextField, {
 			top : parseInt(editInstance.getHeight() * 0.4, 10),
-			keyboardType : Ti.UI.KEYBOARD_URL,
-			returnKeyType : Ti.UI.RETURNKEY_DONE,
+			width: parseInt(editInstance.width * 0.9, 10),
+			left: parseInt(editInstance.width * 0.05, 10),
+			height: parseInt(editInstance.height * 0.2, 10),
 			value : section[e.sectionIndex].getItemAt(e.itemIndex).url.text
 		}));
 		// Add Text Fields to the view
@@ -295,7 +295,6 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 				editInstanceCloseButton = null;
 				editInstanceName = null;
 				editInstanceURL = null;
-				
 				editInstance = null;
 			}
 		};
@@ -313,7 +312,6 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 			editInstanceCloseButton = null;
 			editInstanceName = null;
 			editInstanceURL = null;
-			
 			editInstance = null;
 		};
 		// Add listeners to buttons
@@ -345,8 +343,7 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		// Create Instances List View: Define diferent style templates for items in the list view
 		confInstanceListView = Ti.UI.createListView({
 			templates : {
-				'template' : theme.connectionListViewTemplate,
-				'template_connected' : theme.connectionListViewTemplateConected
+				'template' : theme.instanceListViewTemplate,
 			},
 			defaultItemTemplate : 'template'
 		});
