@@ -147,10 +147,12 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 					message : 'There is no name or URL',
 					title : '-- W4T --'
 				});
-				dialog.addEventListener('click', function() {
+				dialog.press = function press() {
 					dialog.hide();
+					dialog.removeEventListener('click', dialog.press);
 					dialog = null;
-				});
+				};
+				dialog.addEventListener('click', dialog.press);
 				dialog.show();
 			} else {
 				// TODO: Add also the instance to the personal archive or db
