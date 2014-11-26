@@ -52,6 +52,8 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 	
 	/* Method to select an instance for use */
 	var selectInstance = function selectInstance(e) {
+		logo.setOpacity(1);
+		systemLabel.setOpacity(1);
 		Yaast.Sandbox.currentURL = section[e.sectionIndex].getItemAt(e.itemIndex).url.text;
 		Yaast.Sandbox.appConfig.config.lastInstanceName = section[e.sectionIndex].getItemAt(e.itemIndex).connection.text;
 		Yaast.Sandbox.appConfig.config.lastInstanceURL = section[e.sectionIndex].getItemAt(e.itemIndex).url.text;
@@ -382,17 +384,11 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 
 	var destroyConfiguration = function destroyConfiguration() {
 		// Delete events Listeners
-		if (privateAddButton.press != null) {
-			privateAddButton.removeEventListener('click', privateAddButton.press);
-		}
-		delete privateAddButton.press;
-		if (publicAddButton.press != null) {
-			publicAddButton.removeEventListener('click', publicAddButton.press);
-		}
-		delete publicAddButton.press;
+		privateAddButton.removeEventListener('click', createNewInstance);
+		publicAddButton.removeEventListener('click', createNewInstance);
+		confInstanceListView.removeEventListener('itemclick', sectionClicked);
 		// Delete views
 		parentWindow.remove(confView);
-		confInstanceListView.removeEventListener('itemclick', sectionClicked);
 		confInstanceMainView.remove(confInstanceListView);
 		confInstanceListView = null;
 		confInstanceContainer.remove(confInstanceMainView);
@@ -403,7 +399,6 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		confInstanceContainer = null;
 		confView.remove(confViewTitle);
 		confViewTitle = null;
-		
 		confView = null;
 	};
 	var _self = {};
