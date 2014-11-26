@@ -82,10 +82,13 @@ var mainView = function mainView(parentWindow, userName) {
 			Ti.API.info('TODO Public Workspace: ' + JSON.stringify(data));
 		}
 		var desc;
-		if (data.description.length > 50) {
-			desc = data.description.substr(0, 47) + "...";
+		if (data.description.length > 80) {
+			desc = data.description.substr(0, 77) + "...";
 		} else {
 			desc = data.description;
+		}
+		if (desc.length <= 0 && data.longdescription.lenght > 0) {
+				desc = data.longdescription.substr(3, 80) + "...";
 		}
 		var result = {
 			'title' : {

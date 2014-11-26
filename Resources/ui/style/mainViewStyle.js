@@ -162,12 +162,12 @@ var mainViewStyle = ( function() {
 				bindId : 'icon',
 				properties : {
 					layout : 'horizontal',
-					height : rowHeight,
+					height : rowHeight*2,
 					color : '#5679a4',
-					left : parseInt(_self.view.width) * 0.01,
+					left : parseInt(_self.view.width) * 0.02,
 					font : {
 						fontFamily : Yaast.FontAwesome.getFontFamily(),
-						fontSize : rowFontSize
+						fontSize : rowFontSize*2
 					},
 					textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER
 				}
@@ -175,29 +175,34 @@ var mainViewStyle = ( function() {
 				type : 'Ti.UI.Label',
 				bindId : 'title',
 				properties : {
+					width : '100%',
 					layout : 'horizontal',
 					color : '#FFFFFF',
 					font : {
 						fontFamily : 'Default',
 						fontSize : rowFontSize
 					},
-					left : parseInt(_self.view.width) * 0.03,
+					top : 0,
+					left : 0,
 					height : rowHeight,
-					textAlign : Ti.UI.TEXT_ALIGNMENT_LEFT
+					textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER
 				}
 			}, {
 				type : 'Ti.UI.Label',
 				bindId : 'description',
+				
 				properties : {
+					width : '100%',
 					layout : 'horizontal',
 					color : '#DDDDDD',
 					font : {
 						fontFamily : 'Default',
 						fontSize : rowFontSize * 0.8
 					},
-					right : parseInt(_self.view.width) * 0.01,
-					height : rowHeight,
-					textAlign : Ti.UI.TEXT_ALIGHNMENT_RIGHT
+					top : rowHeight,
+					right : 0,
+					height : rowHeight, 
+					textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER
 				}
 			}, {
 				type : 'Ti.UI.Label',
