@@ -2,6 +2,10 @@
 
 function downloadView(h, listWidgets, listOperators, workspaceName, userName, operatorsIdsByName, returnCallback) {
 
+	var IN_PROGRESS_COLOR = "#006100";
+	var ERROR_COLOR = "#610000";
+	var OK_COLOR = "#68FF42";
+
 	var _mainFolderName = Yaast.Sandbox.mainFolderName;
 	var _isApple = Yaast.API.HW.System.isApple();
 	var _fontSize = Yaast.API.UI.getDefaultFontSize();
@@ -271,34 +275,36 @@ function downloadView(h, listWidgets, listOperators, workspaceName, userName, op
 		_footer.show();
 		_self.add(_footer);
 
-		// Check List Resource from Wirecloud Desktop
-		_checkURLIcon.setColor("#006100");
+		// Query the list of resources used in this mashup to the Wirecloud Server
+		_checkURLIcon.setColor(IN_PROGRESS_COLOR);
 		var _conObject = require('/connections/appConnection');
 		_footer.addEventListener('click', _self.returnMain);
 		var _conA = _conObject.checkListResource(_widgetsToDownload.concat(_operatorsToDownload), function(checkResult) {
 			if (checkResult.value === true) {
 				_footer.setMessage(L('label_downloader_footer_error') + ' (' + checkResult.uri + ')');
-				_footer.setColor("#610000");
-				_checkURLIcon.setColor("#610000");
+				_footer.setColor(ERROR_COLOR);
+				_checkURLIcon.setColor(ERROR_COLOR);
 			} else {
-				_checkURLIcon.setColor("#68FF42");
-				_downWidgetsIcon.setColor("#006100");
+				_checkURLIcon.setColor(OK_COLOR);
 				_checkURLIcon.text = Yaast.FontAwesome.getCharCode("fa-check");
+				_downWidgetsIcon.setColor(IN_PROGRESS_COLOR);
+
 				_conA = _conObject.downloadListResource(_widgetsToDownload.concat(_operatorsToDownload), _widgetsToDownload.length,
 				    function(downResult) {
 					if (downResult.value == true) {
 						_footer.setMessage(L('label_downloader_footer_error_down') + ' ' + downResult.uri);
-						_footer.setColor("#610000");
-						_downWidgetsIcon.setColor("#610000");
+						_footer.setColor(ERROR_COLOR);
+						_downWidgetsIcon.setColor(ERROR_COLOR);
 						_downWidgetsIcon.text = Yaast.FontAwesome.getCharCode("fa-times-circle");
 					} else {
 						_footer.removeEventListener('click', _self.returnMain);
-						_downWidgetsIcon.setColor("#68FF42");
+						_downWidgetsIcon.setColor(OK_COLOR);
 						_downWidgetsIcon.text = Yaast.FontAwesome.getCharCode("fa-check");
-						_buildWidgetsIcon.setColor("#68FF42");
-						_buildWidgetsIcon.text = Yaast.FontAwesome.getCharCode("fa-check");
-						_footer.setColor("#68FF42");
+						_buildWidgetsIcon.setColor(IN_PROGRESS_COLOR);
 						createHTMLOperators(downResult.files);
+						_buildWidgetsIcon.setColor(OK_COLOR);
+						_buildWidgetsIcon.text = Yaast.FontAwesome.getCharCode("fa-check");
+						_footer.setColor(OK_COLOR);
 						_footer.hide();
 						// Load workspace
 						_self.funShowWorkspace();
