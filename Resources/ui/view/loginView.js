@@ -200,7 +200,7 @@ var loginView = function (parentWindow) {
                 top: parseInt(loginFormContainer.getHeight() * 0.25, 10),
                 keyboardType: Ti.UI.KEYBOARD_DEFAULT,
                 returnKeyType: Ti.UI.RETURNKEY_DEFAULT,
-                hintText: "Nombre de usuario"
+                hintText: L("label_username")
             }
         ));
 
@@ -212,7 +212,7 @@ var loginView = function (parentWindow) {
                 passwordMask: true,
                 keyboardType: Ti.UI.KEYBOARD_DEFAULT,
                 returnKeyType: Ti.UI.RETURNKEY_DONE,
-                hintText: "Contraseña"
+                hintText: L("label_password")
             }
         ));
         returnPassTField = function returnPassTField() {

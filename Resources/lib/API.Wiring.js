@@ -40,7 +40,23 @@ function platform(workspaceInfo) {
 	// Name of Workspace
 	_self.name =  _tempInfoWorkspace.name;
 	_self.id = _tempInfoWorkspace.id;
-	
+
+	// Widget size and position. Relevant information
+	var layoutInfo, columnWidth, rowHeight;
+	if (_self.preferences.baselayout != null) {
+		layoutInfo = JSON.parse(_self.preferences.baselayout.value);	
+	} else {
+		layoutInfo = {'type': 'columnlayout', 'columns': 20, 'cellheight': 13};
+	}
+
+	if (layoutInfo.type === 'gridlayout') {
+		columnWidth = Yaast.API.UI.getPlatformWidth() / layoutInfo.columns;
+		rowHeight = Yaast.API.UI.getPlatformHeight() / layoutInfo.rows;
+	} else {
+		columnWidth = Yaast.API.UI.getPlatformWidth() / layoutInfo.columns;
+		rowHeight = layoutInfo.cellheight;
+	}
+
 	// Loop through all operators in use for this Workspace and update preferences
 	for (var _i in _tempInfoWorkspace.wiring.operators) {
 		_self.operatorsInUseById[_i] = _operatorsByFullName[_tempInfoWorkspace.wiring.operators[_i].name];
@@ -67,10 +83,10 @@ function platform(workspaceInfo) {
 			_widgetsInUseInThisTabById[iwidgets[_i].id] = {
 			    meta: _metaInfo,    				// widget information
 			    dimensions: {                       // widget dimensions
-			    	top: iwidgets[_i].top,
-			    	left: iwidgets[_i].left,
-			    	width: iwidgets[_i].width,
-			    	height: iwidgets[_i].height
+			    	top: iwidgets[_i].top * rowHeight,
+			    	left: iwidgets[_i].left * columnWidth,
+			    	width: iwidgets[_i].width * columnWidth,
+			    	height: iwidgets[_i].height * rowHeight,
 			    }
 			};
 			_self.widgetsInUseById[iwidgets[_i].id] = _metaInfo;
@@ -81,7 +97,7 @@ function platform(workspaceInfo) {
 	};
 
 	// Parse Tabs
-	for (var _i in _tempInfoWorkspace.tabs) {
+	for (var _i = 0; _i <_tempInfoWorkspace.tabs.length; _i++) {
 		var _widArray = parseIwidgets(_tempInfoWorkspace.tabs[_i].iwidgets);
 		var _blocked = false;
 		for (var _j in _widArray){
