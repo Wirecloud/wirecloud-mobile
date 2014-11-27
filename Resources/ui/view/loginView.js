@@ -336,9 +336,10 @@ var loginView = function (parentWindow) {
 	    }
 
 	    // Config panel
-	    if (configurationView) {
-			configurationView.destroy();
-		}
+	    //if (configurationView) {
+	    	//Ti.API.warn(configurationView);
+			//configurationView.destroy();
+		//}
 
 	   	// Formulario de Login
 	   	destroyForm();

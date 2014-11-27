@@ -400,12 +400,16 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		confView.remove(confViewTitle);
 		confViewTitle = null;
 		confView = null;
+		theme = null;
+		_self = null;
 	};
 	var _self = {};
-	_self.destroy = function destroy() {
+	//_self.destroy = function destroy() {
 		// Delete all view configuration
-		destroyConfiguration();
-	};
+		// destroyConfiguration();
+		// theme = null;
+		// _self = null;
+	//};
 	createConfiguration();
 	return _self;
 };
