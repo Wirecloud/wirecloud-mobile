@@ -61,14 +61,14 @@ var loginViewStyle = (function() {
     	// TODO check this image in retina
         image: (Yaast.API.HW.System.isApple()) ? Ti.Filesystem.getResourcesDirectory()  + 'images/logo_tab.png' : '../../images/logo_tab.png',
         width: parseInt(((_self.view.width / 2) - ((_self.view.width * 4) / 100)), 10),
-        left: '2%',
+        left: parseInt(_self.view.width * 0.02, 10), //'2%',
         enableZoomControls: false, 
         touchEnabled: false
     };
 
     _self.systemLabel = {
-        top: '1%',
-        left: '2%',
+        top: parseInt(_self.view.width * 0.01), //'1%',
+        left: parseInt(_self.view.width * 0.02), //'2%',
         height: Yaast.API.UI.getDefaultRowHeight(),
         text: _os + ' ' + Yaast.API.HW.System.getVersion() + _version,
         textAlign: Ti.UI.TEXT_ALIGNMENT_LEFT,
@@ -83,7 +83,7 @@ var loginViewStyle = (function() {
   		message: 'Checking Authorization',
   		style: (Yaast.API.HW.System.isApple()) ? Ti.UI.iPhone.ActivityIndicatorStyle.BIG : Ti.UI.ActivityIndicatorStyle.BIG_DARK,
   		top: parseInt((_self.view.height/2)-(Yaast.API.UI.getDefaultRowHeight()/2), 10),
-  		right:'7%',
+  		right: parseInt(_self.view.width * 0.07, 10), //'7%',
   		color: _fontColor,
         font : {
             fontSize : parseInt((Ti.Platform.displayCaps.platformHeight*5)/100, 10),
@@ -108,9 +108,9 @@ var loginViewStyle = (function() {
     };
 
     _self.inputTextField = {
-        width: '90%',
-        left: '5%',
-        height: '20%',
+        width: '90%', //,parseInt(_self.containerView.width * 0.9, 10)
+        left: '5%', //,parseInt(_self.containerView.width * 0.05, 10)
+        height: '20%', //,parseInt(_self.containerView.heigh * 0.2, 10)
         color: '#354B5D',
         backgroundColor: '#FFFFFF',
         borderRadius: 5,
