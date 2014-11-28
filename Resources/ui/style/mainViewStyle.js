@@ -162,7 +162,7 @@ var mainViewStyle = ( function() {
 				bindId : 'icon',
 				properties : {
 					layout : 'horizontal',
-					height : rowHeight*2,
+					height : rowHeight*1.75,
 					color : '#5679a4',
 					left : parseInt(_self.view.width) * 0.02,
 					font : {
@@ -184,7 +184,7 @@ var mainViewStyle = ( function() {
 					},
 					top : 0,
 					left : 0,
-					height : rowHeight,
+					height : rowHeight*0.875,
 					textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER
 				}
 			}, {
@@ -199,9 +199,9 @@ var mainViewStyle = ( function() {
 						fontFamily : 'Default',
 						fontSize : rowFontSize * 0.8
 					},
-					top : rowHeight,
+					top : rowHeight*0.875,
 					right : 0,
-					height : rowHeight, 
+					height : rowHeight*0.875, 
 					textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER
 				}
 			}, {
