@@ -268,21 +268,23 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 				dialog.addEventListener('click', dialog.press);
 				dialog.show();
 			} else {
-				if (e.sectionIndex == 1) {
-					// Update instance in the public section
-					publicSection.updateItemAt(e.itemIndex, {
-						connection : {text : editInstanceName.value}, url : {text : editInstanceURL.value}
-					});
-					section.push(publicSection);
-				} else {
-					// Update instance in the private section
-					privateSection.updateItemAt(e.itemIndex, {
-						connection : {text : editInstanceName.value}, url : {text : editInstanceURL.value}
-					});
-					section.push(privateSection);
-				}
-				// TODO: Update also the instance to the personal archive or db
-				destroy();
+				editInstance.animate({duration: 500, delay: 0, opacity: 0}, function() {
+					if (e.sectionIndex == 1) {
+						// Update instance in the public section
+						publicSection.updateItemAt(e.itemIndex, {
+							connection : {text : editInstanceName.value}, url : {text : editInstanceURL.value}
+						});
+						section.push(publicSection);
+					} else {
+						// Update instance in the private section
+						privateSection.updateItemAt(e.itemIndex, {
+							connection : {text : editInstanceName.value}, url : {text : editInstanceURL.value}
+						});
+						section.push(privateSection);
+					}
+					// TODO: Update also the instance to the personal archive or db
+					destroy();
+				});	
 			}
 		};
 		// Method for the listener of Close Button
