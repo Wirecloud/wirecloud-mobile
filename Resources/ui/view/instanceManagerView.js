@@ -30,7 +30,9 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 	    editInstanceDoneButton,
 	    editInstanceCloseButton,
 	    publicSection,
-	    privateSection;
+	    privateSection,
+	    headerPublic,
+	    headerPrivate;
 	    
 	var section = []; /* Array of sections */
 	
@@ -52,13 +54,15 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 	
 	/* Method to select an instance for use */
 	var selectInstance = function selectInstance(e) {
-		logo.setOpacity(1);
-		systemLabel.setOpacity(1);
-		Yaast.Sandbox.currentURL = section[e.sectionIndex].getItemAt(e.itemIndex).url.text;
-		Yaast.Sandbox.appConfig.config.lastInstanceName = section[e.sectionIndex].getItemAt(e.itemIndex).connection.text;
-		Yaast.Sandbox.appConfig.config.lastInstanceURL = section[e.sectionIndex].getItemAt(e.itemIndex).url.text;
-		formCallback();
-		destroyConfiguration();
+		confView.animate({duration: 500, delay: 0, opacity: 0}, function(){
+			logo.setOpacity(1);
+			systemLabel.setOpacity(1);
+			Yaast.Sandbox.currentURL = section[e.sectionIndex].getItemAt(e.itemIndex).url.text;
+			Yaast.Sandbox.appConfig.config.lastInstanceName = section[e.sectionIndex].getItemAt(e.itemIndex).connection.text;
+			Yaast.Sandbox.appConfig.config.lastInstanceURL = section[e.sectionIndex].getItemAt(e.itemIndex).url.text;
+			formCallback();
+			destroyConfiguration();
+		});
 	};
 	
 	/* Method to delete an instance */
@@ -333,7 +337,7 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 
 		// Private Instances Section
 		privateSection = Ti.UI.createListSection();
-		var headerPrivate = Ti.UI.createView(theme.headerView);
+		headerPrivate = Ti.UI.createView(theme.headerView);
 		// Add section title
 		headerPrivate.add(Ti.UI.createLabel(Yaast.MergeObject(theme.headerViewLabel, {
 			text : 'Private'
@@ -355,7 +359,7 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 
 		// Public Instances Section
 		publicSection = Ti.UI.createListSection();
-		var headerPublic = Ti.UI.createView(theme.headerView);
+		headerPublic = Ti.UI.createView(theme.headerView);
 		// Add section title
 		headerPublic.add(Ti.UI.createLabel(Yaast.MergeObject(theme.headerViewLabel, {
 			text : 'Public'
