@@ -161,21 +161,23 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 				dialog.addEventListener('click', dialog.press);
 				dialog.show();
 			} else {
-				// TODO: Add also the instance to the personal archive or db
-				if (button.yesPublic) {
-					// Add instance to publics
-					publicSection.appendItems([{
-						connection : {text : newInstanceName.value}, url : {text : newInstanceURL.value}
-					}]);
-					section.push(publicSection);
-				} else {
-					// Add instance to privates
-					privateSection.appendItems([{
-						connection : {text : newInstanceName.value}, url : {text : newInstanceURL.value}
-					}]);
-					section.push(privateSection);
-				}
-				destroy();
+				newInstance.animate({duration: 500, delay: 0, opacity: 0}, function(){
+					// TODO: Add also the instance to the personal archive or db
+					if (button.yesPublic) {
+						// Add instance to publics
+						publicSection.appendItems([{
+							connection : {text : newInstanceName.value}, url : {text : newInstanceURL.value}
+						}]);
+						section.push(publicSection);
+					} else {
+						// Add instance to privates
+						privateSection.appendItems([{
+							connection : {text : newInstanceName.value}, url : {text : newInstanceURL.value}
+						}]);
+						section.push(privateSection);
+					}
+					destroy();
+				});
 			}
 		};
 		// Method for the listener of Close Button
