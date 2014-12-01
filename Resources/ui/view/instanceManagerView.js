@@ -43,19 +43,27 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 	/* Method to load public instance's list */
 	var loadPublicInstances = function loadPublicInstances() {
 		if (publicInstFile.exists()) {
-			Ti.API.warn("Cargando public...");
 			publicItems = JSON.parse(Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'w4tPublicInst').read().toString());
-			Ti.API.warn("Public cargado");
 		} else {
-			Ti.API.warn("Creando publics...");
-			// TODO: Load info from archive or db
 			publicItems = [
 				{ template: 'no_edit_template', connection : {text : 'Wirecloud CoNWeT'}, url : {text : 'https://wirecloud.conwet.fi.upm.es/'}, id : {text : '1'} },
 				{ template: 'no_edit_template', connection : {text : 'Mashups Fi Lab 2'}, url : {text : 'http://wirecloud2.conwet.fi.upm.es/'}, id : {text : '2'} }
 			];
 			// Save configuration
 			publicInstFile.write(JSON.stringify(publicItems));
-			Ti.API.warn("Publics creado");
+		}
+	};
+	
+	/* Method to load private instance's list */
+	var loadPrivateInstances = function loadPrivateInstances() {
+		if (privateInstFile.exists()) {
+			privateItems = JSON.parse(Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'w4tPrivateInst').read().toString());
+		} else {
+			privateItems = [
+				{ connection : {text : 'Wirecloud CoNWeT'}, url : {text : 'https://wirecloud.conwet.fi.upm.es/'}, id : {text : '1'} }
+			];
+			// Save configuration
+			privateInstFile.write(JSON.stringify(privateItems));
 		}
 	};
 	
@@ -378,11 +386,8 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		privateAddButton.addEventListener('click', createNewInstance);
 		headerPrivate.add(privateAddButton);
 		privateSection.setHeaderView(headerPrivate);
-		// Add predefine public instances
-		// TODO: Load info from archive or db
-		privateSection.setItems([{
-			connection : {text : 'Wirecloud CoNWeT'}, url : {text : 'https://wirecloud.conwet.fi.upm.es/'}, id : {text : '1'}
-		}]);
+		loadPrivateInstances();
+		privateSection.setItems(privateItems);
 		section.push(privateSection);
 		
 		// Public Instances Section
@@ -399,7 +404,6 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		publicAddButton.addEventListener('click', createNewInstance);
 		headerPublic.add(publicAddButton);
 		publicSection.setHeaderView(headerPublic);
-		// Add predefine public instances
 		loadPublicInstances();
 		publicSection.setItems(publicItems);
 		section.push(publicSection);
