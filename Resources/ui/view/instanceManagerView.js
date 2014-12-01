@@ -68,7 +68,6 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 	};
 	
 	var sectionClicked = function sectionClicked(e) {
-		/* Testing Purpose: Ti.API.warn('Pressed id: ' + e.bindId); */
 		// When edit button is clicked
 		if (e.bindId != null && e.bindId == 'edit_button') { 
 			editInstanceMethod(e);
@@ -109,6 +108,17 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 			if (e.index == 1) {
 				// TODO: Delete from the personal archive or db */
 				myEvent.section.deleteItemsAt(myEvent.itemIndex, 1);
+				if (myEvent.sectionIndex == 0) { //Private section
+					// Delete item in privateItems
+					privateItems.splice(myEvent.itemIndex, 1);
+					// Update file
+					privateInstFile.write(JSON.stringify(privateItems), false);
+				} else  { //Public section
+					// Delete item in publicItems
+					publicItems.splice(myEvent.itemIndex, 1);
+					// Update file
+					publicInstFile.write(JSON.stringify(publicItems), false);
+				}
 			}
 			dialog.hide();
 			// Destroy dialog
