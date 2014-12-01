@@ -32,9 +32,32 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 	    publicSection,
 	    privateSection,
 	    headerPublic,
-	    headerPrivate;
-	    
+	    headerPrivate,
+	    publicItems = [],
+	    privateItems = [];
+	   
+	var publicInstFile = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'w4tPublicInst');
+	var privateInstFile = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'w4tPrivateInst');    
 	var section = []; /* Array of sections */
+	
+	/* Method to load public instance's list */
+	var loadPublicInstances = function loadPublicInstances() {
+		if (publicInstFile.exists()) {
+			Ti.API.warn("Cargando public...");
+			publicItems = JSON.parse(Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'w4tPublicInst').read().toString());
+			Ti.API.warn("Public cargado");
+		} else {
+			Ti.API.warn("Creando publics...");
+			// TODO: Load info from archive or db
+			publicItems = [
+				{ template: 'no_edit_template', connection : {text : 'Wirecloud CoNWeT'}, url : {text : 'https://wirecloud.conwet.fi.upm.es/'}, id : {text : '1'} },
+				{ template: 'no_edit_template', connection : {text : 'Mashups Fi Lab 2'}, url : {text : 'http://wirecloud2.conwet.fi.upm.es/'}, id : {text : '2'} }
+			];
+			// Save configuration
+			publicInstFile.write(JSON.stringify(publicItems));
+			Ti.API.warn("Publics creado");
+		}
+	};
 	
 	var sectionClicked = function sectionClicked(e) {
 		/* Testing Purpose: Ti.API.warn('Pressed id: ' + e.bindId); */
@@ -355,13 +378,13 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		privateAddButton.addEventListener('click', createNewInstance);
 		headerPrivate.add(privateAddButton);
 		privateSection.setHeaderView(headerPrivate);
-		// Add predefine instances
+		// Add predefine public instances
 		// TODO: Load info from archive or db
 		privateSection.setItems([{
 			connection : {text : 'Wirecloud CoNWeT'}, url : {text : 'https://wirecloud.conwet.fi.upm.es/'}, id : {text : '1'}
 		}]);
 		section.push(privateSection);
-
+		
 		// Public Instances Section
 		publicSection = Ti.UI.createListSection();
 		headerPublic = Ti.UI.createView(theme.headerView);
@@ -376,13 +399,11 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		publicAddButton.addEventListener('click', createNewInstance);
 		headerPublic.add(publicAddButton);
 		publicSection.setHeaderView(headerPublic);
-		// Add predefine instances
-		// TODO: Load info from archive or db
-		publicSection.setItems([
-			{ template: 'no_edit_template', connection : {text : 'Wirecloud CoNWeT'}, url : {text : 'https://wirecloud.conwet.fi.upm.es/'}, id : {text : '1'} },
-			{ template: 'no_edit_template', connection : {text : 'Mashups Fi Lab 2'}, url : {text : 'http://wirecloud2.conwet.fi.upm.es/'}, id : {text : '2'} }
-		]);
+		// Add predefine public instances
+		loadPublicInstances();
+		publicSection.setItems(publicItems);
 		section.push(publicSection);
+		
 		// Apply sections
 		confInstanceListView.sections = section;
 		// Add listener for the ListView
