@@ -334,6 +334,7 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		confInstanceListView = Ti.UI.createListView({
 			templates : {
 				'template' : theme.instanceListViewTemplate,
+				'no_edit_template' : theme.instanceListViewTemplateWithoutButtons
 			},
 			defaultItemTemplate : 'template'
 		});
@@ -378,8 +379,8 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		// Add predefine instances
 		// TODO: Load info from archive or db
 		publicSection.setItems([
-			{ connection : {text : 'Wirecloud CoNWeT'}, url : {text : 'https://wirecloud.conwet.fi.upm.es/'}, id : {text : '1'} },
-			{ connection : {text : 'Mashups Fi Lab 2'}, url : {text : 'http://wirecloud2.conwet.fi.upm.es/'}, id : {text : '2'} }
+			{ template: 'no_edit_template', connection : {text : 'Wirecloud CoNWeT'}, url : {text : 'https://wirecloud.conwet.fi.upm.es/'}, id : {text : '1'} },
+			{ template: 'no_edit_template', connection : {text : 'Mashups Fi Lab 2'}, url : {text : 'http://wirecloud2.conwet.fi.upm.es/'}, id : {text : '2'} }
 		]);
 		section.push(publicSection);
 		// Apply sections

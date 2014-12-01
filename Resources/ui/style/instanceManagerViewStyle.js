@@ -128,7 +128,50 @@ var loginViewStyle = ( function() {
 		/*
 		 * Templates for List View
 		 */
-		/* Template with Edit-Button */
+		/* Template without Buttons */
+		_self.instanceListViewTemplateWithoutButtons = {
+			childTemplates : [{
+				type : 'Ti.UI.Label',
+				bindId : 'connection',
+				properties : {
+					layout : 'horizontal',
+					color : _background,
+					font : {
+						fontFamily : _font,
+						fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 5.5) / 100, 10)
+					},
+					left : parseInt(_self.instanceMainView.width * 0.05, 10),
+					width: parseInt(_self.instanceMainView.width * 0.43, 10),
+					textAlign : Ti.UI.TEXT_ALIGNMENT_LEFT
+				}
+			}, {
+				type : 'Ti.UI.Label',
+				bindId : 'url',
+				properties : {
+					layout : 'horizontal',
+					color : _background,
+					font : {
+						fontFamily : Yaast.FontAwesome.getFontFamily(),
+						fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 3) / 100, 10)
+					},
+					right: parseInt(_self.instanceMainView.width * 0.1, 10), 
+					width: parseInt(_self.instanceMainView.width * 0.44, 10),
+					textAlign : Ti.UI.TEXT_ALIGNMENT_LEFT
+				}
+			}, {
+				type : 'Ti.UI.Label',
+				bindId : 'id',
+				properties : {
+					visible : false
+				}
+			}],
+			properties : {
+				backgroundColor : '#FFFFFF',
+				selectedBackgroundColor : _background3
+			},
+			events : {}
+		};
+		
 		_self.instanceListViewTemplate = {
 			childTemplates : [{
 				type : 'Ti.UI.Label',
@@ -200,6 +243,26 @@ var loginViewStyle = ( function() {
 				selectedBackgroundColor : _background3
 			},
 			events : {}
+		};
+		
+		/* Input Text Field Settings */
+		_self.inputTextField = {
+			color : '#354B5D',
+			backgroundColor : '#FFFFFF',
+			borderRadius : 5,
+			borderWidth : 1,
+			borderColor : _background3,
+			paddingLeft : 5,
+			borderStyle : Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
+			autocapitalization : Titanium.UI.TEXT_AUTOCAPITALIZATION_NONE,
+			enableReturnKey : false,
+			softKeyboardOnFocus : (Yaast.API.HW.System.isApple()) ? null : Ti.UI.Android.SOFT_KEYBOARD_SHOW_ON_FOCUS,
+			autocorrect : false,
+			font : {
+				fontSize : parseInt(Yaast.API.UI.getDefaultFontSize()) * 1.5,
+				/* fontSize: parseInt((Ti.Platform.displayCaps.platformHeight*3.5)/100, 10),*/
+				fontFamily : _font
+			}
 		};
 		
 		/* Input Text Field Settings */
