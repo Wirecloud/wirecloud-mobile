@@ -10,7 +10,7 @@
 
 var loginView = function (parentWindow) {
 
-	// Variables Comunes
+	// Variables
     var theme = require('ui/style/loginViewStyle'),
     	activitySession, logo = Ti.UI.createImageView(theme.logo),
     	systemLabel = Ti.UI.createLabel(theme.systemLabel), _self = {
@@ -23,7 +23,7 @@ var loginView = function (parentWindow) {
     // Variables para la configuración
     var configurationView;
 
-    // Variables para el Formulario de Login
+    // Login Form variables
     var loginFormContainer, loginFormUserTextField, loginFormPasswordTextField, 
     	loginFormSubmitButton, loginFormConfigButton, loginFormInstanceName,
     	loginFormInstanceURL, loginConfigButton;
@@ -53,7 +53,7 @@ var loginView = function (parentWindow) {
     var showMessageError = function showMessageError(string) {
         var dialog = Ti.UI.createAlertDialog({
             cancel : 0,
-            buttonNames : ['Aceptar'],
+            buttonNames : ['Ok'],
             message : string,
             title : '-- W4T --'
         });
@@ -83,6 +83,7 @@ var loginView = function (parentWindow) {
                 activitySession = Ti.UI.createActivityIndicator(theme.spinner);
                 _self.view.add(activitySession);
                 activitySession.show();
+                // Could this really happend now?
                 if (currentURL == null) {
                 	showMessageError('Seleccione una intancia Wirecloud en el panel de configuración');
                 	return;
@@ -166,7 +167,7 @@ var loginView = function (parentWindow) {
     	var instanceURL, instanceName;
         loginFormContainer = Ti.UI.createView(Yaast.MergeObject(
         	theme.containerView, {
-        		right: '2%'
+        		right: parseInt(_self.view.width * 0.02, 10)
         	}
         ));
 
@@ -175,7 +176,7 @@ var loginView = function (parentWindow) {
 			instanceURL = Yaast.Sandbox.defaultURL;
 		} else {
 			instanceName = Yaast.Sandbox.appConfig.config.lastInstanceName;
-			instanceURL =Yaast.Sandbox.appConfig.config.lastInstanceURL;
+			instanceURL = Yaast.Sandbox.appConfig.config.lastInstanceURL;
 		}
 		loginFormInstanceName = Ti.UI.createLabel(Yaast.MergeObject(
 			theme.instanceName, {
@@ -200,7 +201,7 @@ var loginView = function (parentWindow) {
                 top: parseInt(loginFormContainer.getHeight() * 0.25, 10),
                 keyboardType: Ti.UI.KEYBOARD_DEFAULT,
                 returnKeyType: Ti.UI.RETURNKEY_DEFAULT,
-                hintText: "Nombre de usuario"
+                hintText: L("label_username")
             }
         ));
 
@@ -212,7 +213,7 @@ var loginView = function (parentWindow) {
                 passwordMask: true,
                 keyboardType: Ti.UI.KEYBOARD_DEFAULT,
                 returnKeyType: Ti.UI.RETURNKEY_DONE,
-                hintText: "Contraseña"
+                hintText: L("label_password")
             }
         ));
         returnPassTField = function returnPassTField() {
@@ -249,7 +250,7 @@ var loginView = function (parentWindow) {
 		loginFormSubmitButton = Ti.UI.createButton(Yaast.MergeObject(
 			theme.button, {
 				title: 'Log In',
-                width: '30%',
+                width: parseInt(loginFormContainer.width * 0.3, 10), //'30%',
                 bottom: parseInt((loginFormContainer.getHeight()*5)/100)
 			}
 		));
@@ -336,9 +337,10 @@ var loginView = function (parentWindow) {
 	    }
 
 	    // Config panel
-	    if (configurationView) {
-			configurationView.destroy();
-		}
+	    //if (configurationView) {
+	    	//Ti.API.warn(configurationView);
+			//configurationView.destroy();
+		//}
 
 	   	// Formulario de Login
 	   	destroyForm();

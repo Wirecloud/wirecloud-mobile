@@ -30,7 +30,9 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 	    editInstanceDoneButton,
 	    editInstanceCloseButton,
 	    publicSection,
-	    privateSection;
+	    privateSection,
+	    headerPublic,
+	    headerPrivate;
 	    
 	var section = []; /* Array of sections */
 	
@@ -52,11 +54,15 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 	
 	/* Method to select an instance for use */
 	var selectInstance = function selectInstance(e) {
-		Yaast.Sandbox.currentURL = section[e.sectionIndex].getItemAt(e.itemIndex).url.text;
-		Yaast.Sandbox.appConfig.config.lastInstanceName = section[e.sectionIndex].getItemAt(e.itemIndex).connection.text;
-		Yaast.Sandbox.appConfig.config.lastInstanceURL = section[e.sectionIndex].getItemAt(e.itemIndex).url.text;
-		formCallback();
-		destroyConfiguration();
+		confView.animate({duration: 500, delay: 0, opacity: 0}, function(){
+			logo.setOpacity(1);
+			systemLabel.setOpacity(1);
+			Yaast.Sandbox.currentURL = section[e.sectionIndex].getItemAt(e.itemIndex).url.text;
+			Yaast.Sandbox.appConfig.config.lastInstanceName = section[e.sectionIndex].getItemAt(e.itemIndex).connection.text;
+			Yaast.Sandbox.appConfig.config.lastInstanceURL = section[e.sectionIndex].getItemAt(e.itemIndex).url.text;
+			formCallback();
+			destroyConfiguration();
+		});
 	};
 	
 	/* Method to delete an instance */
@@ -68,14 +74,18 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 			message : 'Do you wanna delete it?',
 			title : 'Wirecloud 4 Tablet'
 		});
-		dialog.addEventListener('click', function(e) {
+		dialog.press = function press(e) {
 			if (e.index == 1) {
 				// TODO: Delete from the personal archive or db */
 				myEvent.section.deleteItemsAt(myEvent.itemIndex, 1);
 			}
 			dialog.hide();
+			// Destroy dialog
+			dialog.removeEventListener('click', dialog.press);
+			delete dialog.press;
 			dialog = null;
-		});
+		};
+		dialog.addEventListener('click', dialog.press);
 		dialog.show();
 	};
 	
@@ -83,20 +93,26 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 	var createNewInstance = function createNewInstance(e) {
 		var button = e.source;
 		// newInstance main view
-		newInstance = Ti.UI.createView(Yaast.MergeObject(theme.containerView, {
+		newInstance = Ti.UI.createView(Yaast.MergeObject(theme.instanceContainerView, {
 			left : parseInt(theme.view.width * 0.2, 10),
 			width : parseInt(theme.view.width * 0.6, 10)
 		}));
 		// Text Field for the Instance Name
 		newInstanceName = Ti.UI.createTextField(Yaast.MergeObject(theme.inputTextField, {
-			top : parseInt(newInstance.getHeight() * 0.15, 10),
-			keyboardType : Ti.UI.KEYBOARD_DEFAULT,
-			returnKeyType : Ti.UI.RETURNKEY_NEXT,
-			hintText : "Instance Name"
+			width: parseInt(newInstance.width * 0.9, 10),
+			left: parseInt(newInstance.width * 0.05, 10),
+			height: parseInt(newInstance.height * 0.2, 10),
+			top: parseInt(newInstance.height * 0.15, 10),
+			keyboardType: Ti.UI.KEYBOARD_DEFAULT,
+			returnKeyType: Ti.UI.RETURNKEY_NEXT,
+			hintText: "Instance Name"
 		}));
 		// Text Field for the Instance Url
 		newInstanceURL = Ti.UI.createTextField(Yaast.MergeObject(theme.inputTextField, {
 			top : parseInt(newInstance.getHeight() * 0.4, 10),
+			width: parseInt(newInstance.width * 0.9, 10),
+			left: parseInt(newInstance.width * 0.05, 10),
+			height: parseInt(newInstance.height * 0.2, 10),
 			keyboardType : Ti.UI.KEYBOARD_URL,
 			returnKeyType : Ti.UI.RETURNKEY_DONE,
 			hintText : "Instance URL"
@@ -119,15 +135,13 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		newInstanceDoneButton = Ti.UI.createButton(Yaast.MergeObject(theme.button, {
 			title : 'Done',
 			left : parseInt(newInstance.width * 0.05, 10),
-			bottom : parseInt(newInstance.width * 0.15, 10),
-			fontSize : parseInt(Yaast.API.UI.getDefaultFontSize()) * 2
+			bottom : parseInt(newInstance.width * 0.15, 10)
 		}));
 		//Add Back button
 		newInstanceCloseButton = Ti.UI.createButton(Yaast.MergeObject(theme.button, {
 			title : 'Back',
 			right : parseInt(newInstance.width * 0.05, 10),
-			bottom : parseInt(newInstance.width * 0.15, 10),
-			fontSize : parseInt(Yaast.API.UI.getDefaultFontSize()) * 2
+			bottom : parseInt(newInstance.width * 0.15, 10)
 		}));
 		// Method for the listener of Done Button
 		newInstanceDoneButton.press = function press() {
@@ -139,51 +153,38 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 					message : 'There is no name or URL',
 					title : '-- W4T --'
 				});
-				dialog.addEventListener('click', function() {
+				dialog.press = function press() {
 					dialog.hide();
+					dialog.removeEventListener('click', dialog.press);
 					dialog = null;
-				});
+				};
+				dialog.addEventListener('click', dialog.press);
 				dialog.show();
 			} else {
-				// TODO: Add also the instance to the personal archive or db
-				if (button.yesPublic) {
-					// Add instance to publics
-					publicSection.appendItems([{
-						connection : {text : newInstanceName.value}, url : {text : newInstanceURL.value}
-					}]);
-					section.push(publicSection);
-				} else {
-					// Add instance to privates
-					privateSection.appendItems([{
-						connection : {text : newInstanceName.value}, url : {text : newInstanceURL.value}
-					}]);
-					section.push(privateSection);
-				}
-				// TODO: Improve delete view because the user can see it
-				// Remove view and listeners
-				parentWindow.remove(newInstance);
-				newInstance.removeEventListener('click', createNewInstance);
-				newInstanceDoneButton.removeEventListener('click', newInstanceDoneButton.press);
-				newInstanceCloseButton.removeEventListener('click', newInstanceCloseButton.press);
-				newInstanceName.removeEventListener('return', newInstanceName.getText);
-				newInstanceURL.removeEventListener('return', newInstanceURL.getText);
-				newInstance.remove(newInstanceDoneButton);
-				newInstance.remove(newInstanceCloseButton);
-				newInstance.remove(newInstanceName);
-				newInstance.remove(newInstanceURL);
-				newInstanceDoneButton = null;
-				newInstanceCloseButton = null;
-				newInstanceName = null;
-				newInstanceURL = null;
-				
-				newInstance = null;
+				newInstance.animate({duration: 500, delay: 0, opacity: 0}, function(){
+					// TODO: Add also the instance to the personal archive or db
+					if (button.yesPublic) {
+						// Add instance to publics
+						publicSection.appendItems([{
+							connection : {text : newInstanceName.value}, url : {text : newInstanceURL.value}
+						}]);
+						section.push(publicSection);
+					} else {
+						// Add instance to privates
+						privateSection.appendItems([{
+							connection : {text : newInstanceName.value}, url : {text : newInstanceURL.value}
+						}]);
+						section.push(privateSection);
+					}
+					destroy();
+				});
 			}
 		};
 		// Method for the listener of Close Button
-		newInstanceCloseButton.press = function press() {
-			// Remove view and listeners
+		newInstanceCloseButton.press = function press(){ destroy(); };
+		// Destroy newInstance elements
+		function destroy() {
 			parentWindow.remove(newInstance);
-			newInstance.removeEventListener('click', createNewInstance);
 			newInstanceDoneButton.removeEventListener('click', newInstanceDoneButton.press);
 			newInstanceCloseButton.removeEventListener('click', newInstanceCloseButton.press);
 			newInstanceName.removeEventListener('return', newInstanceName.getText);
@@ -196,7 +197,6 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 			newInstanceCloseButton = null;
 			newInstanceName = null;
 			newInstanceURL = null;
-			
 			newInstance = null;
 		};
 		// Add listeners to the buttons
@@ -212,22 +212,24 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 	/* Method to edit instances */
 	var editInstanceMethod = function editInstanceMethod(e) {
 		// editInstance main view
-		editInstance = Ti.UI.createView(Yaast.MergeObject(theme.containerView, {
+		editInstance = Ti.UI.createView(Yaast.MergeObject(theme.instanceContainerView, {
 			left : parseInt(theme.view.width * 0.2, 10),
 			width : parseInt(theme.view.width * 0.6, 10)
 		}));
 		// Text Field for the Instance Name
 		editInstanceName = Ti.UI.createTextField(Yaast.MergeObject(theme.inputTextField, {
-			top : parseInt(editInstance.getHeight() * 0.15, 10),
-			keyboardType : Ti.UI.KEYBOARD_DEFAULT,
-			returnKeyType : Ti.UI.RETURNKEY_NEXT,
+			width: parseInt(editInstance.width * 0.9, 10),
+			left: parseInt(editInstance.width * 0.05, 10),
+			height: parseInt(editInstance.height * 0.2, 10),
+			top: parseInt(editInstance.height * 0.15, 10),
 			value : section[e.sectionIndex].getItemAt(e.itemIndex).connection.text
 		}));
 		// Text Field for the Instance Url
 		editInstanceURL = Ti.UI.createTextField(Yaast.MergeObject(theme.inputTextField, {
 			top : parseInt(editInstance.getHeight() * 0.4, 10),
-			keyboardType : Ti.UI.KEYBOARD_URL,
-			returnKeyType : Ti.UI.RETURNKEY_DONE,
+			width: parseInt(editInstance.width * 0.9, 10),
+			left: parseInt(editInstance.width * 0.05, 10),
+			height: parseInt(editInstance.height * 0.2, 10),
 			value : section[e.sectionIndex].getItemAt(e.itemIndex).url.text
 		}));
 		// Add Text Fields to the view
@@ -254,51 +256,42 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 				// Create dialog to alert that there is a empty text field
 				var dialog = Ti.UI.createAlertDialog({
 					cancel : 0,
-					buttonNames : ['Aceptar'],
+					buttonNames : ['Ok'],
 					message : 'There is no name or URL',
 					title : '-- W4T --'
 				});
-				dialog.addEventListener('click', function() {
+				dialog.press = function press() {
 					dialog.hide();
+					dialog.removeEventListener('click', dialog.press);
 					dialog = null;
-				});
+				};
+				dialog.addEventListener('click', dialog.press);
 				dialog.show();
 			} else {
-				if (e.sectionIndex == 1) {
-					// Update instance in the public section
-					publicSection.updateItemAt(e.itemIndex, {
-						connection : {text : editInstanceName.value}, url : {text : editInstanceURL.value}
-					});
-					section.push(publicSection);
-				} else {
-					// Update instance in the private section
-					privateSection.updateItemAt(e.itemIndex, {
-						connection : {text : editInstanceName.value}, url : {text : editInstanceURL.value}
-					});
-					section.push(privateSection);
-				}
-				// TODO: Update also the instance to the personal archive or db
-				// Remove view and listeners
-				parentWindow.remove(editInstance);
-				editInstance.removeEventListener('click', editInstanceMethod);
-				editInstanceDoneButton.removeEventListener('click', editInstanceDoneButton.press);
-				editInstanceCloseButton.removeEventListener('click', editInstanceCloseButton.press);
-				editInstance.remove(editInstanceDoneButton);
-				editInstance.remove(editInstanceCloseButton);
-				editInstance.remove(editInstanceName);
-				editInstance.remove(editInstanceURL);
-				editInstanceDoneButton = null;
-				editInstanceCloseButton = null;
-				editInstanceName = null;
-				editInstanceURL = null;
-				
-				editInstance = null;
+				editInstance.animate({duration: 500, delay: 0, opacity: 0}, function() {
+					if (e.sectionIndex == 1) {
+						// Update instance in the public section
+						publicSection.updateItemAt(e.itemIndex, {
+							connection : {text : editInstanceName.value}, url : {text : editInstanceURL.value}
+						});
+						section.push(publicSection);
+					} else {
+						// Update instance in the private section
+						privateSection.updateItemAt(e.itemIndex, {
+							connection : {text : editInstanceName.value}, url : {text : editInstanceURL.value}
+						});
+						section.push(privateSection);
+					}
+					// TODO: Update also the instance to the personal archive or db
+					destroy();
+				});	
 			}
 		};
 		// Method for the listener of Close Button
-		editInstanceCloseButton.press = function press() {
+		editInstanceCloseButton.press = function press() { destroy(); };
+		// Delete editInstanceMethod elements
+		function destroy() {
 			parentWindow.remove(editInstance);
-			editInstance.removeEventListener('click', editInstanceMethod);
 			editInstanceDoneButton.removeEventListener('click', editInstanceDoneButton.press);
 			editInstanceCloseButton.removeEventListener('click', editInstanceCloseButton.press);
 			editInstance.remove(editInstanceDoneButton);
@@ -309,9 +302,8 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 			editInstanceCloseButton = null;
 			editInstanceName = null;
 			editInstanceURL = null;
-			
 			editInstance = null;
-		};
+		}
 		// Add listeners to buttons
 		editInstanceDoneButton.addEventListener('click', editInstanceDoneButton.press);
 		editInstanceCloseButton.addEventListener('click', editInstanceCloseButton.press);
@@ -326,24 +318,22 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 	var createConfiguration = function createConfiguration() {
 		// Create the main configuration view
 		confView = Ti.UI.createView(theme.view);
-		confViewTitle = Ti.UI.createLabel(theme.configurationFormTitle);
+		confViewTitle = Ti.UI.createLabel(theme.viewTitle);
 		confView.add(confViewTitle);
 		
 		// Create a Instance Container View
-		confInstanceContainer = Ti.UI.createView(theme.containerView);
-		confInstanceContainerTitle = Ti.UI.createLabel(theme.instanceTitle);
+		confInstanceContainer = Ti.UI.createView(theme.instanceContainerView);
+		confInstanceContainerTitle = Ti.UI.createLabel(theme.instanceContainerViewTitle);
 		confInstanceContainer.add(confInstanceContainerTitle);
 		confView.add(confInstanceContainer);
 
 		// Create Instaces Main View 
-		confInstanceMainView = Ti.UI.createView(theme.connectionView);
+		confInstanceMainView = Ti.UI.createView(theme.instanceMainView);
 		confInstanceContainer.add(confInstanceMainView);
-
 		// Create Instances List View: Define diferent style templates for items in the list view
 		confInstanceListView = Ti.UI.createListView({
 			templates : {
-				'template' : theme.connectionListViewTemplate,
-				'template_connected' : theme.connectionListViewTemplateConected
+				'template' : theme.instanceListViewTemplate,
 			},
 			defaultItemTemplate : 'template'
 		});
@@ -351,7 +341,7 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 
 		// Private Instances Section
 		privateSection = Ti.UI.createListSection();
-		var headerPrivate = Ti.UI.createView(theme.headerView);
+		headerPrivate = Ti.UI.createView(theme.headerView);
 		// Add section title
 		headerPrivate.add(Ti.UI.createLabel(Yaast.MergeObject(theme.headerViewLabel, {
 			text : 'Private'
@@ -373,7 +363,7 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 
 		// Public Instances Section
 		publicSection = Ti.UI.createListSection();
-		var headerPublic = Ti.UI.createView(theme.headerView);
+		headerPublic = Ti.UI.createView(theme.headerView);
 		// Add section title
 		headerPublic.add(Ti.UI.createLabel(Yaast.MergeObject(theme.headerViewLabel, {
 			text : 'Public'
@@ -402,17 +392,11 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 
 	var destroyConfiguration = function destroyConfiguration() {
 		// Delete events Listeners
-		if (privateAddButton.press != null) {
-			privateAddButton.removeEventListener('click', privateAddButton.press);
-		}
-		delete privateAddButton.press;
-		if (publicAddButton.press != null) {
-			publicAddButton.removeEventListener('click', publicAddButton.press);
-		}
-		delete publicAddButton.press;
+		privateAddButton.removeEventListener('click', createNewInstance);
+		publicAddButton.removeEventListener('click', createNewInstance);
+		confInstanceListView.removeEventListener('itemclick', sectionClicked);
 		// Delete views
 		parentWindow.remove(confView);
-		confInstanceListView.removeEventListener('itemclick', sectionClicked);
 		confInstanceMainView.remove(confInstanceListView);
 		confInstanceListView = null;
 		confInstanceContainer.remove(confInstanceMainView);
@@ -423,14 +407,17 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		confInstanceContainer = null;
 		confView.remove(confViewTitle);
 		confViewTitle = null;
-		
 		confView = null;
+		theme = null;
+		_self = null;
 	};
 	var _self = {};
-	_self.destroy = function destroy() {
+	//_self.destroy = function destroy() {
 		// Delete all view configuration
-		destroyConfiguration();
-	};
+		// destroyConfiguration();
+		// theme = null;
+		// _self = null;
+	//};
 	createConfiguration();
 	return _self;
 };

@@ -29,29 +29,35 @@ var loginViewStyle = ( function() {
 		    _fontColorGreen = "#00AA00",
 		    _fontColor = '#EBEBEB',
 		    _fontColorButton = '#354B5D';
-		// 1F3346
-
-		/* Main View Settings */
+		
+		/* Main Instance Manager View */
 		_self.view = {
 			top : 0,
 			left : 0,
 			backgroundColor : _background,
 			width : Yaast.API.UI.getPlatformWidth(),
 			height : Yaast.API.UI.getPlatformHeight() - Yaast.API.UI.getDefaultStatusBar(),
-			/* Size test */
+			// Size test
 			borderWidth : 1,
 			borderColor : _background3,
 		};
 		/* Update height in case there is a top height */
 		_self.view.height = Yaast.API.UI.getPlatformHeight() - _self.view.top;
-
-		/*
-		 *
-		 *  Generales
-		 *
-		 */
-		/* Container View Settings */
-		_self.containerView = {
+		
+		/* Main Instance Manager View Title */
+		_self.viewTitle = {
+			top : parseInt((_self.view.height * 2) / 100),
+			color : _fontColor,
+			textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER,
+			font : {
+				fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 9) / 100, 10), // 32
+				fontFamily : _font
+			},
+			text : 'Configuration'
+		};
+		
+		/* Instance Container View Settings */
+		_self.instanceContainerView = {
 			width : parseInt(_self.view.width * 0.9, 10), 
 			left : parseInt(_self.view.width * 0.05, 10),
 			height : parseInt(_self.view.height * 0.7, 10) ,
@@ -61,69 +67,11 @@ var loginViewStyle = ( function() {
 			borderColor : _background3,
 			backgroundColor	: _background2
 		};
-		/* Input Text Field Settings */
-		_self.inputTextField = {
-			width : '90%',
-			left : '5%',
-			height : '20%',
-			color : '#354B5D',
-			backgroundColor : '#FFFFFF',
-			borderRadius : 5,
-			borderWidth : 1,
-			borderColor : _background3,
-			paddingLeft : 5,
-			borderStyle : Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
-			autocapitalization : Titanium.UI.TEXT_AUTOCAPITALIZATION_NONE,
-			enableReturnKey : false,
-			softKeyboardOnFocus : (Yaast.API.HW.System.isApple()) ? null : Ti.UI.Android.SOFT_KEYBOARD_SHOW_ON_FOCUS,
-			autocorrect : false,
-			font : {
-				fontSize : parseInt(Yaast.API.UI.getDefaultFontSize()) * 1.5,
-				/* fontSize: parseInt((Ti.Platform.displayCaps.platformHeight*3.5)/100, 10),*/
-				fontFamily : _font
-			}
-		};
-		/* Button Settings */
-		_self.button = {
-			backgroundColor : _background3,
-			color : _fontColorButton,
-			borderRadius : 10,
-			borderWidth : 1,
-			paddingLeft : 5,
-			borderColor : _background,
-			textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER,
-			height : parseInt((Ti.Platform.displayCaps.platformHeight * 6) / 100, 10) + 15,
-			font : {
-				fontSize : _fontSize *2,
-				/* fontSize: parseInt((Ti.Platform.displayCaps.platformHeight*2.5)/100, 10),*/
-				fontFamily : _font
-			}
-		};
-
-		/* Configuration Form */
-		_self.configurationFormTitle = {
-			top : parseInt((_self.containerView.height * 2) / 100),
-			color : _fontColor,
-			textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER,
-			font : {
-				fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 9) / 100, 10), // 32
-				fontFamily : _font
-			},
-			text : 'Configuration'
-		};
-
-		// Configuration Form Instances
-
-		_self.connectionView = {
-			bottom : parseInt(_self.containerView.height * 0.1, 10),
-			height : parseInt(_self.containerView.height * 0.80, 10),
-			left : parseInt(_self.containerView.width * 0.03, 10),
-			width : parseInt(_self.containerView.width * 0.94, 10)
-		};
-
-		_self.instanceTitle = {
+		
+		/* Container View Title */
+		_self.instanceContainerViewTitle = {
 			top : 10,
-			left : parseInt(_self.connectionView.width * 0.05, 10),
+			left : parseInt(_self.instanceContainerView.width * 0.05, 10),
 			text : 'Instances',
 			textAlign : Ti.UI.TEXT_ALIGNMENT_LEFT,
 			color : _fontColor,
@@ -133,10 +81,19 @@ var loginViewStyle = ( function() {
 				fontFamily : _font
 			}
 		};
-
+		
+		/* Instance List Main View */
+		_self.instanceMainView = {
+			bottom : parseInt(_self.instanceContainerView.height * 0.1, 10),
+			height : parseInt(_self.instanceContainerView.height * 0.80, 10),
+			left : parseInt(_self.instanceContainerView.width * 0.03, 10),
+			width : parseInt(_self.instanceContainerView.width * 0.94, 10)
+		};
+		
+		/* Header view label */
 		_self.headerView = {
 			backgroundColor : _background3,
-			width : _self.connectionView.width,
+			width : _self.instanceMainView.width,
 			height : parseInt((Ti.Platform.displayCaps.platformHeight * 8) / 100, 10) // 32 -> 40%
 		};
 		
@@ -165,11 +122,14 @@ var loginViewStyle = ( function() {
 				fontFamily : Yaast.FontAwesome.getFontFamily(),
 				fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 6) / 100, 10)
 			},
-			yesPublic:true
+			yesPublic: true
 		};
 		
-		 /* Template with Edit-Button */
-		_self.connectionListViewTemplate = {
+		/*
+		 * Templates for List View
+		 */
+		/* Template with Edit-Button */
+		_self.instanceListViewTemplate = {
 			childTemplates : [{
 				type : 'Ti.UI.Label',
 				bindId : 'connection',
@@ -180,8 +140,8 @@ var loginViewStyle = ( function() {
 						fontFamily : _font,
 						fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 5.5) / 100, 10)
 					},
-					left : parseInt(_self.connectionView.width * 0.05, 10),
-					width: parseInt(_self.connectionView.width * 0.43, 10),
+					left : parseInt(_self.instanceMainView.width * 0.05, 10),
+					width: parseInt(_self.instanceMainView.width * 0.43, 10),
 					textAlign : Ti.UI.TEXT_ALIGNMENT_LEFT
 				}
 			}, {
@@ -195,7 +155,7 @@ var loginViewStyle = ( function() {
 						fontSize: parseInt((Ti.Platform.displayCaps.platformHeight * 5) / 100, 10)
 					},
 					right: 1,
-					widht: parseInt(_self.connectionView.width * 0.04, 10),
+					widht: parseInt(_self.instanceMainView.width * 0.04, 10),
 					title: Yaast.FontAwesome.getCharCode('fa-edit'),
 					textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER
 				}
@@ -209,8 +169,8 @@ var loginViewStyle = ( function() {
 						fontFamily: Yaast.FontAwesome.getFontFamily(),
 						fontSize: parseInt((Ti.Platform.displayCaps.platformHeight * 5) / 100, 10)
 					},
-					right: parseInt(_self.connectionView.width * 0.06, 10),
-					widht: parseInt(_self.connectionView.width * 0.04, 10),
+					right: parseInt(_self.instanceMainView.width * 0.06, 10),
+					widht: parseInt(_self.instanceMainView.width * 0.04, 10),
 					title: Yaast.FontAwesome.getCharCode('fa-ban'),
 					textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER
 				}
@@ -224,8 +184,8 @@ var loginViewStyle = ( function() {
 						fontFamily : Yaast.FontAwesome.getFontFamily(),
 						fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 3) / 100, 10)
 					},
-					right: parseInt(_self.connectionView.width * 0.1, 10), 
-					width: parseInt(_self.connectionView.width * 0.44, 10),
+					right: parseInt(_self.instanceMainView.width * 0.1, 10), 
+					width: parseInt(_self.instanceMainView.width * 0.44, 10),
 					textAlign : Ti.UI.TEXT_ALIGNMENT_LEFT
 				}
 			}, {
@@ -242,404 +202,41 @@ var loginViewStyle = ( function() {
 			events : {}
 		};
 		
-		_self.connectionListViewTemplateConected = {
-			childTemplates : [{
-				type : 'Ti.UI.Label',
-				bindId : 'connection',
-				properties : {
-					layout : 'horizontal',
-					color : _background,
-					font : {
-						fontFamily : _font,
-						fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 6) / 100, 10)
-					},
-					left : '5%',
-					textAlign : Ti.UI.TEXT_ALIGNMENT_LEFT
-				}
-			}, {
-				type : 'Ti.UI.Label',
-				bindId : 'conected_icon',
-				properties : {
-					layout : 'horizontal',
-					color : _fontColorGreen,
-					right : '2%',
-					font : {
-						fontFamily : Yaast.FontAwesome.getFontFamily(),
-						fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 9) / 100, 10)
-					},
-					text : Yaast.FontAwesome.getCharCode('fa-check'),
-					textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER
-				}
-			}, {
-				type : 'Ti.UI.Label',
-				bindId : 'url',
-				properties : {
-					visible : false
-				}
-			}, {
-				type : 'Ti.UI.Label',
-				bindId : 'id',
-				properties : {
-					visible : false
-				}
-			}],
-			properties : {
-				backgroundColor : _backgroundGreen,
-				selectedBackgroundColor : _background3
-			},
-			events : {}
+		/* Input Text Field Settings */
+		_self.inputTextField = {
+			color : '#354B5D',
+			backgroundColor : '#FFFFFF',
+			borderRadius : 5,
+			borderWidth : 1,
+			borderColor : _background3,
+			paddingLeft : 5,
+			borderStyle : Ti.UI.INPUT_BORDERSTYLE_ROUNDED,
+			autocapitalization : Titanium.UI.TEXT_AUTOCAPITALIZATION_NONE,
+			enableReturnKey : false,
+			softKeyboardOnFocus : (Yaast.API.HW.System.isApple()) ? null : Ti.UI.Android.SOFT_KEYBOARD_SHOW_ON_FOCUS,
+			autocorrect : false,
+			font : {
+				fontSize : parseInt(Yaast.API.UI.getDefaultFontSize()) * 1.5,
+				/* fontSize: parseInt((Ti.Platform.displayCaps.platformHeight*3.5)/100, 10),*/
+				fontFamily : _font
+			}
 		};
-
-		_self.connectionListViewTemplateChoosed = {
-			childTemplates : [{
-				type : 'Ti.UI.Label',
-				bindId : 'connection',
-				properties : {
-					layout : 'horizontal',
-					color : _fontColor,
-					font : {
-						fontFamily : _font,
-						fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 6) / 100, 10)
-					},
-					left : '4%',
-					top : 15,
-					textAlign : Ti.UI.TEXT_ALIGNMENT_LEFT
-				}
-			}, {
-				type : 'Ti.UI.Label',
-				bindId : 'url',
-				properties : {
-					visible : true,
-					layout : 'horizontal',
-					color : _fontColor,
-					bottom : 10,
-					left : '2%',
-					font : {
-						fontFamily : _font,
-						fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 4) / 100, 10)
-					},
-					textAlign : Ti.UI.TEXT_ALIGNMENT_LEFT
-				}
-			}, {
-				type : 'Ti.UI.Label',
-				bindId : 'edit_connection',
-				properties : {
-					layout : 'horizontal',
-					color : _editColor,
-					right : '15%',
-					font : {
-						fontFamily : Yaast.FontAwesome.getFontFamily(),
-						fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 9) / 100, 10)
-					},
-					text : ' ' + Yaast.FontAwesome.getCharCode('fa-pencil-square-o') + ' ',
-					textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER
-				}
-			}, {
-				type : 'Ti.UI.Label',
-				bindId : 'delete_connection',
-				properties : {
-					layout : 'horizontal',
-					color : _deleteColor,
-					right : '2%',
-					font : {
-						fontFamily : Yaast.FontAwesome.getFontFamily(),
-						fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 9) / 100, 10)
-					},
-					text : ' ' + Yaast.FontAwesome.getCharCode('fa-minus-circle') + ' ',
-					textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER
-				}
-			}, {
-				type : 'Ti.UI.Label',
-				bindId : 'conect_button_icon',
-				properties : {
-					layout : 'horizontal',
-					color : _background,
-					backgroundColor : _backgroundGreen,
-					left : '1%',
-					font : {
-						fontFamily : Yaast.FontAwesome.getFontFamily(),
-						fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 6) / 100, 10)
-					},
-					text : ' ' + Yaast.FontAwesome.getCharCode('fa-power-off') + '      ',
-					textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER
-				}
-			}, {
-				type : 'Ti.UI.Label',
-				bindId : 'conect_button',
-				properties : {
-					layout : 'horizontal',
-					color : _background,
-					backgroundColor : _backgroundGreen,
-					left : '10%',
-					font : {
-						fontFamily : Yaast.FontAwesome.getFontFamily(),
-						fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 6) / 100, 10)
-					},
-					text : ' Conectar ',
-					textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER
-				}
-			}, {
-				type : 'Ti.UI.Label',
-				bindId : 'id',
-				properties : {
-					visible : false
-				}
-			}],
-			properties : {
-				backgroundColor : _background,
-				height : parseInt((Ti.Platform.displayCaps.platformHeight * 40) / 100, 10)
-			},
-			events : {}
-		};
-
-		_self.connectionListViewTemplateChoosedConected = {
-			childTemplates : [{
-				type : 'Ti.UI.Label',
-				bindId : 'connection',
-				properties : {
-					layout : 'horizontal',
-					color : _background,
-					font : {
-						fontFamily : _font,
-						fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 6) / 100, 10)
-					},
-					left : '4%',
-					top : 15,
-					textAlign : Ti.UI.TEXT_ALIGNMENT_LEFT
-				}
-			}, {
-				type : 'Ti.UI.Label',
-				bindId : 'url',
-				properties : {
-					visible : true,
-					layout : 'horizontal',
-					color : _background,
-					bottom : 10,
-					left : '2%',
-					font : {
-						fontFamily : _font,
-						fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 4) / 100, 10)
-					},
-					textAlign : Ti.UI.TEXT_ALIGNMENT_LEFT
-				}
-			}, {
-				type : 'Ti.UI.Label',
-				bindId : 'edit_connection',
-				properties : {
-					layout : 'horizontal',
-					color : _editColor2,
-					right : '15%',
-					font : {
-						fontFamily : Yaast.FontAwesome.getFontFamily(),
-						fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 9) / 100, 10)
-					},
-					text : ' ' + Yaast.FontAwesome.getCharCode('fa-pencil-square-o') + ' ',
-					textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER
-				}
-			}, {
-				type : 'Ti.UI.Label',
-				bindId : 'delete_connection',
-				properties : {
-					layout : 'horizontal',
-					color : _deleteColor2,
-					right : '2%',
-					font : {
-						fontFamily : Yaast.FontAwesome.getFontFamily(),
-						fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 9) / 100, 10)
-					},
-					text : ' ' + Yaast.FontAwesome.getCharCode('fa-minus-circle') + ' ',
-					textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER
-				}
-			}, {
-				type : 'Ti.UI.Label',
-				bindId : 'disconect_button_icon',
-				properties : {
-					layout : 'horizontal',
-					color : _background,
-					backgroundColor : _backgroundRed,
-					left : '1%',
-					font : {
-						fontFamily : Yaast.FontAwesome.getFontFamily(),
-						fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 6) / 100, 10)
-					},
-					text : ' ' + Yaast.FontAwesome.getCharCode('fa-power-off') + '      ',
-					textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER
-				}
-			}, {
-				type : 'Ti.UI.Label',
-				bindId : 'disconect_button',
-				properties : {
-					layout : 'horizontal',
-					color : _background,
-					backgroundColor : _backgroundRed,
-					left : '10%',
-					font : {
-						fontFamily : Yaast.FontAwesome.getFontFamily(),
-						fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 6) / 100, 10)
-					},
-					text : ' Desconectar ',
-					textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER
-				}
-			}, {
-				type : 'Ti.UI.Label',
-				bindId : 'id',
-				properties : {
-					visible : false
-				}
-			}],
-			properties : {
-				backgroundColor : _backgroundGreen,
-				height : parseInt((Ti.Platform.displayCaps.platformHeight * 40) / 100, 10)
-			},
-			events : {}
-		};
-
-		_self.connectionListViewTemplatePublicChoosed = {
-			childTemplates : [{
-				type : 'Ti.UI.Label',
-				bindId : 'connection',
-				properties : {
-					layout : 'horizontal',
-					color : _fontColor,
-					font : {
-						fontFamily : _font,
-						fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 6) / 100, 10)
-					},
-					left : '4%',
-					top : 15,
-					textAlign : Ti.UI.TEXT_ALIGNMENT_LEFT
-				}
-			}, {
-				type : 'Ti.UI.Label',
-				bindId : 'url',
-				properties : {
-					visible : true,
-					layout : 'horizontal',
-					color : _fontColor,
-					bottom : 10,
-					left : '2%',
-					font : {
-						fontFamily : _font,
-						fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 4) / 100, 10)
-					},
-					textAlign : Ti.UI.TEXT_ALIGNMENT_LEFT
-				}
-			}, {
-				type : 'Ti.UI.Label',
-				bindId : 'conect_button_icon',
-				properties : {
-					layout : 'horizontal',
-					color : _background,
-					backgroundColor : _backgroundGreen,
-					left : '1%',
-					font : {
-						fontFamily : Yaast.FontAwesome.getFontFamily(),
-						fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 6) / 100, 10)
-					},
-					text : ' ' + Yaast.FontAwesome.getCharCode('fa-power-off') + '      ',
-					textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER
-				}
-			}, {
-				type : 'Ti.UI.Label',
-				bindId : 'conect_button',
-				properties : {
-					layout : 'horizontal',
-					color : _background,
-					backgroundColor : _backgroundGreen,
-					left : '10%',
-					font : {
-						fontFamily : Yaast.FontAwesome.getFontFamily(),
-						fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 6) / 100, 10)
-					},
-					text : ' Conectar ',
-					textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER
-				}
-			}, {
-				type : 'Ti.UI.Label',
-				bindId : 'id',
-				properties : {
-					visible : false
-				}
-			}],
-			properties : {
-				backgroundColor : _background,
-				height : parseInt((Ti.Platform.displayCaps.platformHeight * 30) / 100, 10)
-			},
-			events : {}
-		};
-
-		_self.connectionListViewTemplateChoosedPublicConected = {
-			childTemplates : [{
-				type : 'Ti.UI.Label',
-				bindId : 'connection',
-				properties : {
-					layout : 'horizontal',
-					color : _background,
-					font : {
-						fontFamily : _font,
-						fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 6) / 100, 10)
-					},
-					left : '4%',
-					top : 15,
-					textAlign : Ti.UI.TEXT_ALIGNMENT_LEFT
-				}
-			}, {
-				type : 'Ti.UI.Label',
-				bindId : 'url',
-				properties : {
-					visible : true,
-					layout : 'horizontal',
-					color : _background,
-					bottom : 10,
-					left : '2%',
-					font : {
-						fontFamily : _font,
-						fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 4) / 100, 10)
-					},
-					textAlign : Ti.UI.TEXT_ALIGNMENT_LEFT
-				}
-			}, {
-				type : 'Ti.UI.Label',
-				bindId : 'disconect_button_icon',
-				properties : {
-					layout : 'horizontal',
-					color : _background,
-					backgroundColor : _backgroundRed,
-					left : '1%',
-					font : {
-						fontFamily : Yaast.FontAwesome.getFontFamily(),
-						fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 6) / 100, 10)
-					},
-					text : ' ' + Yaast.FontAwesome.getCharCode('fa-power-off') + '      ',
-					textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER
-				}
-			}, {
-				type : 'Ti.UI.Label',
-				bindId : 'disconect_button',
-				properties : {
-					layout : 'horizontal',
-					color : _background,
-					backgroundColor : _backgroundRed,
-					left : '10%',
-					font : {
-						fontFamily : Yaast.FontAwesome.getFontFamily(),
-						fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 6) / 100, 10)
-					},
-					text : ' Desconectar ',
-					textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER
-				}
-			}, {
-				type : 'Ti.UI.Label',
-				bindId : 'id',
-				properties : {
-					visible : false
-				}
-			}],
-			properties : {
-				backgroundColor : _backgroundGreen,
-				height : parseInt((Ti.Platform.displayCaps.platformHeight * 30) / 100, 10)
-			},
-			events : {}
+		
+		/* Button Settings */
+		_self.button = {
+			backgroundColor : _background3,
+			color : _fontColorButton,
+			borderRadius : 10,
+			borderWidth : 1,
+			paddingLeft : 5,
+			borderColor : _background,
+			textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER,
+			height : parseInt((Ti.Platform.displayCaps.platformHeight * 6) / 100, 10) + 15,
+			font : {
+				fontSize : parseInt(Yaast.API.UI.getDefaultFontSize()) * 2,
+				/* fontSize: parseInt((Ti.Platform.displayCaps.platformHeight*2.5)/100, 10),*/
+				fontFamily : _font
+			}
 		};
 
 		return _self;
