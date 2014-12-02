@@ -316,15 +316,20 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 				editInstance.animate({duration: 500, delay: 0, opacity: 0}, function() {
 					if (e.sectionIndex == 1) {
 						// Update instance in the public section
-						publicSection.updateItemAt(e.itemIndex, {
-							connection : {text : editInstanceName.value}, url : {text : editInstanceURL.value}
-						});
+						publicItems.splice(e.itemIndex, 1, 
+							{connection: {text : editInstanceName.value}, url: {text : editInstanceURL.value}});
+						publicInstFile.write(JSON.stringify(publicItems));
+						publicSection.setItems(publicItems);
 						section.push(publicSection);
 					} else {
 						// Update instance in the private section
-						privateSection.updateItemAt(e.itemIndex, {
-							connection : {text : editInstanceName.value}, url : {text : editInstanceURL.value}
-						});
+						//privateSection.updateItemAt(e.itemIndex, {
+						//	connection : {text : editInstanceName.value}, url : {text : editInstanceURL.value}
+						//});
+						privateItems.splice(e.itemIndex, 1, 
+							{connection : {text : editInstanceName.value}, url : {text : editInstanceURL.value}});
+						privateInstFile.write(JSON.stringify(privateItems));
+						privateSection.setItems(privateItems);
 						section.push(privateSection);
 					}
 					// TODO: Update also the instance to the personal archive or db
