@@ -209,12 +209,16 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 						publicSection.appendItems([{
 							connection : {text : newInstanceName.value}, url : {text : newInstanceURL.value}
 						}]);
+						publicItems.push({connection: {text: newInstanceName.value}, url: {text : newInstanceURL.value}});
+						publicInstFile.write(JSON.stringify(publicItems), false);
 						section.push(publicSection);
 					} else {
 						// Add instance to privates
 						privateSection.appendItems([{
 							connection : {text : newInstanceName.value}, url : {text : newInstanceURL.value}
 						}]);
+						privateItems.push({connection: {text : newInstanceName.value}, url: {text : newInstanceURL.value}});
+						privateInstFile.write(JSON.stringify(privateItems), false);
 						section.push(privateSection);
 					}
 					destroy();
