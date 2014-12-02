@@ -48,4 +48,19 @@
 	<string name="error_connection_login_ios">There was an error getting data\nfrom your account\n\nPlease try again later or\ncontact the administrator</string>
 	<string name="error_connection_getMashup_ios">There was an error getting data or try use mashup indicated\n\nPlease try again later or contact the administrator</string>
 	<string name="error_connection_getMashup_android">There was an error getting data or try use mashup indicated\n\nPlease try again later or contact the administrator</string>
+	<string name="error_instance_not_selected">Select an instnace using the instance configuration screen</string>
+	<string name="error_wrong_credentials">Your credentials are wrong</string>
+	<string name="error_server_timeout">There has been some error with the server</string>
+	<string name="error_offline">Check your internet connection</string>
+	<string name="checking_auth">Checking authorization</string>
+	<string name="configuration">configuration</string>
+	<string name="instances">Instances</string>
+	<string name="yes">Yes</string>
+	<string name="no">No</string>
+	<string name="instance_deletion_confirmation">Do you want to delete the instance?</string>
+	<string name="label_instance_name">Instance Name</string>
+	<string name="label_url">URL</string>
+	<string name="done">Done</string>
+	<string name="back">Back</string>
+	<string name="error_missing_field">There is no name or url</string>
 </resources>

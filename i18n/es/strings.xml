@@ -51,4 +51,19 @@
 	<string name="error_connection_getMarketplace_ios">Se ha producido un error al obtener el marketplace local de su cuenta\n\n Inténtelo más tarde\no contacte con el administrador</string>
 	<string name="error_connection_getMashup_android">Se ha producido un error al obtener o intentar\nutilizar el mashup indicado. Inténtelo más tarde\no contacte con el administrador</string>
 	<string name="error_connection_getMashup_ios">Se ha producido un error al obtener o intentar\nutilizar el mashup indicado. Inténtelo más tarde\no contacte con el administrador</string>
+	<string name="error_instance_not_selected">Seleccione una instancia en el panel de configuración</string>
+	<string name="error_wrong_credentials">Sus credenciales son incorrectas</string>
+	<string name="error_server_timeout">Ha ocurrido un error con el servidor</string>
+	<string name="error_offline">Compruebe su conexión a internet</string>
+	<string name="checking_auth">Comprobando autorización</string>
+	<string name="configuration">Configuración</string>
+	<string name="instances">Instancias</string>
+	<string name="yes">Sí</string>
+	<string name="no">No</string>
+	<string name="instance_deletion_confirmation">¿Desea borrar la instancia?</string>
+	<string name="label_instance_name">Nombre de la Instancia</string>
+	<string name="label_url">URL</string>
+	<string name="done">Hecho</string>
+	<string name="back">Atrás</string>
+	<string name="error_missing_field">El nombre o url están en blanco</string>
 </resources>

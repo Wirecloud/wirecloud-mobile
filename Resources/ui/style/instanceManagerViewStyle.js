@@ -53,7 +53,7 @@ var loginViewStyle = ( function() {
 				fontSize : parseInt((Ti.Platform.displayCaps.platformHeight * 9) / 100, 10), // 32
 				fontFamily : _font
 			},
-			text : 'Configuration'
+			text : L('configuration')
 		};
 		
 		/* Instance Container View Settings */
@@ -72,7 +72,7 @@ var loginViewStyle = ( function() {
 		_self.instanceContainerViewTitle = {
 			top : 10,
 			left : parseInt(_self.instanceContainerView.width * 0.05, 10),
-			text : 'Instances',
+			text : L('instances'),
 			textAlign : Ti.UI.TEXT_ALIGNMENT_LEFT,
 			color : _fontColor,
 			font : {

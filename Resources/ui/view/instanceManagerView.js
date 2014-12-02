@@ -70,8 +70,8 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		var myEvent = e;
 		var dialog = Ti.UI.createAlertDialog({
 			cancel : 0,
-			buttonNames : ['No','Yes'],
-			message : 'Do you wanna delete it?',
+			buttonNames : [L("no"),L("yes")],
+			message : L("instance_deletion_confirmation"),
 			title : 'Wirecloud 4 Tablet'
 		});
 		dialog.press = function press(e) {
@@ -105,7 +105,7 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 			top: parseInt(newInstance.height * 0.15, 10),
 			keyboardType: Ti.UI.KEYBOARD_DEFAULT,
 			returnKeyType: Ti.UI.RETURNKEY_NEXT,
-			hintText: "Instance Name"
+			hintText: L("label_instance_name")
 		}));
 		// Text Field for the Instance Url
 		newInstanceURL = Ti.UI.createTextField(Yaast.MergeObject(theme.inputTextField, {
@@ -115,7 +115,7 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 			height: parseInt(newInstance.height * 0.2, 10),
 			keyboardType : Ti.UI.KEYBOARD_URL,
 			returnKeyType : Ti.UI.RETURNKEY_DONE,
-			hintText : "Instance URL"
+			hintText : L("label_url")
 		}));
 		//Method to force the textField to lose the focus
 		newInstanceName.getText = function getText() {
@@ -133,13 +133,13 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		// TODO: improve style of the buttons
 		//Add Done button
 		newInstanceDoneButton = Ti.UI.createButton(Yaast.MergeObject(theme.button, {
-			title : 'Done',
+			title : L("done"),
 			left : parseInt(newInstance.width * 0.05, 10),
 			bottom : parseInt(newInstance.width * 0.15, 10)
 		}));
 		//Add Back button
 		newInstanceCloseButton = Ti.UI.createButton(Yaast.MergeObject(theme.button, {
-			title : 'Back',
+			title : L("back"),
 			right : parseInt(newInstance.width * 0.05, 10),
 			bottom : parseInt(newInstance.width * 0.15, 10)
 		}));
@@ -150,7 +150,7 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 				var dialog = Ti.UI.createAlertDialog({
 					cancel : 0,
 					buttonNames : ['Ok'],
-					message : 'There is no name or URL',
+					message : L("error_missing_field"),
 					title : '-- W4T --'
 				});
 				dialog.press = function press() {
@@ -257,7 +257,7 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 				var dialog = Ti.UI.createAlertDialog({
 					cancel : 0,
 					buttonNames : ['Ok'],
-					message : 'There is no name or URL',
+					message : L("error_missing_field"),
 					title : '-- W4T --'
 				});
 				dialog.press = function press() {

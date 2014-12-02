@@ -80,7 +80,7 @@ var loginViewStyle = (function() {
     };
 
     _self.spinner = {
-  		message: 'Checking Authorization',
+  		message: L("checking_auth"),
   		style: (Yaast.API.HW.System.isApple()) ? Ti.UI.iPhone.ActivityIndicatorStyle.BIG : Ti.UI.ActivityIndicatorStyle.BIG_DARK,
   		top: parseInt((_self.view.height/2)-(Yaast.API.UI.getDefaultRowHeight()/2), 10),
   		right: parseInt(_self.view.width * 0.07, 10), //'7%',
@@ -108,9 +108,9 @@ var loginViewStyle = (function() {
     };
 
     _self.inputTextField = {
-        width: '90%', //,parseInt(_self.containerView.width * 0.9, 10)
-        left: '5%', //,parseInt(_self.containerView.width * 0.05, 10)
-        height: '20%', //,parseInt(_self.containerView.heigh * 0.2, 10)
+        width: parseInt(parseInt(((_self.view.width)/2) - (_self.view.width*0.04), 10) * 0.9, 10),
+        left: parseInt(parseInt(((_self.view.width)/2) - (_self.view.width*0.04), 10) * 0.05, 10),
+        height: parseInt(parseInt(((_self.view.height)/2), 10) * 0.2, 10),
         color: '#354B5D',
         backgroundColor: '#FFFFFF',
         borderRadius: 5,
