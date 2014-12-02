@@ -205,20 +205,20 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 				newInstance.animate({duration: 500, delay: 0, opacity: 0}, function(){
 					// TODO: Add also the instance to the personal archive or db
 					if (button.yesPublic) {
+						publicItems.push({connection: {text: newInstanceName.value}, url: {text : newInstanceURL.value}});
+						publicInstFile.write(JSON.stringify(publicItems), false);
 						// Add instance to publics
 						publicSection.appendItems([{
 							connection : {text : newInstanceName.value}, url : {text : newInstanceURL.value}
 						}]);
-						publicItems.push({connection: {text: newInstanceName.value}, url: {text : newInstanceURL.value}});
-						publicInstFile.write(JSON.stringify(publicItems), false);
 						section.push(publicSection);
 					} else {
 						// Add instance to privates
+						privateItems.push({connection: {text : newInstanceName.value}, url: {text : newInstanceURL.value}});
+						privateInstFile.write(JSON.stringify(privateItems), false);
 						privateSection.appendItems([{
 							connection : {text : newInstanceName.value}, url : {text : newInstanceURL.value}
 						}]);
-						privateItems.push({connection: {text : newInstanceName.value}, url: {text : newInstanceURL.value}});
-						privateInstFile.write(JSON.stringify(privateItems), false);
 						section.push(privateSection);
 					}
 					destroy();
@@ -277,6 +277,16 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 			height: parseInt(editInstance.height * 0.2, 10),
 			value : section[e.sectionIndex].getItemAt(e.itemIndex).url.text
 		}));
+		//Method to force the textField to lose the focus
+		editInstanceName.getText = function getText() {
+			editInstanceName.blur();
+		};
+		editInstanceURL.getText = function getText() {
+			editInstanceURL.blur();
+		};
+		// Listeners for the key
+		editInstanceName.addEventListener('return', editInstanceName.getText);
+		editInstanceURL.addEventListener('return', editInstanceURL.getText);
 		// Add Text Fields to the view
 		editInstance.add(editInstanceName);
 		editInstance.add(editInstanceURL);
@@ -316,20 +326,23 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 				editInstance.animate({duration: 500, delay: 0, opacity: 0}, function() {
 					if (e.sectionIndex == 1) {
 						// Update instance in the public section
-						publicItems.splice(e.itemIndex, 1, 
-							{connection: {text : editInstanceName.value}, url: {text : editInstanceURL.value}});
-						publicInstFile.write(JSON.stringify(publicItems));
-						publicSection.setItems(publicItems);
+						publicSection.updateItemAt(e.itemIndex, {
+							connection : {text : editInstanceName.value}, url : {text : editInstanceURL.value}
+						});
+						//publicItems.splice(e.itemIndex, 1, 
+						//	{connection: {text : editInstanceName.value}, url: {text : editInstanceURL.value}});
+						//publicInstFile.write(JSON.stringify(publicItems));
+						//publicSection.setItems(publicItems);
 						section.push(publicSection);
 					} else {
 						// Update instance in the private section
-						//privateSection.updateItemAt(e.itemIndex, {
-						//	connection : {text : editInstanceName.value}, url : {text : editInstanceURL.value}
-						//});
-						privateItems.splice(e.itemIndex, 1, 
-							{connection : {text : editInstanceName.value}, url : {text : editInstanceURL.value}});
-						privateInstFile.write(JSON.stringify(privateItems));
-						privateSection.setItems(privateItems);
+						privateSection.updateItemAt(e.itemIndex, {
+							connection : {text : editInstanceName.value}, url : {text : editInstanceURL.value}
+						});
+						//privateItems.splice(e.itemIndex, 1, 
+						//	{connection : {text : editInstanceName.value}, url : {text : editInstanceURL.value}});
+						//privateInstFile.write(JSON.stringify(privateItems));
+						//privateSection.setItems(privateItems);
 						section.push(privateSection);
 					}
 					// TODO: Update also the instance to the personal archive or db
@@ -344,6 +357,8 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 			parentWindow.remove(editInstance);
 			editInstanceDoneButton.removeEventListener('click', editInstanceDoneButton.press);
 			editInstanceCloseButton.removeEventListener('click', editInstanceCloseButton.press);
+			editInstanceName.removeEventListener('return', editInstanceName.getText);
+			editInstanceURL.removeEventListener('return', editInstanceURL.getText);
 			editInstance.remove(editInstanceDoneButton);
 			editInstance.remove(editInstanceCloseButton);
 			editInstance.remove(editInstanceName);
