@@ -66,7 +66,7 @@ var loginView = function(parentWindow) {
 	var showMessageError = function showMessageError(string) {
 		var dialog = Ti.UI.createAlertDialog({
 			cancel : 0,
-			buttonNames : ['Ok'],
+			buttonNames : [L('button_ok')],
 			message : string,
 			title : '-- W4T --'
 		});
@@ -271,7 +271,7 @@ var loginView = function(parentWindow) {
 
 		// Botón de enviar
 		loginFormSubmitButton = Ti.UI.createButton(Yaast.MergeObject(theme.button, {
-			title : 'Log In',
+			title : L('button_login'),
 			width : parseInt(loginFormContainer.width * 0.3, 10), //'30%',
 			bottom : parseInt((loginFormContainer.getHeight() * 5) / 100)
 		}));

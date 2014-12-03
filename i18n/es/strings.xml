@@ -9,6 +9,10 @@
 	<string name="label_search_marketplace">Filtro de búsqueda</string>
 	<string name="label_vendor_marketplace">Vendedor</string>
 	<string name="label_version_marketplace">Versión</string>
+	<string name="label_instance_name">Nombre de la Instancia</string>
+	<string name="label_url">URL</string>
+	<string name="label_private_section">Privadas</string>
+	<string name="label_public_section">Públicas</string>
 	<string name="label_widget_map_distance">Distancia</string>
 	<string name="label_widget_map_time">Tiempo</string>
 	<string name="label_widget_map_step">Indicación</string>
@@ -25,6 +29,10 @@
 	<string name="label_downloader_footer_show">Visualizar Dashboard</string>
 	<string name="label_downloader_down">Descargar</string>
 	<string name="label_downloader_later">Omitir</string>
+	<string name="button_ok">Aceptar</string>
+	<string name="button_done">Hecho</string>
+	<string name="button_back">Atrás</string>
+	<string name="button_login">Conectar</string>
 	<string name="button_slider_aworkspace">Marketplace</string>
 	<string name="button_slider_rworkspace">Renombrar</string>
 	<string name="button_slider_eworkspace">Eliminar</string>
@@ -54,16 +62,14 @@
 	<string name="error_instance_not_selected">Seleccione una instancia en el panel de configuración</string>
 	<string name="error_wrong_credentials">Sus credenciales son incorrectas</string>
 	<string name="error_server_timeout">Ha ocurrido un error con el servidor</string>
+	<string name="error_missing_field">El nombre o la url están vacíos</string>
 	<string name="error_offline">Compruebe su conexión a internet</string>
+	<string name="confirmation_instance_deletion">¿Desea borrar la instancia?</string>
 	<string name="checking_auth">Comprobando autorización</string>
 	<string name="configuration">Configuración</string>
 	<string name="instances">Instancias</string>
 	<string name="yes">Sí</string>
 	<string name="no">No</string>
-	<string name="instance_deletion_confirmation">¿Desea borrar la instancia?</string>
-	<string name="label_instance_name">Nombre de la Instancia</string>
-	<string name="label_url">URL</string>
-	<string name="done">Hecho</string>
-	<string name="back">Atrás</string>
-	<string name="error_missing_field">El nombre o url están en blanco</string>
+	
+	
 </resources>

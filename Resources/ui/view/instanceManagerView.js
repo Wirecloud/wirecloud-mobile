@@ -101,7 +101,7 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		var dialog = Ti.UI.createAlertDialog({
 			cancel : 0,
 			buttonNames : [L("no"),L("yes")],
-			message : L("instance_deletion_confirmation"),
+			message : L("confirmation_instance_deletion"),
 			title : 'Wirecloud 4 Tablet'
 		});
 		dialog.press = function press(e) {
@@ -176,13 +176,13 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		// TODO: improve style of the buttons
 		//Add Done button
 		newInstanceDoneButton = Ti.UI.createButton(Yaast.MergeObject(theme.button, {
-			title : L("done"),
+			title : L("button_done"),
 			left : parseInt(newInstance.width * 0.05, 10),
 			bottom : parseInt(newInstance.width * 0.15, 10)
 		}));
 		//Add Back button
 		newInstanceCloseButton = Ti.UI.createButton(Yaast.MergeObject(theme.button, {
-			title : L("back"),
+			title : L("button_back"),
 			right : parseInt(newInstance.width * 0.05, 10),
 			bottom : parseInt(newInstance.width * 0.15, 10)
 		}));
@@ -192,7 +192,7 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 				// Create dialog to alert that there is a empty text field
 				var dialog = Ti.UI.createAlertDialog({
 					cancel : 0,
-					buttonNames : ['Ok'],
+					buttonNames : [L('button_ok')],
 					message : L("error_missing_field"),
 					title : '-- W4T --'
 				});
@@ -301,14 +301,14 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		// TODO: improve style
 		// Add Done button
 		editInstanceDoneButton = Ti.UI.createButton(Yaast.MergeObject(theme.button, {
-			title : 'Done',
+			title : L('button_done'),
 			left : parseInt(editInstance.width * 0.05, 10),
 			bottom : parseInt(editInstance.width * 0.15, 10),
 			fontSize : parseInt(Yaast.API.UI.getDefaultFontSize()) * 2
 		}));
 		// Add Back button
 		editInstanceCloseButton = Ti.UI.createButton(Yaast.MergeObject(theme.button, {
-			title : 'Back',
+			title : L('button_back'),
 			right : parseInt(editInstance.width * 0.05, 10),
 			bottom : parseInt(editInstance.width * 0.15, 10),
 			fontSize : parseInt(Yaast.API.UI.getDefaultFontSize()) * 2
@@ -319,7 +319,7 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 				// Create dialog to alert that there is a empty text field
 				var dialog = Ti.UI.createAlertDialog({
 					cancel : 0,
-					buttonNames : ['Ok'],
+					buttonNames : [L('button_ok')],
 					message : L("error_missing_field"),
 					title : '-- W4T --'
 				});
@@ -421,7 +421,7 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		headerPrivate = Ti.UI.createView(theme.headerView);
 		// Add section title
 		headerPrivate.add(Ti.UI.createLabel(Yaast.MergeObject(theme.headerViewLabel, {
-			text : 'Private'
+			text : L('label_private_section')
 		})));
 		// Add '+' button to create new instance
 		privateAddButton = Ti.UI.createButton(Yaast.MergeObject(theme.headerViewButton, {
@@ -440,7 +440,7 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		headerPublic = Ti.UI.createView(theme.headerView);
 		// Add section title
 		headerPublic.add(Ti.UI.createLabel(Yaast.MergeObject(theme.headerViewLabel, {
-			text : 'Public'
+			text : L('label_public_section')
 		})));
 		// Add '+' button to create new instance
 		publicAddButton = Ti.UI.createButton(Yaast.MergeObject(theme.headerViewButton, {
