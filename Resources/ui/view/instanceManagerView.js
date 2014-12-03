@@ -112,11 +112,13 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 					// Delete item in privateItems
 					privateItems.splice(myEvent.itemIndex, 1);
 					// Update file
+					privateInstFile = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'w4tPrivateInst');
 					privateInstFile.write(JSON.stringify(privateItems), false);
 				} else  { //Public section
 					// Delete item in publicItems
 					publicItems.splice(myEvent.itemIndex, 1);
 					// Update file
+					publicInstFile = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'w4tPublicInst');
 					publicInstFile.write(JSON.stringify(publicItems), false);
 				}
 			}
@@ -205,20 +207,26 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 				newInstance.animate({duration: 500, delay: 0, opacity: 0}, function(){
 					// TODO: Add also the instance to the personal archive or db
 					if (button.yesPublic) {
+						// Update public list
 						publicItems.push({connection: {text: newInstanceName.value}, url: {text : newInstanceURL.value}});
+						// Reload file
+						publicInstFile = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'w4tPublicInst'); 
+						// Update file
 						publicInstFile.write(JSON.stringify(publicItems), false);
-						// Add instance to publics
-						publicSection.appendItems([{
-							connection : {text : newInstanceName.value}, url : {text : newInstanceURL.value}
-						}]);
+						// Update public section
+						publicSection.setItems(publicItems);
+						// Update section
 						section.push(publicSection);
 					} else {
-						// Add instance to privates
+						// Update private list
 						privateItems.push({connection: {text : newInstanceName.value}, url: {text : newInstanceURL.value}});
+						// Reload file
+						privateInstFile = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'w4tPrivateInst');
+						// Update file
 						privateInstFile.write(JSON.stringify(privateItems), false);
-						privateSection.appendItems([{
-							connection : {text : newInstanceName.value}, url : {text : newInstanceURL.value}
-						}]);
+						// Update private section
+						privateSection.setItems(privateItems);
+						// Update section
 						section.push(privateSection);
 					}
 					destroy();
@@ -325,27 +333,30 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 			} else {
 				editInstance.animate({duration: 500, delay: 0, opacity: 0}, function() {
 					if (e.sectionIndex == 1) {
-						// Update instance in the public section
-						publicSection.updateItemAt(e.itemIndex, {
-							connection : {text : editInstanceName.value}, url : {text : editInstanceURL.value}
-						});
-						//publicItems.splice(e.itemIndex, 1, 
-						//	{connection: {text : editInstanceName.value}, url: {text : editInstanceURL.value}});
-						//publicInstFile.write(JSON.stringify(publicItems));
-						//publicSection.setItems(publicItems);
+						// Update public list
+						publicItems.splice(e.itemIndex, 1, 
+							{connection: {text : editInstanceName.value}, url: {text : editInstanceURL.value}});
+						// Reload file
+						publicInstFile = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'w4tPublicInst');
+						// Update file
+						publicInstFile.write(JSON.stringify(publicItems));
+						// Update public section
+						publicSection.setItems(publicItems);
+						// Update section
 						section.push(publicSection);
 					} else {
-						// Update instance in the private section
-						privateSection.updateItemAt(e.itemIndex, {
-							connection : {text : editInstanceName.value}, url : {text : editInstanceURL.value}
-						});
-						//privateItems.splice(e.itemIndex, 1, 
-						//	{connection : {text : editInstanceName.value}, url : {text : editInstanceURL.value}});
-						//privateInstFile.write(JSON.stringify(privateItems));
-						//privateSection.setItems(privateItems);
+						// Update private list
+						privateItems.splice(e.itemIndex, 1, 
+							{connection : {text : editInstanceName.value}, url : {text : editInstanceURL.value}});
+						// Reload file
+						privateInstFile = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'w4tPrivateInst');
+						// Update file
+						privateInstFile.write(JSON.stringify(privateItems));
+						// Update private section
+						privateSection.setItems(privateItems);
+						// Update section
 						section.push(privateSection);
 					}
-					// TODO: Update also the instance to the personal archive or db
 					destroy();
 				});	
 			}
