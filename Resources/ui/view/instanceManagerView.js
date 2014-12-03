@@ -32,12 +32,42 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 	    publicSection,
 	    privateSection,
 	    headerPublic,
-	    headerPrivate;
-	    
+	    headerPrivate,
+	    publicItems = [],
+	    privateItems = [];
+	   
+	var publicInstFile = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'w4tPublicInst');
+	var privateInstFile = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'w4tPrivateInst');    
 	var section = []; /* Array of sections */
 	
+	/* Method to load public instance's list */
+	var loadPublicInstances = function loadPublicInstances() {
+		if (publicInstFile.exists()) {
+			publicItems = JSON.parse(Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'w4tPublicInst').read().toString());
+		} else {
+			publicItems = [
+				{ template: 'no_edit_template', connection : {text : 'Wirecloud CoNWeT'}, url : {text : 'https://wirecloud.conwet.fi.upm.es/'}, id : {text : '1'} },
+				{ template: 'no_edit_template', connection : {text : 'Mashups Fi Lab 2'}, url : {text : 'http://wirecloud2.conwet.fi.upm.es/'}, id : {text : '2'} }
+			];
+			// Save configuration
+			publicInstFile.write(JSON.stringify(publicItems));
+		}
+	};
+	
+	/* Method to load private instance's list */
+	var loadPrivateInstances = function loadPrivateInstances() {
+		if (privateInstFile.exists()) {
+			privateItems = JSON.parse(Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'w4tPrivateInst').read().toString());
+		} else {
+			privateItems = [
+				{ connection : {text : 'Wirecloud CoNWeT'}, url : {text : 'https://wirecloud.conwet.fi.upm.es/'}, id : {text : '1'} }
+			];
+			// Save configuration
+			privateInstFile.write(JSON.stringify(privateItems));
+		}
+	};
+	
 	var sectionClicked = function sectionClicked(e) {
-		/* Testing Purpose: Ti.API.warn('Pressed id: ' + e.bindId); */
 		// When edit button is clicked
 		if (e.bindId != null && e.bindId == 'edit_button') { 
 			editInstanceMethod(e);
@@ -78,6 +108,19 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 			if (e.index == 1) {
 				// TODO: Delete from the personal archive or db */
 				myEvent.section.deleteItemsAt(myEvent.itemIndex, 1);
+				if (myEvent.sectionIndex == 0) { //Private section
+					// Delete item in privateItems
+					privateItems.splice(myEvent.itemIndex, 1);
+					// Update file
+					privateInstFile = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'w4tPrivateInst');
+					privateInstFile.write(JSON.stringify(privateItems), false);
+				} else  { //Public section
+					// Delete item in publicItems
+					publicItems.splice(myEvent.itemIndex, 1);
+					// Update file
+					publicInstFile = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'w4tPublicInst');
+					publicInstFile.write(JSON.stringify(publicItems), false);
+				}
 			}
 			dialog.hide();
 			// Destroy dialog
@@ -164,16 +207,26 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 				newInstance.animate({duration: 500, delay: 0, opacity: 0}, function(){
 					// TODO: Add also the instance to the personal archive or db
 					if (button.yesPublic) {
-						// Add instance to publics
-						publicSection.appendItems([{
-							connection : {text : newInstanceName.value}, url : {text : newInstanceURL.value}
-						}]);
+						// Update public list
+						publicItems.push({connection: {text: newInstanceName.value}, url: {text : newInstanceURL.value}});
+						// Reload file
+						publicInstFile = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'w4tPublicInst'); 
+						// Update file
+						publicInstFile.write(JSON.stringify(publicItems), false);
+						// Update public section
+						publicSection.setItems(publicItems);
+						// Update section
 						section.push(publicSection);
 					} else {
-						// Add instance to privates
-						privateSection.appendItems([{
-							connection : {text : newInstanceName.value}, url : {text : newInstanceURL.value}
-						}]);
+						// Update private list
+						privateItems.push({connection: {text : newInstanceName.value}, url: {text : newInstanceURL.value}});
+						// Reload file
+						privateInstFile = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'w4tPrivateInst');
+						// Update file
+						privateInstFile.write(JSON.stringify(privateItems), false);
+						// Update private section
+						privateSection.setItems(privateItems);
+						// Update section
 						section.push(privateSection);
 					}
 					destroy();
@@ -232,6 +285,16 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 			height: parseInt(editInstance.height * 0.2, 10),
 			value : section[e.sectionIndex].getItemAt(e.itemIndex).url.text
 		}));
+		//Method to force the textField to lose the focus
+		editInstanceName.getText = function getText() {
+			editInstanceName.blur();
+		};
+		editInstanceURL.getText = function getText() {
+			editInstanceURL.blur();
+		};
+		// Listeners for the key
+		editInstanceName.addEventListener('return', editInstanceName.getText);
+		editInstanceURL.addEventListener('return', editInstanceURL.getText);
 		// Add Text Fields to the view
 		editInstance.add(editInstanceName);
 		editInstance.add(editInstanceURL);
@@ -270,19 +333,30 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 			} else {
 				editInstance.animate({duration: 500, delay: 0, opacity: 0}, function() {
 					if (e.sectionIndex == 1) {
-						// Update instance in the public section
-						publicSection.updateItemAt(e.itemIndex, {
-							connection : {text : editInstanceName.value}, url : {text : editInstanceURL.value}
-						});
+						// Update public list
+						publicItems.splice(e.itemIndex, 1, 
+							{connection: {text : editInstanceName.value}, url: {text : editInstanceURL.value}});
+						// Reload file
+						publicInstFile = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'w4tPublicInst');
+						// Update file
+						publicInstFile.write(JSON.stringify(publicItems));
+						// Update public section
+						publicSection.setItems(publicItems);
+						// Update section
 						section.push(publicSection);
 					} else {
-						// Update instance in the private section
-						privateSection.updateItemAt(e.itemIndex, {
-							connection : {text : editInstanceName.value}, url : {text : editInstanceURL.value}
-						});
+						// Update private list
+						privateItems.splice(e.itemIndex, 1, 
+							{connection : {text : editInstanceName.value}, url : {text : editInstanceURL.value}});
+						// Reload file
+						privateInstFile = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'w4tPrivateInst');
+						// Update file
+						privateInstFile.write(JSON.stringify(privateItems));
+						// Update private section
+						privateSection.setItems(privateItems);
+						// Update section
 						section.push(privateSection);
 					}
-					// TODO: Update also the instance to the personal archive or db
 					destroy();
 				});	
 			}
@@ -294,6 +368,8 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 			parentWindow.remove(editInstance);
 			editInstanceDoneButton.removeEventListener('click', editInstanceDoneButton.press);
 			editInstanceCloseButton.removeEventListener('click', editInstanceCloseButton.press);
+			editInstanceName.removeEventListener('return', editInstanceName.getText);
+			editInstanceURL.removeEventListener('return', editInstanceURL.getText);
 			editInstance.remove(editInstanceDoneButton);
 			editInstance.remove(editInstanceCloseButton);
 			editInstance.remove(editInstanceName);
@@ -334,6 +410,7 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		confInstanceListView = Ti.UI.createListView({
 			templates : {
 				'template' : theme.instanceListViewTemplate,
+				'no_edit_template' : theme.instanceListViewTemplateWithoutButtons
 			},
 			defaultItemTemplate : 'template'
 		});
@@ -354,13 +431,10 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		privateAddButton.addEventListener('click', createNewInstance);
 		headerPrivate.add(privateAddButton);
 		privateSection.setHeaderView(headerPrivate);
-		// Add predefine instances
-		// TODO: Load info from archive or db
-		privateSection.setItems([{
-			connection : {text : 'Wirecloud CoNWeT'}, url : {text : 'https://wirecloud.conwet.fi.upm.es/'}, id : {text : '1'}
-		}]);
+		loadPrivateInstances();
+		privateSection.setItems(privateItems);
 		section.push(privateSection);
-
+		
 		// Public Instances Section
 		publicSection = Ti.UI.createListSection();
 		headerPublic = Ti.UI.createView(theme.headerView);
@@ -375,13 +449,10 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		publicAddButton.addEventListener('click', createNewInstance);
 		headerPublic.add(publicAddButton);
 		publicSection.setHeaderView(headerPublic);
-		// Add predefine instances
-		// TODO: Load info from archive or db
-		publicSection.setItems([
-			{ connection : {text : 'Wirecloud CoNWeT'}, url : {text : 'https://wirecloud.conwet.fi.upm.es/'}, id : {text : '1'} },
-			{ connection : {text : 'Mashups Fi Lab 2'}, url : {text : 'http://wirecloud2.conwet.fi.upm.es/'}, id : {text : '2'} }
-		]);
+		loadPublicInstances();
+		publicSection.setItems(publicItems);
 		section.push(publicSection);
+		
 		// Apply sections
 		confInstanceListView.sections = section;
 		// Add listener for the ListView
