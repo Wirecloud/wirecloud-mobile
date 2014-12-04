@@ -175,15 +175,13 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		// TODO: improve style of the buttons
 		//Add Done button
 		newInstanceDoneButton = Ti.UI.createButton(Yaast.MergeObject(theme.button, {
-			title : L("button_done"),
-			left : parseInt(newInstance.width * 0.05, 10),
-			bottom : parseInt(newInstance.width * 0.15, 10)
+			title : L('button_done'),
+			left  : parseInt(newInstance.width * 0.13, 10)
 		}));
 		//Add Back button
 		newInstanceCloseButton = Ti.UI.createButton(Yaast.MergeObject(theme.button, {
-			title : L("button_back"),
-			right : parseInt(newInstance.width * 0.05, 10),
-			bottom : parseInt(newInstance.width * 0.15, 10)
+			title : L('button_back'),
+			right : parseInt(newInstance.width * 0.13, 10)
 		}));
 		// Method for the listener of Done Button
 		newInstanceDoneButton.press = function press() {
@@ -288,18 +286,14 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		editInstance.add(editInstanceURL);
 		// TODO: improve style
 		// Add Done button
-		editInstanceDoneButton = Ti.UI.createButton(Yaast.MergeObject(theme.button, {
+		editInstanceDoneButton = Ti.UI.createButton(Yaast.MergeObject(theme.button, { 
 			title : L('button_done'),
-			left : parseInt(editInstance.width * 0.05, 10),
-			bottom : parseInt(editInstance.width * 0.15, 10),
-			fontSize : parseInt(Yaast.API.UI.getDefaultFontSize()) * 2
+			left  : parseInt(editInstance.width * 0.13, 10)
 		}));
 		// Add Back button
 		editInstanceCloseButton = Ti.UI.createButton(Yaast.MergeObject(theme.button, {
 			title : L('button_back'),
-			right : parseInt(editInstance.width * 0.05, 10),
-			bottom : parseInt(editInstance.width * 0.15, 10),
-			fontSize : parseInt(Yaast.API.UI.getDefaultFontSize()) * 2
+			right : parseInt(editInstance.width * 0.13, 10)
 		}));
 		// Method for the listener of Done Button
 		editInstanceDoneButton.press = function press() {

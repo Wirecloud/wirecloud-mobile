@@ -292,13 +292,14 @@ var loginViewStyle = ( function() {
 			autocorrect : false,
 			font : {
 				fontSize : parseInt(Yaast.API.UI.getDefaultFontSize()) * 1.5,
-				/* fontSize: parseInt((Ti.Platform.displayCaps.platformHeight*3.5)/100, 10),*/
 				fontFamily : _font
 			}
 		};
 		
 		/* Button Settings */
 		_self.button = {
+			width : parseInt(_self.editCreateInstanceView.width * 0.3, 10),
+			bottom : parseInt(_self.editCreateInstanceView.height * 0.15, 10),
 			backgroundColor : _background3,
 			color : _fontColorButton,
 			borderRadius : 10,
@@ -309,7 +310,6 @@ var loginViewStyle = ( function() {
 			height : parseInt((Ti.Platform.displayCaps.platformHeight * 6) / 100, 10) + 15,
 			font : {
 				fontSize : parseInt(Yaast.API.UI.getDefaultFontSize()) * 2,
-				/* fontSize: parseInt((Ti.Platform.displayCaps.platformHeight*2.5)/100, 10),*/
 				fontFamily : _font
 			}
 		};
