@@ -82,6 +82,18 @@ var loginViewStyle = ( function() {
 			}
 		};
 		
+		/* Edit/Create instance view Settings */
+		_self.editCreateInstanceView = {
+			left : parseInt(_self.view.width * 0.2, 10),
+			width : parseInt(_self.view.width * 0.6, 10),
+			height : parseInt(_self.view.height * 0.68, 10) ,
+			bottom : parseInt(_self.view.height * 0.07, 10),
+			borderRadius : 15,
+			borderWidth	: 2,
+			borderColor : _background3,
+			backgroundColor	: _background2
+		};
+		
 		/* Instance List Main View */
 		_self.instanceMainView = {
 			bottom : parseInt(_self.instanceContainerView.height * 0.1, 10),

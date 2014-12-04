@@ -138,10 +138,7 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 	var createNewInstance = function createNewInstance(e) {
 		var button = e.source;
 		// newInstance main view
-		newInstance = Ti.UI.createView(Yaast.MergeObject(theme.instanceContainerView, {
-			left : parseInt(theme.view.width * 0.2, 10),
-			width : parseInt(theme.view.width * 0.6, 10)
-		}));
+		newInstance = Ti.UI.createView(theme.editCreateInstanceView);
 		// Text Field for the Instance Name
 		newInstanceName = Ti.UI.createTextField(Yaast.MergeObject(theme.inputTextField, {
 			width: parseInt(newInstance.width * 0.9, 10),
@@ -259,10 +256,7 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 	/* Method to edit instances */
 	var editInstanceMethod = function editInstanceMethod(e) {
 		// editInstance main view
-		editInstance = Ti.UI.createView(Yaast.MergeObject(theme.instanceContainerView, {
-			left : parseInt(theme.view.width * 0.2, 10),
-			width : parseInt(theme.view.width * 0.6, 10)
-		}));
+		editInstance = Ti.UI.createView(theme.editCreateInstanceView);
 		// Text Field for the Instance Name
 		editInstanceName = Ti.UI.createTextField(Yaast.MergeObject(theme.inputTextField, {
 			width: parseInt(editInstance.width * 0.9, 10),
