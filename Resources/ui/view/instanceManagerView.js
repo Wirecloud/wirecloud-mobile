@@ -85,6 +85,13 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 	/* Method to select an instance for use */
 	var selectInstance = function selectInstance(e) {
 		confView.animate({duration: 500, delay: 0, opacity: 0}, function(){
+			// Updates publicInstFile
+			publicInstFile = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'w4tPublicInst');
+			publicInstFile.write(JSON.stringify(publicItems));
+			// Update privateInstFile
+			privateInstFile = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'w4tPrivateInst');
+			privateInstFile.write(JSON.stringify(privateItems));
+			// Restore Logo and SystemLabel
 			logo.setOpacity(1);
 			systemLabel.setOpacity(1);
 			Yaast.Sandbox.currentURL = section[e.sectionIndex].getItemAt(e.itemIndex).url.text;
@@ -112,14 +119,9 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 					// Delete item in privateItems
 					privateItems.splice(myEvent.itemIndex, 1);
 					// Update file
-					privateInstFile = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'w4tPrivateInst');
-					privateInstFile.write(JSON.stringify(privateItems), false);
 				} else  { //Public section
 					// Delete item in publicItems
 					publicItems.splice(myEvent.itemIndex, 1);
-					// Update file
-					publicInstFile = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'w4tPublicInst');
-					publicInstFile.write(JSON.stringify(publicItems), false);
 				}
 			}
 			dialog.hide();
@@ -209,10 +211,6 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 					if (button.yesPublic) {
 						// Update public list
 						publicItems.push({connection: {text: newInstanceName.value}, url: {text : newInstanceURL.value}});
-						// Reload file
-						publicInstFile = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'w4tPublicInst'); 
-						// Update file
-						publicInstFile.write(JSON.stringify(publicItems), false);
 						// Update public section
 						publicSection.setItems(publicItems);
 						// Update section
@@ -220,10 +218,6 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 					} else {
 						// Update private list
 						privateItems.push({connection: {text : newInstanceName.value}, url: {text : newInstanceURL.value}});
-						// Reload file
-						privateInstFile = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'w4tPrivateInst');
-						// Update file
-						privateInstFile.write(JSON.stringify(privateItems), false);
 						// Update private section
 						privateSection.setItems(privateItems);
 						// Update section
@@ -336,10 +330,6 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 						// Update public list
 						publicItems.splice(e.itemIndex, 1, 
 							{connection: {text : editInstanceName.value}, url: {text : editInstanceURL.value}});
-						// Reload file
-						publicInstFile = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'w4tPublicInst');
-						// Update file
-						publicInstFile.write(JSON.stringify(publicItems));
 						// Update public section
 						publicSection.setItems(publicItems);
 						// Update section
@@ -348,10 +338,6 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 						// Update private list
 						privateItems.splice(e.itemIndex, 1, 
 							{connection : {text : editInstanceName.value}, url : {text : editInstanceURL.value}});
-						// Reload file
-						privateInstFile = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'w4tPrivateInst');
-						// Update file
-						privateInstFile.write(JSON.stringify(privateItems));
 						// Update private section
 						privateSection.setItems(privateItems);
 						// Update section
