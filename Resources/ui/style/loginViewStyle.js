@@ -100,7 +100,7 @@ var loginViewStyle = (function() {
     
     _self.containerView = {
         width: parseInt(((_self.view.width)/2) - (_self.view.width*0.04), 10),
-        height: parseInt(((_self.view.height)/2), 10),
+        height: parseInt((_self.view.height) * 0.6, 10),
         borderRadius: 15,
         borderWidth: 1,
         borderColor: _background3,
