@@ -92,14 +92,14 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 			privateInstFile = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'w4tPrivateInst');
 			privateInstFile.write(JSON.stringify(privateItems));
 			// Restore Logo and SystemLabel
-			logo.setOpacity(1);
-			systemLabel.setOpacity(1);
 			Yaast.Sandbox.currentURL = section[e.sectionIndex].getItemAt(e.itemIndex).url.text;
 			Yaast.Sandbox.appConfig.config.lastInstanceName = section[e.sectionIndex].getItemAt(e.itemIndex).connection.text;
 			Yaast.Sandbox.appConfig.config.lastInstanceURL = section[e.sectionIndex].getItemAt(e.itemIndex).url.text;
 			formCallback();
 			destroyConfiguration();
 		});
+		logo.animate({duration: 500, delay: 500, opacity: 1},function(){});
+		systemLabel.animate({duration: 500, delay: 500, opacity: 1},function(){});
 	};
 	
 	/* Method to delete an instance */
