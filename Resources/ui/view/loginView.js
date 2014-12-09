@@ -274,7 +274,7 @@ var loginView = function(parentWindow) {
 		// Botón de enviar
 		loginFormSubmitButton = Ti.UI.createButton(Yaast.MergeObject(theme.button, {
 			title : L('button_login'),
-			width : parseInt(loginFormContainer.width * 0.3, 10), //'30%',
+			width : parseInt(loginFormContainer.width * 0.4, 10), //'30%',
 			bottom : parseInt((loginFormContainer.getHeight() * 5) / 100)
 		}));
 		loginFormSubmitButton.submit = function submit() {
