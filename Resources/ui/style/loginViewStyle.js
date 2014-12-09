@@ -191,7 +191,18 @@ var loginViewStyle = (function() {
             fontFamily: Yaast.FontAwesome.getFontFamily(),
         }
     };    
-
+	
+	_self.checkboxUser = {
+    	bottom : parseInt(_self.containerView.height * 0.23, 10),
+		left : parseInt(_self.containerView.width * 0.06, 10),
+		title : 'Recordar usuario', //TODO: L()
+    	style : Titanium.UI.Android.SWITCH_STYLE_CHECKBOX,
+    	value : false,
+    	font: {
+            fontSize: _fontSize,
+            fontFamily: _font
+        }
+    };
     return _self;
 
 }());

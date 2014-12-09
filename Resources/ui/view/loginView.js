@@ -220,14 +220,7 @@ var loginView = function(parentWindow) {
 			text : '(' + instanceURL + ')'
 		}));
 		loginFormContainer.add(loginFormInstanceURL);
-		/* TODO: Improve and move common setting to loginViewStyle */
-		loginFormCheckbox = Titanium.UI.createSwitch({
-			bottom: parseInt(loginFormContainer.height * 0.2, 10),
-			left: parseInt(loginFormContainer.width * 0.1, 10),
-			title: 'Recordar usuario',
-    		style:Titanium.UI.Android.SWITCH_STYLE_CHECKBOX,
-    		value:false
-		});	
+		loginFormCheckbox = Titanium.UI.createSwitch(theme.checkboxUser);	
 		loginFormContainer.add(loginFormCheckbox);
 		loginConfigButton = Ti.UI.createLabel(theme.configButtonIcon);
 		loginFormContainer.add(loginConfigButton);
