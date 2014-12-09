@@ -161,6 +161,11 @@ var loginView = function(parentWindow) {
 							showMessageError(L("error_offline"));
 					} else {
 						var userName = loginFormUserTextField.value;
+						// Save userName if checkbox is enable
+						if (loginFormCheckbox.value)
+							Yaast.Sandbox.appConfig.config.lastUser = userName;
+						else
+							Yaast.Sandbox.appConfig.config.lastUser = null;
 						// Clean Login View
 						parentWindow.cleanCurrentView();
 						// Show Main View
@@ -231,7 +236,9 @@ var loginView = function(parentWindow) {
 			returnKeyType : Ti.UI.RETURNKEY_DEFAULT,
 			hintText : L("label_username")
 		}));
-
+		// Load username if it was save
+		if (Yaast.Sandbox.appConfig.config.lastUser != null)
+			loginFormUserTextField.text(Yaast.Sandbox.appConfig.config.lastUser);
 		loginFormContainer.add(loginFormUserTextField);
 
 		loginFormPasswordTextField = Ti.UI.createTextField(Yaast.MergeObject(theme.inputTextField, {
