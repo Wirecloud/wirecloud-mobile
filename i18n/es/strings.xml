@@ -6,6 +6,7 @@
 	<string name="label_inet_connected">Conectado</string>
 	<string name="label_inet_noconnected">Desconectado</string>
 	<string name="label_login_wait">Conectando, espere por favor</string>
+	<string name="label_login_remember_user">Recordar usuario</string>
 	<string name="label_search_marketplace">Filtro de búsqueda</string>
 	<string name="label_vendor_marketplace">Vendedor</string>
 	<string name="label_version_marketplace">Versión</string>

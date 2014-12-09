@@ -195,7 +195,7 @@ var loginViewStyle = (function() {
 	_self.checkboxUser = {
     	bottom : parseInt(_self.containerView.height * 0.23, 10),
 		left : parseInt(_self.containerView.width * 0.06, 10),
-		title : 'Recordar usuario', //TODO: L()
+		title : L('label_login_remember_user'),
     	style : Titanium.UI.Android.SWITCH_STYLE_CHECKBOX,
     	value : false,
     	font: {
