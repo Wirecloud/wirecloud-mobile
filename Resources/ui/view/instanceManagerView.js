@@ -16,7 +16,8 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 	    confInstanceContainer,
 	    confInstanceContainerTitle,
 	    confInstanceMainView,
-	    confInstanceListView,
+	    confPublicInstanceListView,
+	    confPrivateInstanceListView,
 	    privateAddButton,
 	    publicAddButton,
 	    newInstance,
@@ -34,11 +35,12 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 	    headerPublic,
 	    headerPrivate,
 	    publicItems = [],
-	    privateItems = [];
+	    privateItems = [],
+	    publicSections = [],
+	    privateSections = [];
 	   
 	var publicInstFile = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'w4tPublicInst');
 	var privateInstFile = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'w4tPrivateInst');    
-	var section = []; /* Array of sections */
 	
 	/* Method to load public instance's list */
 	var loadPublicInstances = function loadPublicInstances() {
@@ -47,6 +49,10 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		} else {
 			publicItems = [
 				{ template: 'no_edit_template', connection : {text : 'Wirecloud CoNWeT'}, url : {text : 'https://wirecloud.conwet.fi.upm.es/'}, id : {text : '1'} },
+				{ template: 'no_edit_template', connection : {text : 'Mashups Fi Lab 2'}, url : {text : 'http://wirecloud2.conwet.fi.upm.es/'}, id : {text : '2'} },
+				//Testing Purpose
+				{ template: 'no_edit_template', connection : {text : 'Mashups Fi Lab 2'}, url : {text : 'http://wirecloud2.conwet.fi.upm.es/'}, id : {text : '3'} },
+				{ template: 'no_edit_template', connection : {text : 'Mashups Fi Lab 2'}, url : {text : 'http://wirecloud2.conwet.fi.upm.es/'}, id : {text : '4'} },
 				{ template: 'no_edit_template', connection : {text : 'Mashups Fi Lab 2'}, url : {text : 'http://wirecloud2.conwet.fi.upm.es/'}, id : {text : '2'} }
 			];
 			// Save configuration
@@ -60,6 +66,11 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 			privateItems = JSON.parse(Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'w4tPrivateInst').read().toString());
 		} else {
 			privateItems = [
+				{ connection : {text : 'Wirecloud CoNWeT'}, url : {text : 'https://wirecloud.conwet.fi.upm.es/'}, id : {text : '1'} },
+				// Testing Purpose
+				{ connection : {text : 'Wirecloud CoNWeT'}, url : {text : 'https://wirecloud.conwet.fi.upm.es/'}, id : {text : '1'} },
+				{ connection : {text : 'Wirecloud CoNWeT'}, url : {text : 'https://wirecloud.conwet.fi.upm.es/'}, id : {text : '1'} },
+				{ connection : {text : 'Wirecloud CoNWeT'}, url : {text : 'https://wirecloud.conwet.fi.upm.es/'}, id : {text : '1'} },
 				{ connection : {text : 'Wirecloud CoNWeT'}, url : {text : 'https://wirecloud.conwet.fi.upm.es/'}, id : {text : '1'} }
 			];
 			// Save configuration
@@ -380,16 +391,17 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		// Create Instaces Main View 
 		confInstanceMainView = Ti.UI.createView(theme.instanceMainView);
 		confInstanceContainer.add(confInstanceMainView);
-		// Create Instances List View: Define diferent style templates for items in the list view
-		confInstanceListView = Ti.UI.createListView({
+
+		// Create Private Instances List View
+		confPrivateInstanceListView = Ti.UI.createListView({
 			templates : {
-				'template' : theme.instanceListViewTemplate,
-				'no_edit_template' : theme.instanceListViewTemplateWithoutButtons
+				'template' : theme.instanceListViewTemplate
 			},
 			defaultItemTemplate : 'template'
 		});
-		confInstanceMainView.add(confInstanceListView);
-
+		confPrivateInstanceListView.top = 0;
+		confPrivateInstanceListView.height = parseInt(confInstanceMainView.height * 0.5, 10);
+		confInstanceMainView.add(confPrivateInstanceListView);
 		// Private Instances Section
 		privateSection = Ti.UI.createListSection();
 		headerPrivate = Ti.UI.createView(theme.headerView);
@@ -407,8 +419,19 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		privateSection.setHeaderView(headerPrivate);
 		loadPrivateInstances();
 		privateSection.setItems(privateItems);
-		section.push(privateSection);
+		privateSections.push(privateSection);
 		
+		// Create Public Instances List View
+		confPublicInstanceListView = Ti.UI.createListView({
+			templates : {
+				'template' : theme.instanceListViewTemplate,
+				'no_edit_template' : theme.instanceListViewTemplateWithoutButtons
+			},
+			defaultItemTemplate : 'template'
+		});
+		confPublicInstanceListView.top = parseInt(confInstanceMainView.height * 0.5, 10);
+		confPublicInstanceListView.height = parseInt(confInstanceMainView.height * 0.5, 10);
+		confInstanceMainView.add(confPublicInstanceListView);
 		// Public Instances Section
 		publicSection = Ti.UI.createListSection();
 		headerPublic = Ti.UI.createView(theme.headerView);
@@ -425,12 +448,14 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		publicSection.setHeaderView(headerPublic);
 		loadPublicInstances();
 		publicSection.setItems(publicItems);
-		section.push(publicSection);
+		publicSections.push(publicSection);
 		
 		// Apply sections
-		confInstanceListView.sections = section;
+		confPublicInstanceListView.sections = publicSections;
+		confPrivateInstanceListView.sections = privateSections;
 		// Add listener for the ListView
-		confInstanceListView.addEventListener('itemclick', sectionClicked);
+		confPublicInstanceListView.addEventListener('itemclick', sectionClicked);
+		confPrivateInstanceListView.addEventListener('itemclick', sectionClicked);
 		// Add main view to parent
 		parentWindow.add(confView);
 	};
@@ -439,11 +464,14 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		// Delete events Listeners
 		privateAddButton.removeEventListener('click', createNewInstance);
 		publicAddButton.removeEventListener('click', createNewInstance);
-		confInstanceListView.removeEventListener('itemclick', sectionClicked);
+		confPublicInstanceListView.removeEventListener('itemclick', sectionClicked);
+		confPrivateInstanceListView.removeEventListener('itemclick', sectionClicked);
 		// Delete views
 		parentWindow.remove(confView);
-		confInstanceMainView.remove(confInstanceListView);
-		confInstanceListView = null;
+		confInstanceMainView.remove(confPublicInstanceListView);
+		confPublicInstanceListView = null;
+		confInstanceMainView.remove(confPrivateInstanceListView);
+		confPrivateInstanceListView = null;
 		confInstanceContainer.remove(confInstanceMainView);
 		confInstanceMainView = null;
 		confInstanceContainer.remove(confInstanceContainerTitle);
