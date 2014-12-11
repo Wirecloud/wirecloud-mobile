@@ -32,12 +32,13 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 	    editInstanceCloseButton,
 	    publicSection,
 	    privateSection,
-	    headerPublic,
-	    headerPrivate,
+	    publicHeader,
 	    publicItems = [],
 	    privateItems = [],
 	    publicSections = [],
-	    privateSections = [];
+	    privateSections = [],
+	    privateLabel,
+	    publicLabel;
 	   
 	var publicInstFile = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'w4tPublicInst');
 	var privateInstFile = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'w4tPrivateInst');    
@@ -51,9 +52,9 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 				{ template: 'no_edit_template', connection : {text : 'Wirecloud CoNWeT'}, url : {text : 'https://wirecloud.conwet.fi.upm.es/'}, id : {text : '1'} },
 				{ template: 'no_edit_template', connection : {text : 'Mashups Fi Lab 2'}, url : {text : 'http://wirecloud2.conwet.fi.upm.es/'}, id : {text : '2'} },
 				//Testing Purpose
-				{ template: 'no_edit_template', connection : {text : 'Mashups Fi Lab 2'}, url : {text : 'http://wirecloud2.conwet.fi.upm.es/'}, id : {text : '3'} },
-				{ template: 'no_edit_template', connection : {text : 'Mashups Fi Lab 2'}, url : {text : 'http://wirecloud2.conwet.fi.upm.es/'}, id : {text : '4'} },
-				{ template: 'no_edit_template', connection : {text : 'Mashups Fi Lab 2'}, url : {text : 'http://wirecloud2.conwet.fi.upm.es/'}, id : {text : '2'} }
+				{ template: 'no_edit_template', connection : {text : 'Mashups Fi Lab 3'}, url : {text : 'http://wirecloud2.conwet.fi.upm.es/'}, id : {text : '0'} },
+				{ template: 'no_edit_template', connection : {text : 'Mashups Fi Lab 4'}, url : {text : 'http://wirecloud2.conwet.fi.upm.es/'}, id : {text : '0'} },
+				{ template: 'no_edit_template', connection : {text : 'Mashups Fi Lab 5'}, url : {text : 'http://wirecloud2.conwet.fi.upm.es/'}, id : {text : '0'} }
 			];
 			// Save configuration
 			publicInstFile.write(JSON.stringify(publicItems));
@@ -68,10 +69,10 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 			privateItems = [
 				{ connection : {text : 'Wirecloud CoNWeT'}, url : {text : 'https://wirecloud.conwet.fi.upm.es/'}, id : {text : '1'} },
 				// Testing Purpose
-				{ connection : {text : 'Wirecloud CoNWeT'}, url : {text : 'https://wirecloud.conwet.fi.upm.es/'}, id : {text : '1'} },
-				{ connection : {text : 'Wirecloud CoNWeT'}, url : {text : 'https://wirecloud.conwet.fi.upm.es/'}, id : {text : '1'} },
-				{ connection : {text : 'Wirecloud CoNWeT'}, url : {text : 'https://wirecloud.conwet.fi.upm.es/'}, id : {text : '1'} },
-				{ connection : {text : 'Wirecloud CoNWeT'}, url : {text : 'https://wirecloud.conwet.fi.upm.es/'}, id : {text : '1'} }
+				{ connection : {text : 'Wirecloud CoNWeT 2'}, url : {text : 'https://wirecloud.conwet.fi.upm.es/'}, id : {text : '0'} },
+				{ connection : {text : 'Wirecloud CoNWeT 3'}, url : {text : 'https://wirecloud.conwet.fi.upm.es/'}, id : {text : '0'} },
+				{ connection : {text : 'Wirecloud CoNWeT 4'}, url : {text : 'https://wirecloud.conwet.fi.upm.es/'}, id : {text : '0'} },
+				{ connection : {text : 'Wirecloud CoNWeT 5'}, url : {text : 'https://wirecloud.conwet.fi.upm.es/'}, id : {text : '0'} }
 			];
 			// Save configuration
 			privateInstFile.write(JSON.stringify(privateItems));
@@ -391,7 +392,9 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		// Create Instaces Main View 
 		confInstanceMainView = Ti.UI.createView(theme.instanceMainView);
 		confInstanceContainer.add(confInstanceMainView);
-
+		
+		//LISTS
+		
 		// Create Private Instances List View
 		confPrivateInstanceListView = Ti.UI.createListView({
 			templates : {
@@ -399,24 +402,24 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 			},
 			defaultItemTemplate : 'template'
 		});
-		confPrivateInstanceListView.top = 0;
-		confPrivateInstanceListView.height = parseInt(confInstanceMainView.height * 0.5, 10);
-		confInstanceMainView.add(confPrivateInstanceListView);
 		// Private Instances Section
 		privateSection = Ti.UI.createListSection();
-		headerPrivate = Ti.UI.createView(theme.headerView);
 		// Add section title
-		headerPrivate.add(Ti.UI.createLabel(Yaast.MergeObject(theme.headerViewLabel, {
-			text : L('label_private_section')
-		})));
+		privateLabel = Ti.UI.createLabel(Yaast.MergeObject(theme.headerViewLabel, {
+			text : L('label_private_section'),
+			top : 0
+		}));
 		// Add '+' button to create new instance
 		privateAddButton = Ti.UI.createButton(Yaast.MergeObject(theme.headerViewButton, {
 			yesPublic : false
 		}));
 		// Add handler on click for '+' button
 		privateAddButton.addEventListener('click', createNewInstance);
-		headerPrivate.add(privateAddButton);
-		privateSection.setHeaderView(headerPrivate);
+		confInstanceMainView.add(privateLabel);
+		confInstanceMainView.add(privateAddButton);
+		confPrivateInstanceListView.top = privateLabel.height;
+		confPrivateInstanceListView.height = parseInt(confInstanceMainView.height * 0.5, 10) - privateLabel.height;
+		confInstanceMainView.add(confPrivateInstanceListView);
 		loadPrivateInstances();
 		privateSection.setItems(privateItems);
 		privateSections.push(privateSection);
@@ -429,23 +432,24 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 			},
 			defaultItemTemplate : 'template'
 		});
-		confPublicInstanceListView.top = parseInt(confInstanceMainView.height * 0.5, 10);
-		confPublicInstanceListView.height = parseInt(confInstanceMainView.height * 0.5, 10);
-		confInstanceMainView.add(confPublicInstanceListView);
 		// Public Instances Section
 		publicSection = Ti.UI.createListSection();
-		headerPublic = Ti.UI.createView(theme.headerView);
 		// Add section title
-		headerPublic.add(Ti.UI.createLabel(Yaast.MergeObject(theme.headerViewLabel, {
-			text : L('label_public_section')
-		})));
+		publicLabel = Ti.UI.createLabel(Yaast.MergeObject(theme.headerViewLabel, {
+			text : L('label_public_section'),
+			top: parseInt(confInstanceMainView.height * 0.5, 10),
+		}));
 		// Add '+' button to create new instance
 		publicAddButton = Ti.UI.createButton(Yaast.MergeObject(theme.headerViewButton, {
-			yesPublic : true
+			yesPublic : true,
+			top : parseInt(confInstanceMainView.height * 0.5, 10)
 		}));
 		publicAddButton.addEventListener('click', createNewInstance);
-		headerPublic.add(publicAddButton);
-		publicSection.setHeaderView(headerPublic);
+		confInstanceMainView.add(publicLabel);
+		confInstanceMainView.add(publicAddButton);
+		confPublicInstanceListView.top = parseInt(confInstanceMainView.height * 0.5, 10) + publicLabel.height;
+		confPublicInstanceListView.height = parseInt(confInstanceMainView.height * 0.5, 10) - publicLabel.height;
+		confInstanceMainView.add(confPublicInstanceListView);
 		loadPublicInstances();
 		publicSection.setItems(publicItems);
 		publicSections.push(publicSection);
