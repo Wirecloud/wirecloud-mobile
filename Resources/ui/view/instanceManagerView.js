@@ -50,11 +50,7 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		} else {
 			publicItems = [
 				{ template: 'no_edit_template', connection : {text : 'Wirecloud CoNWeT'}, url : {text : 'https://wirecloud.conwet.fi.upm.es/'}, id : {text : '1'} },
-				{ template: 'no_edit_template', connection : {text : 'Mashups Fi Lab 2'}, url : {text : 'http://wirecloud2.conwet.fi.upm.es/'}, id : {text : '2'} },
-				//Testing Purpose
-				{ template: 'no_edit_template', connection : {text : 'Mashups Fi Lab 3'}, url : {text : 'http://wirecloud2.conwet.fi.upm.es/'}, id : {text : '0'} },
-				{ template: 'no_edit_template', connection : {text : 'Mashups Fi Lab 4'}, url : {text : 'http://wirecloud2.conwet.fi.upm.es/'}, id : {text : '0'} },
-				{ template: 'no_edit_template', connection : {text : 'Mashups Fi Lab 5'}, url : {text : 'http://wirecloud2.conwet.fi.upm.es/'}, id : {text : '0'} }
+				{ template: 'no_edit_template', connection : {text : 'Mashups Fi Lab 2'}, url : {text : 'http://wirecloud2.conwet.fi.upm.es/'}, id : {text : '2'} }
 			];
 			// Save configuration
 			publicInstFile.write(JSON.stringify(publicItems));
@@ -67,12 +63,7 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 			privateItems = JSON.parse(Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'w4tPrivateInst').read().toString());
 		} else {
 			privateItems = [
-				{ connection : {text : 'Wirecloud CoNWeT'}, url : {text : 'https://wirecloud.conwet.fi.upm.es/'}, id : {text : '1'} },
-				// Testing Purpose
-				{ connection : {text : 'Wirecloud CoNWeT 2'}, url : {text : 'https://wirecloud.conwet.fi.upm.es/'}, id : {text : '0'} },
-				{ connection : {text : 'Wirecloud CoNWeT 3'}, url : {text : 'https://wirecloud.conwet.fi.upm.es/'}, id : {text : '0'} },
-				{ connection : {text : 'Wirecloud CoNWeT 4'}, url : {text : 'https://wirecloud.conwet.fi.upm.es/'}, id : {text : '0'} },
-				{ connection : {text : 'Wirecloud CoNWeT 5'}, url : {text : 'https://wirecloud.conwet.fi.upm.es/'}, id : {text : '0'} }
+				{ connection : {text : 'Wirecloud CoNWeT'}, url : {text : 'https://wirecloud.conwet.fi.upm.es/'}, id : {text : '1'} }
 			];
 			// Save configuration
 			privateInstFile.write(JSON.stringify(privateItems));
@@ -417,7 +408,8 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 			templates : {
 				'template' : theme.instanceListViewTemplate
 			},
-			defaultItemTemplate : 'template'
+			defaultItemTemplate : 'template',
+			backgroundColor : '#FFFFFF'
 		});
 		// Private Instances Section
 		privateSection = Ti.UI.createListSection();
@@ -447,7 +439,8 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 				'template' : theme.instanceListViewTemplate,
 				'no_edit_template' : theme.instanceListViewTemplateWithoutButtons
 			},
-			defaultItemTemplate : 'template'
+			defaultItemTemplate : 'template',
+			backgroundColor : '#FFFFFF'
 		});
 		// Public Instances Section
 		publicSection = Ti.UI.createListSection();
