@@ -143,15 +143,14 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		});
 		dialog.press = function press(e) {
 			if (e.index == 1) {
-				// TODO: Delete from the personal archive or db */
-				myEvent.section.deleteItemsAt(myEvent.itemIndex, 1);
-				if (myEvent.sectionIndex == 0) { //Private section
-					// Delete item in privateItems
-					privateItems.splice(myEvent.itemIndex, 1);
-					// Update file
-				} else  { //Public section
-					// Delete item in publicItems
+				if (p) {
 					publicItems.splice(myEvent.itemIndex, 1);
+					publicSection.setItems(publicItems);
+					publicSections.push(publicSection);
+				} else {
+					privateItems.splice(myEvent.itemIndex, 1);
+					privateSection.setItems(privateItems);
+					privateSections.push(publicSection);
 				}
 			}
 			dialog.hide();
