@@ -79,23 +79,38 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		}
 	};
 	
-	var sectionClicked = function sectionClicked(e) {
+	var publicSectionClicked = function publicSectionClicked(e) {
 		// When edit button is clicked
 		if (e.bindId != null && e.bindId == 'edit_button') { 
-			editInstanceMethod(e);
+			editInstanceMethod(e, true);
 		}
 		// When delete button is clicked
 		else if (e.bindId != null && e.bindId == 'delete_button') { 
-			deleteInstance(e);
+			deleteInstance(e, true);
 		}
 		// Other cases choose the instance for use
 		else {
-			selectInstance(e);
+			selectInstance(e, true);
+		}
+	};
+	
+	var privateSectionClicked = function privateSectionClicked(e) {
+		// When edit button is clicked
+		if (e.bindId != null && e.bindId == 'edit_button') { 
+			editInstanceMethod(e, false);
+		}
+		// When delete button is clicked
+		else if (e.bindId != null && e.bindId == 'delete_button') { 
+			deleteInstance(e, false);
+		}
+		// Other cases choose the instance for use
+		else {
+			selectInstance(e, false);
 		}
 	};
 	
 	/* Method to select an instance for use */
-	var selectInstance = function selectInstance(e) {
+	var selectInstance = function selectInstance(e, p) {
 		confView.animate({duration: 500, delay: 0, opacity: 0}, function(){
 			// Updates publicInstFile
 			publicInstFile = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'w4tPublicInst');
@@ -104,6 +119,9 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 			privateInstFile = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, 'w4tPrivateInst');
 			privateInstFile.write(JSON.stringify(privateItems));
 			// Restore Logo and SystemLabel
+			var section;
+			if (p == true) { section = publicSections; }
+			else { section = privateSections; }
 			Yaast.Sandbox.currentURL = section[e.sectionIndex].getItemAt(e.itemIndex).url.text;
 			Yaast.Sandbox.appConfig.config.lastInstanceName = section[e.sectionIndex].getItemAt(e.itemIndex).connection.text;
 			Yaast.Sandbox.appConfig.config.lastInstanceURL = section[e.sectionIndex].getItemAt(e.itemIndex).url.text;
@@ -115,7 +133,7 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 	};
 	
 	/* Method to delete an instance */
-	var deleteInstance = function deleteInstance(e) {
+	var deleteInstance = function deleteInstance(e, p) {
 		var myEvent = e;
 		var dialog = Ti.UI.createAlertDialog({
 			cancel : 0,
@@ -264,7 +282,7 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 	};
 
 	/* Method to edit instances */
-	var editInstanceMethod = function editInstanceMethod(e) {
+	var editInstanceMethod = function editInstanceMethod(e, p) {
 		// editInstance main view
 		editInstance = Ti.UI.createView(theme.editCreateInstanceView);
 		// Text Field for the Instance Name
@@ -458,8 +476,8 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		confPublicInstanceListView.sections = publicSections;
 		confPrivateInstanceListView.sections = privateSections;
 		// Add listener for the ListView
-		confPublicInstanceListView.addEventListener('itemclick', sectionClicked);
-		confPrivateInstanceListView.addEventListener('itemclick', sectionClicked);
+		confPublicInstanceListView.addEventListener('itemclick', publicSectionClicked);
+		confPrivateInstanceListView.addEventListener('itemclick', privateSectionClicked);
 		// Add main view to parent
 		parentWindow.add(confView);
 	};
@@ -468,8 +486,8 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 		// Delete events Listeners
 		privateAddButton.removeEventListener('click', createNewInstance);
 		publicAddButton.removeEventListener('click', createNewInstance);
-		confPublicInstanceListView.removeEventListener('itemclick', sectionClicked);
-		confPrivateInstanceListView.removeEventListener('itemclick', sectionClicked);
+		confPublicInstanceListView.removeEventListener('itemclick', publicSectionClicked);
+		confPrivateInstanceListView.removeEventListener('itemclick', privateSectionClicked);
 		// Delete views
 		parentWindow.remove(confView);
 		confInstanceMainView.remove(confPublicInstanceListView);
