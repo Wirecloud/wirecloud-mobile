@@ -239,14 +239,14 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 						// Update public section
 						publicSection.setItems(publicItems);
 						// Update section
-						section.push(publicSection);
+						publicSections.push(publicSection);
 					} else {
 						// Update private list
 						privateItems.push({connection: {text : newInstanceName.value}, url: {text : newInstanceURL.value}});
 						// Update private section
 						privateSection.setItems(privateItems);
 						// Update section
-						section.push(privateSection);
+						privateSections.push(privateSection);
 					}
 					destroy();
 				});
