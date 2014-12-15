@@ -289,8 +289,7 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 			width: parseInt(editInstance.width * 0.9, 10),
 			left: parseInt(editInstance.width * 0.05, 10),
 			height: parseInt(editInstance.height * 0.2, 10),
-			top: parseInt(editInstance.height * 0.15, 10),
-			value : section[e.sectionIndex].getItemAt(e.itemIndex).connection.text
+			top: parseInt(editInstance.height * 0.15, 10)
 		}));
 		// Text Field for the Instance Url
 		editInstanceURL = Ti.UI.createTextField(Yaast.MergeObject(theme.inputTextField, {
@@ -298,8 +297,9 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 			width: parseInt(editInstance.width * 0.9, 10),
 			left: parseInt(editInstance.width * 0.05, 10),
 			height: parseInt(editInstance.height * 0.2, 10),
-			value : section[e.sectionIndex].getItemAt(e.itemIndex).url.text
 		}));
+		editInstanceName.value = (p) ? publicItems[e.itemIndex].connection.text : privateItems[e.itemIndex].connection.text;
+		editInstanceURL.value = (p) ? publicItems[e.itemIndex].url.text : privateItems[e.itemIndex].url.text;
 		//Method to force the textField to lose the focus
 		editInstanceName.getText = function getText() {
 			editInstanceName.blur();
@@ -343,14 +343,14 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 				dialog.show();
 			} else {
 				editInstance.animate({duration: 500, delay: 0, opacity: 0}, function() {
-					if (e.sectionIndex == 1) {
+					if (p) {
 						// Update public list
 						publicItems.splice(e.itemIndex, 1, 
 							{connection: {text : editInstanceName.value}, url: {text : editInstanceURL.value}});
 						// Update public section
 						publicSection.setItems(publicItems);
 						// Update section
-						section.push(publicSection);
+						publicSections.push(publicSection);
 					} else {
 						// Update private list
 						privateItems.splice(e.itemIndex, 1, 
@@ -358,7 +358,7 @@ var instanceManagerView = function(parentWindow, logo, systemLabel, formCallback
 						// Update private section
 						privateSection.setItems(privateItems);
 						// Update section
-						section.push(privateSection);
+						privateSections.push(privateSection);
 					}
 					destroy();
 				});	
