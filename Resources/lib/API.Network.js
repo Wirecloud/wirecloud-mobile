@@ -201,6 +201,7 @@ var Network = function (APIReferences) {
             timeout: tim
         });
         client.open("POST", loginURL);
+        client.setRequestHeader("Referer", loginURL);
         client.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
         client.send(boundary);
     };
@@ -321,7 +322,6 @@ var Network = function (APIReferences) {
 		});
 		Ti.Network.removeAllHTTPCookies();
 		client.open("GET", loginURL);
-		client.setRequestHeader("Content-Type", 'text/html');
 		client.send();
 	};
 
