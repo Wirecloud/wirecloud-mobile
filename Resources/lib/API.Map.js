@@ -494,7 +494,7 @@ var Map = ( function() {
             }
 
             Yaast.Sandbox.tabView.add(mapsList[mapsId]);
-            _self.setBound(mapId, viewId, options);
+            return _self.setBound(mapId, viewId, options);
         };
 
         /**
@@ -510,24 +510,30 @@ var Map = ( function() {
                 return false;
             }
             if ( typeof options.width === 'undefined' || typeof options.height === 'undefined') {
-                options.width = parseInt(Yaast.Sandbox.tabView.rect.width * 0.7);
-                options.height = parseInt(Yaast.Sandbox.tabView.rect.height * 0.5);
+                options.width = parseInt(Yaast.Sandbox.componentPos[viewId].width * 0.7);
+                options.height = parseInt(Yaast.Sandbox.componentPos[viewId].height * 0.5);
                 options.top = 'undefined';
                 options.left = 'undefined';
             } else {
+            	if (options.width.toString().indexOf('%') !== -1) {
+            		options.width = (parseInt(options.width) / 100) * parseInt(Yaast.Sandbox.componentPos[viewId].width);
+            	}
+            	if (options.height.toString().indexOf('%') !== -1) {
+            		options.height = (parseInt(options.height) / 100) * parseInt(Yaast.Sandbox.componentPos[viewId].height);
+            	}
                 // Position
                 if ( typeof options.top !== 'undefined' || typeof options.bottom !== 'undefined') {
                     if ( typeof options.bottom === 'undefined') {
-                        options.top = parseInt(options.top + Yaast.Sandbox.componentPos[viewId].top);
+                        options.top = parseInt(options.top) + parseInt(Yaast.Sandbox.componentPos[viewId].top);
                     } else {
-                        options.top = parseInt(Yaast.Sandbox.componentPos[viewId].top + (Yaast.Sandbox.componentPos[viewId].height - options.bottom));
+                        options.top = parseInt(Yaast.Sandbox.componentPos[viewId].top) + (parseInt(Yaast.Sandbox.componentPos[viewId].height) - parseInt(options.bottom));
                     }
                 }
                 if ( typeof options.left !== 'undefined' || typeof options.right !== 'undefined') {
                     if ( typeof options.right === 'undefined') {
-                        options.left = parseInt(options.left + Yaast.Sandbox.componentPos[viewId].left);
+                        options.left = parseInt(options.left) + parseInt(Yaast.Sandbox.componentPos[viewId].left);
                     } else {
-                        options.left = parseInt(Yaast.Sandbox.componentPos[viewId].left + (Yaast.Sandbox.componentPos[viewId].width - options.right));
+                        options.left = parseInt(Yaast.Sandbox.componentPos[viewId].left) + (parseInt(Yaast.Sandbox.componentPos[viewId].width) - parseInt(options.right));
                     }
                 }
             }
