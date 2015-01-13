@@ -1,6 +1,6 @@
-/*
+/**
  * Copyright (c) 2014 by Center Open Middleware. All Rights Reserved.
- * Titanium Appcelerator 3.2.0GA
+ * Titanium Appcelerator 3.3.0GA
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
  */
@@ -18,9 +18,7 @@
 /* FYI: http://docs.appcelerator.com/titanium/3.0/#!/api/Titanium.Media*/
 var Media = function (APIReferences) {
 
-    var Yaast = {
-        API: APIReferences
-    };
+    Yaast['API'] = APIReferences;
 
     /** It allows to manage photo gallery and other native services.
      * @author Santiago Blanco & Carlos Blanco
@@ -364,16 +362,16 @@ var Media = function (APIReferences) {
             // Position
             if (typeof options.top !== 'undefined' || typeof options.bottom !== 'undefined') {
                 if (typeof options.bottom === 'undefined') {
-                    options.top = parseInt(options.top + Ti.App.componentPos[viewId].top);
+                    options.top = parseInt(options.top + Yaast.Sandbox.componentPos[viewId].top);
                 } else {
-                    options.top = parseInt(Ti.App.componentPos[viewId].top + (Ti.App.componentPos[viewId].height - options.bottom));
+                    options.top = parseInt(Yaast.Sandbox.componentPos[viewId].top + (Yaast.Sandbox.componentPos[viewId].height - options.bottom));
                 }
             }
             if (typeof options.left !== 'undefined' || typeof options.right !== 'undefined') {
                 if (typeof options.right === 'undefined') {
-                    options.left = parseInt(options.left + Ti.App.componentPos[viewId].left);
+                    options.left = parseInt(options.left + Yaast.Sandbox.componentPos[viewId].left);
                 } else {
-                    options.left = parseInt(Ti.App.componentPos[viewId].left + (Ti.App.componentPos[viewId].width - options.right));
+                    options.left = parseInt(Yaast.Sandbox.componentPos[viewId].left + (Yaast.Sandbox.componentPos[viewId].width - options.right));
                 }
             }
         }
@@ -437,19 +435,25 @@ var Media = function (APIReferences) {
             options.top = 'undefined';
             options.left = 'undefined';
         } else {
+           	if (options.width.toString().indexOf('%') !== -1) {
+        		options.width = (parseInt(options.width) / 100) * parseInt(Yaast.Sandbox.componentPos[viewId].width);
+        	}
+        	if (options.height.toString().indexOf('%') !== -1) {
+        		options.height = (parseInt(options.height) / 100) * parseInt(Yaast.Sandbox.componentPos[viewId].height);
+        	}
             // Position
             if (typeof options.top !== 'undefined' || typeof options.bottom !== 'undefined') {
                 if (typeof options.bottom === 'undefined') {
-                    options.top = parseInt(options.top + Ti.App.componentPos[viewId].top);
+                    options.top = parseInt(options.top) + parseInt(Yaast.Sandbox.componentPos[viewId].top);
                 } else {
-                    options.top = parseInt(Ti.App.componentPos[viewId].top + (Ti.App.componentPos[viewId].height - options.bottom));
+                    options.top = parseInt(Yaast.Sandbox.componentPos[viewId].top) + (parseInt(Yaast.Sandbox.componentPos[viewId].height) - parseInt(options.bottom));
                 }
             }
             if (typeof options.left !== 'undefined' || typeof options.right !== 'undefined') {
                 if (typeof options.right === 'undefined') {
-                    options.left = parseInt(options.left + Ti.App.componentPos[viewId].left);
+                    options.left = parseInt(options.left) + parseInt(Yaast.Sandbox.componentPos[viewId].left);
                 } else {
-                    options.left = parseInt(Ti.App.componentPos[viewId].left + (Ti.App.componentPos[viewId].width - options.right));
+                    options.left = parseInt(Yaast.Sandbox.componentPos[viewId].left) + (parseInt(Yaast.Sandbox.componentPos[viewId].width) - parseInt(options.right));
                 }
             }
         }

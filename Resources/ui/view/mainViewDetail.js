@@ -3,7 +3,6 @@
  * Titanium Appcelerator 3.3.0GA
  * Licensed under the terms of the Apache Public License
  * Please see the LICENSE included with this distribution for details.
- *
  */
 
 "use strict";

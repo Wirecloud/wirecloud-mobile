@@ -9,6 +9,7 @@
  *  Alejandro F.Carrera
  *  Carlos Blanco Vallejo
  *  Santiago Blanco Ventas
+ *  Alejandro Vera De Juan
  *
  */
 
