@@ -61,14 +61,14 @@ var loginViewStyle = (function() {
     	// TODO check this image in retina
         image: (Yaast.API.HW.System.isApple()) ? Ti.Filesystem.getResourcesDirectory()  + 'images/logo_tab.png' : '../../images/logo_tab.png',
         width: parseInt(((_self.view.width / 2) - ((_self.view.width * 4) / 100)), 10),
-        left: '2%',
+        left: parseInt(_self.view.width * 0.02, 10), //'2%',
         enableZoomControls: false, 
         touchEnabled: false
     };
 
     _self.systemLabel = {
-        top: '1%',
-        left: '2%',
+        top: parseInt(_self.view.width * 0.01), //'1%',
+        left: parseInt(_self.view.width * 0.02), //'2%',
         height: Yaast.API.UI.getDefaultRowHeight(),
         text: _os + ' ' + Yaast.API.HW.System.getVersion() + _version,
         textAlign: Ti.UI.TEXT_ALIGNMENT_LEFT,
@@ -80,10 +80,10 @@ var loginViewStyle = (function() {
     };
 
     _self.spinner = {
-  		message: 'Checking Authorization',
+  		message: L("checking_auth"),
   		style: (Yaast.API.HW.System.isApple()) ? Ti.UI.iPhone.ActivityIndicatorStyle.BIG : Ti.UI.ActivityIndicatorStyle.BIG_DARK,
   		top: parseInt((_self.view.height/2)-(Yaast.API.UI.getDefaultRowHeight()/2), 10),
-  		right:'7%',
+  		right: parseInt(_self.view.width * 0.07, 10), //'7%',
   		color: _fontColor,
         font : {
             fontSize : parseInt((Ti.Platform.displayCaps.platformHeight*5)/100, 10),
@@ -100,7 +100,7 @@ var loginViewStyle = (function() {
     
     _self.containerView = {
         width: parseInt(((_self.view.width)/2) - (_self.view.width*0.04), 10),
-        height: parseInt(((_self.view.height)/2), 10),
+        height: parseInt((_self.view.height) * 0.6, 10),
         borderRadius: 15,
         borderWidth: 1,
         borderColor: _background3,
@@ -108,9 +108,9 @@ var loginViewStyle = (function() {
     };
 
     _self.inputTextField = {
-        width: '90%',
-        left: '5%',
-        height: '20%',
+        width: parseInt(parseInt(((_self.view.width)/2) - (_self.view.width*0.04), 10) * 0.9, 10),
+        left: parseInt(parseInt(((_self.view.width)/2) - (_self.view.width*0.04), 10) * 0.05, 10),
+        height: parseInt(parseInt(((_self.view.height)/2), 10) * 0.2, 10),
         color: '#354B5D',
         backgroundColor: '#FFFFFF',
         borderRadius: 5,
@@ -191,7 +191,18 @@ var loginViewStyle = (function() {
             fontFamily: Yaast.FontAwesome.getFontFamily(),
         }
     };    
-
+	
+	_self.checkboxUser = {
+    	bottom : parseInt(_self.containerView.height * 0.23, 10),
+		left : parseInt(_self.containerView.width * 0.06, 10),
+		title : L('label_login_remember_user'),
+    	style : Titanium.UI.Android.SWITCH_STYLE_CHECKBOX,
+    	value : false,
+    	font: {
+            fontSize: _fontSize,
+            fontFamily: _font
+        }
+    };
     return _self;
 
 }());

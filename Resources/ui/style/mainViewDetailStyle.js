@@ -49,19 +49,20 @@ var mainViewDetailStyle = (function() {
             fontFamily: Yaast.FontAwesome.getFontFamily(),
             fontSize: parseInt(_fontSize)
         },
-        left: 15,
-        top: parseInt(rowHeight) + 30
+        left: parseInt(_self.view.width)* 0.05,
+        top: _self.mainTitle.top + _self.mainTitle.height + parseInt(_self.view.height) * 0.05
 	};
 
 	_self.descriptionLabel = {
 		color: '#FFFFFF',
-		height: parseInt(heightView * 60 / 100),
+		height: _self.view.height * 0.6,
+		width : parseInt(_self.view.width) * 0.84,
         font: {
             fontFamily: Yaast.FontAwesome.getFontFamily(),
             fontSize: _fontSize
         },
-        left: 15,
-        top: _self.creatorLabel.top + parseInt(rowHeight * 1.5),
+        left: parseInt(_self.view.width)* 0.08,
+        top: _self.creatorLabel.top + _self.creatorLabel.height + parseInt(_self.view.height)  * 0.05,
         verticalAlign: Titanium.UI.TEXT_VERTICAL_ALIGNMENT_TOP
 	};
 

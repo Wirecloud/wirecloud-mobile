@@ -6,9 +6,14 @@
 	<string name="label_inet_connected">Online</string>
 	<string name="label_inet_noconnected">Offline</string>
 	<string name="label_login_wait">Connecting, please wait</string>
+	<string name="label_login_remember_user">Remember user</string>
 	<string name="label_search_marketplace">Search filter</string>
 	<string name="label_vendor_marketplace">Vendor</string>
 	<string name="label_version_marketplace">Version</string>
+	<string name="label_instance_name">Instance Name</string>
+	<string name="label_url">URL</string>
+	<string name="label_private_section">Private</string>
+	<string name="label_public_section">Public</string>
 	<string name="label_widget_map_distance">Distance</string>
 	<string name="label_widget_map_time">Time</string>
 	<string name="label_widget_map_step">Step</string>
@@ -28,6 +33,10 @@
 	<string name="button_slider_rworkspace">Rename</string>
 	<string name="button_slider_eworkspace">Remove</string>
 	<string name="button_slider_oworkspace">Organize</string>
+	<string name="button_ok">Ok</string>
+	<string name="button_done">Done</string>
+	<string name="button_back">Back</string>
+	<string name="button_login">Log In</string>
 	<string name="alert_label_description">Description</string>
 	<string name="alert_label_ordermarket">Marketplace sort by</string>
 	<string name="alert_button_cancel">Cancel</string>
@@ -48,4 +57,17 @@
 	<string name="error_connection_login_ios">There was an error getting data\nfrom your account\n\nPlease try again later or\ncontact the administrator</string>
 	<string name="error_connection_getMashup_ios">There was an error getting data or try use mashup indicated\n\nPlease try again later or contact the administrator</string>
 	<string name="error_connection_getMashup_android">There was an error getting data or try use mashup indicated\n\nPlease try again later or contact the administrator</string>
+	<string name="error_instance_not_selected">Select an instnace using the instance configuration screen</string>
+	<string name="error_wrong_credentials">Your credentials are wrong</string>
+	<string name="error_server_timeout">There has been some error with the server</string>
+	<string name="error_missing_field">There is no name or url</string>
+	<string name="error_offline">Check your internet connection</string>
+	<string name="confirmation_instance_deletion">Do you want to delete the instance?</string>
+	<string name="checking_auth">Checking authorization</string>
+	<string name="configuration">Configuration</string>
+	<string name="instances">Instances</string>
+	<string name="yes">Yes</string>
+	<string name="no">No</string>
+	
+	
 </resources>
