@@ -12,15 +12,8 @@
 
     var eventHandlers = {};
     var methodHandlers = {};
-    var appleOS;
-    var id;
-
-    // Dont remove the next line.
-    // ChangeMeYaaST!! appleOS bool
-
-	// Dont remove the next line.
-    // ChangeMeYaaST!! MagicID
-
+    var appleOS = window._payload.appleOS;
+    var id = window._payload.id;
     var prefs = null;
     var inputs = {};
     var callCounter = 0;

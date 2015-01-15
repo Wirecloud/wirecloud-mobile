@@ -97,6 +97,7 @@
 		} else {
 			var url = _mainUrl + "api/workspace/" + optionalid + "/resources";
 		}
+		url += "?process_urls=false";
 		Ti.API.info("[getResoruces]: " + url);
 		var client = Ti.Network.createHTTPClient({
 			onload : function(e) {
@@ -414,7 +415,7 @@
 		 *  @param: widgets uri, id, type [operator|widget] and callback_function
 		 *  @usage: download index.html and files */
 		function downloadResources(uri, id, flag, callback, userName) {
-			var urlResource = _mainUrl + 'api/resource/' + uri + '/description?include_wgt_files=true';
+			var urlResource = _mainUrl + 'api/resource/' + uri + '/description?include_wgt_files=true&process_urls=false';
 			Ti.API.info("URL a descargar recurso -> " + urlResource);
 			var client = Ti.Network.createHTTPClient({
 				onload : function(e) {

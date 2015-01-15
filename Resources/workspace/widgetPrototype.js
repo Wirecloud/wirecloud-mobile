@@ -18,17 +18,17 @@ function widgetPrototype(data) {
     _self.id = data.uri;
     _self.display_name = data.title;
     _self.contents = data.contents;
-    if (data.type == 'widget') {
+    if (data.type === 'widget') {
 	    for (var i = 0; i < data.altcontents.length; i ++) {
 	    	if (data.altcontents[i].scope === "yaast") {
 	    		_self.contents = data.altcontents[i];
 	    	}
 	    }
-	    // TODO remove code_content_type and use contents.contenttype directly
-    	_self.code_content_type = data.contents.contenttype;
     	_self.default_width = data.widget_width;
    		_self.default_height = data.widget_height;
-	}
+	} else if (data.type === "operator") {
+		_self.js_files = data.js_files;
+    }
 
 	// Inputs
     _self.inputs = {};
@@ -45,9 +45,11 @@ function widgetPrototype(data) {
 	
 	// Preferences
 	_self.preferences = {};
-	for (var i = 0; i < data.preferences.length; i++){
-		_self.preferences[data.preferences[i].name] = data.preferences[i].default_value;
-	}
+    _self.preferenceList = data.preferences;
+    for (i = 0; i < data.preferences.length; i++) {
+        _self.preferences[data.preferences[i].name] = data.preferences[i];
+    }
+
     return _self;
     
 };

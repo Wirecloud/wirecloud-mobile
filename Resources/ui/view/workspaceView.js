@@ -233,27 +233,6 @@ function workspaceView(parameters, userName, returnCallback) {
 	};
 	Ti.App.addEventListener('makeRequest', _self.funMakeRequest);
 
-	// Handler that take each petition of preferences value
-	_self.funGetPreferences = function funGetPreferences(data){
-		Ti.API.info('getPreferences from id: '+data.id);
-		var _theEntity;
-		var _preferences;
-		if(data.typeView === 'widget'){
-			_theEntity = _widgetsViewById[data.id];
-			_preferences = _selfView.platform.widgetsInUseById[data.id].preferences;
-		}
-		else{
-			_theEntity = _operatorsViewById[data.id];
-			_preferences = _selfView.platform.operatorsInUseById[data.id].preferences;
-		}
-		Ti.API.info('activatePreferenceCallback to id: '+data.id+' with preferences: '+ JSON.stringify(_preferences));
-		_theEntity.evalJS("MashupPlatform.activatePreferenceCallback(" + JSON.stringify(_preferences) + ");");
-		_result = null;
-		_theEntity = null;
-		_preferences = null;
-	};
-	Ti.App.addEventListener('getPrefs', _self.funGetPreferences);
-
 	/** @title: showShortcutTab (Function)
 	 *  @parameters: mode (scrollable or not) and start index
 	 *  @usage: create view with buttons
@@ -419,8 +398,6 @@ function workspaceView(parameters, userName, returnCallback) {
 		Ti.App.removeEventListener('pushEvent', _self.funPushEvent);
 		delete _self['funPushEvent'];
 		Ti.App.removeEventListener('makeRequest', _self.funMakeRequest);
-		delete _self['funGetPreferences'];
-		Ti.App.removeEventListener('getPrefs', _self.funGetPreferences);
 		if (_self['funClickDialog']) delete _self['funClickDialog'];
 		_isApple = null;
 		_platformObject = null;

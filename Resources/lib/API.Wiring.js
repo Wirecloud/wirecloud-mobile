@@ -57,11 +57,10 @@ function platform(workspaceInfo) {
 	}
 
 	// Loop through all operators in use for this Workspace and update preferences
-	for (var _i in _tempInfoWorkspace.wiring.operators) {
-		_self.operatorsInUseById[_i] = _operatorsByFullName[_tempInfoWorkspace.wiring.operators[_i].name];
-		for(var _j in _tempInfoWorkspace.wiring.operators[_i].preferences){
-			_self.operatorsInUseById[_i].preferences[_j] = _tempInfoWorkspace.wiring.operators[_i].preferences[_j];
-		}
+	for (var i in _tempInfoWorkspace.wiring.operators) {
+		_self.operatorsInUseById[i] = _tempInfoWorkspace.wiring.operators[i];
+		_self.operatorsInUseById[i].uri = _tempInfoWorkspace.wiring.operators[i].name;
+		_self.operatorsInUseById[i].meta = _operatorsByFullName[_tempInfoWorkspace.wiring.operators[i].name];
 	}
 
 	// Returns the widgets that are in use for a particular tab, add this widgets
@@ -75,9 +74,6 @@ function platform(workspaceInfo) {
 			} else {
 				Ti.API.info('[API.Wiring] Widget not available: ' + iwidgets[_i].widget);
 				return _widgetsInUseInThisTabById;
-			}
-			for (var _j in _metaInfo.preferences){
-				_metaInfo.preferences[_j] = iwidgets[_i].variables[_j].value;
 			}
 			_widgetsInUseInThisTabById[iwidgets[_i].id] = {
 			    meta: _metaInfo,    				// widget information
