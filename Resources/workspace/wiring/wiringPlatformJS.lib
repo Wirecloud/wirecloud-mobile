@@ -13,11 +13,13 @@
     var id = window._payload.id;
     var meta = window._payload.meta;
     var preferences = window._payload.preferences;
+    var properties = window._payload.properties;
     var prefs_callback = null;
     var inputs = {};
     var requestCallbacks = {};
     var requestCallbacksKey = 0;
     var type = window._payload.type;
+    var component_entry = null;
 
     // Platform definition
     Object.defineProperty(window, 'MashupPlatform', {value: {}});
@@ -43,6 +45,48 @@
             prefs_callback(values);
         }
     });
+
+    // Component
+    Object.defineProperty(window.MashupPlatform, type, {value: {}});
+    component_entry = window.MashupPlatform[type];
+    Object.defineProperty(component_entry, 'id', {value: id});
+    if (type === 'widget') {
+        var IWidgetVariable = function IWidgetVariable(meta, variable) {
+            this.set = function set(value) {
+                if (!variable.readonly) {
+                    variable.value = value;
+                } else {
+                    // Throw exception
+                }
+            };
+
+            this.get = function get() {
+                return variable.value;
+            };
+
+            Object.freeze(this);
+        };
+
+        Object.defineProperty(component_entry, 'getVariable', {
+            value: function getVariable(key) {
+                var variable;
+                if (key in meta.properties) {
+                    if (properties[key] != null && properties[key].value != null) {
+                        variable = properties[key];
+                    } else {
+                        variable = {
+                            name: key,
+                            readonly: false,
+                            value: meta.properties.default
+                        };
+                    }
+                    return new IWidgetVariable(meta.properties[key], variable);
+                } else {
+                    // Throw new Error
+                }
+            }
+        });
+    }
 
     // Wiring Module
     Object.defineProperty(window.MashupPlatform, 'wiring', {value: {}});

@@ -23,6 +23,7 @@ function widgetGeneric(dim, parameters, idWidget, userName) {
 		id: idWidget,
 		meta: parameters.meta,
 		preferences: parameters.preferences,
+		properties: parameters.properties,
 		appleOS: _isApple
 	};
 	payloadFile.write("window._payload = " + JSON.stringify(payload), false);

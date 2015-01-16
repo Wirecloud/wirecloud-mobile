@@ -42,6 +42,13 @@ function widgetPrototype(data) {
         _self.outputs[data.wiring.outputs[i].name] = data.wiring.outputs[i];
     }
 	i = null;
+
+	// Properties
+	_self.properties = {};
+	_self.propertiesList = data.properties;
+	for (i = 0; i < data.properties.length; i++) {
+		_self.properties[data.properties[i].name] = data.properties[i];
+	}
 	
 	// Preferences
 	_self.preferences = {};
