@@ -403,6 +403,7 @@ function workspaceView(parameters, userName, returnCallback) {
 	};
 
 	_self.destroy = function destroy() {
+		_self.clearObject();
 		_self.view = null;
 	};
 
