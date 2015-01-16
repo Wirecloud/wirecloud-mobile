@@ -12,7 +12,7 @@
 
     var id = window._payload.id;
     var meta = window._payload.meta;
-    var prefs = window._payload.preferences;
+    var preferences = window._payload.preferences;
     var prefs_callback = null;
     var inputs = {};
     var requestCallbacks = {};
@@ -84,18 +84,52 @@
    
     // Preferences Module
     Object.defineProperty(window.MashupPlatform, 'prefs', {value: {}});
+    Object.defineProperty(window.MashupPlatform.prefs, 'PreferenceError', {
+        value: function PreferenceError(message) {
+            this.name = "PreferenceError";
+            this.message = message || "";
+        }
+    });
+    MashupPlatform.prefs.PreferenceError.prototype = new Error();
+    MashupPlatform.prefs.PreferenceError.prototype.constructor = MashupPlatform.prefs.PreferenceError;
+    Object.freeze(MashupPlatform.prefs.PreferenceError.prototype);
+    Object.freeze(MashupPlatform.prefs.PreferenceError);
+
     Object.defineProperty(window.MashupPlatform.prefs, 'get', {
-	    value: function get(key) {
+        value: function get(key) {
             if (key in meta.preferences) {
-                if (key in prefs && prefs[key].value != null) {
-                    return prefs[key].value;
-                } else {
-                    return meta.preferences[key].default;
+                if (preferences[key] == null) {
+                    preferences[key] = {
+                        readonly: false,
+                        hidden: false,
+                        value: null
+                    };
                 }
+                if (preferences[key].value == null) {
+                    preferences[key].value = meta.preferences[key].default;
+                }
+                return preferences[key].value;
             } else {
-                // throw new MashupPlatform.prefs.PreferenceError('"%(pref)s" is not a valid preference name');
+                throw new MashupPlatform.prefs.PreferenceError('"' + key + '" is not a valid preference name');
             }
-	    }
+        }
+    });
+    Object.defineProperty(window.MashupPlatform.prefs, 'set', {
+        value: function set(key, value) {
+            if (key in meta.preferences) {
+                if (preferences[key] == null) {
+                    preferences[key] = {
+                        readonly: false,
+                        hidden: false,
+                        value: null
+                    };
+                }
+                preferences.value = value;
+                // TODO persist
+            } else {
+                throw new MashupPlatform.prefs.PreferenceError('"' + key + '" is not a valid preference name');
+            }
+        }
     });
     Object.defineProperty(window.MashupPlatform.prefs, 'registerCallback', {
         value: function registerCallback(callback) {
