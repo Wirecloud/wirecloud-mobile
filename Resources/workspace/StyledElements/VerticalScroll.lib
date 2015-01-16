@@ -1,0 +1,9 @@
+(function () {
+
+    var VerticalScroll = function VerticalScroll(element) {
+        element.style.overflowY = 'hidden';
+    };
+
+    StyledElements.VerticalScroll = VerticalScroll;
+
+})();

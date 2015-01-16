@@ -44,15 +44,16 @@ function widgetGeneric(dim, parameters, idWidget, userName) {
 		_fileBridge = null;
 		_fileMashupPlatform = null;
 
-		var _textHTML = mainHTML.read().toString();
-		var _routeMashup = '<head>\n';
-		_routeMashup += '\t\t<script type="text/javascript" src="' + mainhtmlName + "." + idWidget + ".payload.js" + '"></script>\n';
-		_routeMashup += '\t\t<script type="text/javascript" src="wiringPlatform.js"></script>\n'; 
-		_routeMashup += '\t\t<script type="text/javascript" src="APIBridge.js"></script>\n';
-		_textHTML = _textHTML.replace('<head>', _routeMashup);
-		instanceHTML.write(_textHTML, false);
-		_routeMashup = null;
-		_textHTML = null;
+		var widgetHTML = mainHTML.read().toString();
+		var extensionHTML = '<head>\n';
+		extensionHTML += '\t\t<script type="text/javascript" src="' + mainhtmlName + "." + idWidget + ".payload.js" + '"></script>\n';
+		extensionHTML += '\t\t<script type="text/javascript" src="wiringPlatform.js"></script>\n';
+		extensionHTML += '\t\t<script type="text/javascript" src="APIBridge.js"></script>\n';
+		extensionHTML = apply_extensions(parameters.meta, extensionHTML);
+		widgetHTML = widgetHTML.replace('<head>', extensionHTML);
+		instanceHTML.write(widgetHTML, false);
+		extensionHTML = null;
+		widgetHTML = null;
 	}
 	_self = Ti.UI.createWebView({
 		url: instanceHTML.nativePath,
@@ -85,6 +86,47 @@ function widgetGeneric(dim, parameters, idWidget, userName) {
 	_self.setBorderColor("#E3DEDD");
 	_self.setBorderWidth(1);
 	return _self;
+}
+
+function add_script(file, extensionHTML) {
+	return extensionHTML + '\t\t<script type="text/javascript" src="' + file + '"></script>\n';
+}
+
+var STYLED_ELEMENTS_FILES = [
+    'Utils.lib',
+    'Event.lib',
+    'ObjectWithEvents.lib',
+    'StyledElements.lib',
+    'InputElement.lib',
+    'CommandQueue.lib',
+    'Container.lib',
+    'Addon.lib',
+    'Accordion.lib',
+    'Expander.lib',
+    'Fragment.lib',
+    'Button.lib',
+    'Alternative.lib',
+    'Alternatives.lib',
+    'HorizontalLayout.lib',
+    'BorderLayout.lib',
+    'ModelTable.lib',
+    'Tab.lib',
+    'StyledNotebook.lib',
+];
+
+function apply_extensions(meta, extensionHTML) {
+	if (meta.contents.useplatformstyle) {
+		extensionHTML += '\t\t<link href="' + Ti.Filesystem.getFile(Ti.Filesystem.getResourcesDirectory(), 'css/platform_gadget_style.css').nativePath + '" rel="stylesheet" type="text/css" />\n';
+	}
+
+	//for (var i = 0; i < meta.requirements.length; i++) {
+	//	if (meta.requirements[i].name == 'STYLED_ELEMENTS')
+		for (var j = 0; j < STYLED_ELEMENTS_FILES.length; j++) {
+			extensionHTML = add_script(Ti.Filesystem.getFile(Ti.Filesystem.getResourcesDirectory(), 'workspace/StyledElements/' + STYLED_ELEMENTS_FILES[j]).nativePath, extensionHTML);
+		}
+	//}
+
+	return extensionHTML;
 }
 
 module.exports = widgetGeneric;
