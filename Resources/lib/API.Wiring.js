@@ -59,36 +59,33 @@ function platform(workspaceInfo) {
 	// Loop through all operators in use for this Workspace and update preferences
 	for (var i in _tempInfoWorkspace.wiring.operators) {
 		_self.operatorsInUseById[i] = _tempInfoWorkspace.wiring.operators[i];
-		_self.operatorsInUseById[i].uri = _tempInfoWorkspace.wiring.operators[i].name;
 		_self.operatorsInUseById[i].meta = _operatorsByFullName[_tempInfoWorkspace.wiring.operators[i].name];
 	}
 
 	// Returns the widgets that are in use for a particular tab, add this widgets
 	// to self.widgetsInUseById and update preferences of these widgets
 	function parseIwidgets(iwidgets) {
-		var _widgetsInUseInThisTabById = {};
-		for (var _i in iwidgets) {
-			var _metaInfo = _widgetsByFullName[iwidgets[_i].widget];
-			if (_metaInfo) {
-				_metaInfo.readonly = iwidgets[_i].readOnly;
-			} else {
-				Ti.API.info('[API.Wiring] Widget not available: ' + iwidgets[_i].widget);
-				return _widgetsInUseInThisTabById;
-			}
-			_widgetsInUseInThisTabById[iwidgets[_i].id] = {
-			    meta: _metaInfo,    				// widget information
-			    dimensions: {                       // widget dimensions
-			    	top: iwidgets[_i].top * rowHeight,
-			    	left: iwidgets[_i].left * columnWidth,
-			    	width: iwidgets[_i].width * columnWidth,
-			    	height: iwidgets[_i].height * rowHeight,
-			    }
-			};
-			_self.widgetsInUseById[iwidgets[_i].id] = _metaInfo;
-			_metaInfo = null;
-		}
-		_i = null;
-		return _widgetsInUseInThisTabById;
+        var _widgetsInUseInThisTabById = {};
+        for (var i in iwidgets) {
+            var _metaInfo = _widgetsByFullName[iwidgets[i].widget];
+            if (!_metaInfo) {
+                Ti.API.info('[API.Wiring] Widget not available: ' + iwidgets[i].widget);
+                continue;
+            }
+            _widgetsInUseInThisTabById[iwidgets[i].id] = iwidgets[i];
+            iwidgets[i].meta = _metaInfo;  // widget information
+            iwidgets[i].dimensions = {     // widget dimensions
+                top: iwidgets[i].top * rowHeight,
+                left: iwidgets[i].left * columnWidth,
+                width: iwidgets[i].width * columnWidth,
+                height: iwidgets[i].height * rowHeight,
+            };
+
+            _self.widgetsInUseById[iwidgets[i].id] = _widgetsInUseInThisTabById[iwidgets[i].id];
+            _metaInfo = null;
+        }
+        i = null;
+        return _widgetsInUseInThisTabById;
 	};
 
 	// Parse Tabs

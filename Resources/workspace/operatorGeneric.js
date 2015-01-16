@@ -13,7 +13,7 @@ function operatorGeneric(parameters, idOperator, userName) {
 	var _isApple = (Ti.Platform.osname == 'ipad');
 	var _self;
 
-	var mac_path = Yaast.Sandbox.instanceDir + userName + '/operators/' + parameters.uri + '/';
+	var mac_path = Yaast.Sandbox.instanceDir + userName + '/operators/' + parameters.meta.uri + '/';
 	var instanceHTML = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, mac_path + "index." + idOperator + ".html");
 	var payloadFile = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, mac_path + "index.html." + idOperator + ".payload.js");
 	var payload = {
@@ -61,14 +61,14 @@ function operatorGeneric(parameters, idOperator, userName) {
 		visible : false
 	});
 	_self.clearObject = function clearObject() {
-		_self.removeEventListener('load', _self.funPlatformInfo);
-		delete _self['funPlatformInfo'];
-		_isApple = null;
+		// Nothing to do
 	};
 
+	_isApple = null;
+	mac_path = null;
 	instanceHTML = null;
-	payload = null;
 	payloadFile = null;
+	payload = null;
 
 	return _self;
 }

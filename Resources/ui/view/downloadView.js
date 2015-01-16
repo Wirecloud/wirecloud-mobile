@@ -8,7 +8,7 @@
 
 //downloadsPlatform Window Component Constructor
 
-function downloadView(h, listWidgets, listOperators, workspaceName, userName, operatorsIdsByName, returnCallback) {
+function downloadView(h, listWidgets, listOperators, workspaceName, userName, returnCallback) {
 
 	var IN_PROGRESS_COLOR = "#006100";
 	var ERROR_COLOR = "#610000";

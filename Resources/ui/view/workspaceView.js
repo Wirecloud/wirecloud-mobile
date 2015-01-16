@@ -17,7 +17,6 @@ function workspaceView(parameters, userName, returnCallback) {
 	var _downloadObject = null;
 	var _widgetsViewById = {};
 	var _operatorsViewById = {};
-	var _operatorsIdsByName = {};
 	var _returnCall = returnCallback;
 
 	// Visualization Self
@@ -66,15 +65,14 @@ function workspaceView(parameters, userName, returnCallback) {
 	// Check Dependencies
 	var _widgets = new Array();
 	for (var i in _selfView.platform.widgetsInUseById){
-		if(_widgets.indexOf(_selfView.platform.widgetsInUseById[i].uri) === -1){
-			_widgets.push(_selfView.platform.widgetsInUseById[i].uri);
+		if (_widgets.indexOf(_selfView.platform.widgetsInUseById[i].meta.uri) === -1){
+			_widgets.push(_selfView.platform.widgetsInUseById[i].meta.uri);
 		}
 	}
 	var _operators = new Array();
 	for (var i in _selfView.platform.operatorsInUseById){
-		if(_operators.indexOf(_selfView.platform.operatorsInUseById[i].uri) === -1){
-			_operators.push(_selfView.platform.operatorsInUseById[i].uri);
-			_operatorsIdsByName[_selfView.platform.operatorsInUseById[i].uri] = i;
+		if (_operators.indexOf(_selfView.platform.operatorsInUseById[i].meta.uri) === -1){
+			_operators.push(_selfView.platform.operatorsInUseById[i].meta.uri);
 		}
 	}
 	var _widgetsToDownload = new Array();
@@ -107,7 +105,7 @@ function workspaceView(parameters, userName, returnCallback) {
 		_self.funShowWorkspace();
 	}
 	else{
-		var _downloadObject = require('ui/view/downloadView')(parameters.heightView, _widgetsToDownload, _operatorsToDownload, _selfView.platform.name, userName, _operatorsIdsByName, _returnCall);
+		var _downloadObject = require('ui/view/downloadView')(parameters.heightView, _widgetsToDownload, _operatorsToDownload, _selfView.platform.name, userName, _returnCall);
 		_selfView.add(_downloadObject);
 	}
 
@@ -148,7 +146,7 @@ function workspaceView(parameters, userName, returnCallback) {
 			var _dimWidgetO = dataTab[i].dimensions;
 			componentPos[i] = _dimWidgetO;
 			var _widgetClass = require("workspace/widgetGeneric");
-			var _widgetO = _widgetClass(_dimWidgetO, dataTab[i].meta, i, userName);
+			var _widgetO = _widgetClass(_dimWidgetO, dataTab[i], i, userName);
 			_widgetsViewById[i] = _widgetO;
 			_tabView.add(_widgetO);
 			_tabView.add(Ti.UI.createLabel({ // Widget Label

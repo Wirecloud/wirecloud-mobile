@@ -13,8 +13,8 @@ function widgetGeneric(dim, parameters, idWidget, userName) {
 
 	var _isApple = (Ti.Platform.osname == 'ipad');
 	var _self;
-	var mainhtmlName = parameters.contents.src;
-	var mac_path = Yaast.Sandbox.instanceDir + userName + '/widgets/' + parameters.uri + '/';
+	var mainhtmlName = parameters.meta.contents.src;
+	var mac_path = Yaast.Sandbox.instanceDir + userName + '/widgets/' + parameters.meta.uri + '/';
 	var mainHTML = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, mac_path + mainhtmlName);
 	var instanceHTML = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, mac_path + mainhtmlName + "." + idWidget + ".html");
 	var payloadFile = Ti.Filesystem.getFile(Ti.Filesystem.applicationDataDirectory, mac_path + mainhtmlName + "." + idWidget + ".payload.js");
@@ -57,15 +57,9 @@ function widgetGeneric(dim, parameters, idWidget, userName) {
 		flag : true
 	});
 
-	_self.funPlatformInfo = function funPlatformInfo(){
-		_self.evalJS("MashupPlatform.setPlatformInfo(" + idWidget + "," + "'widget'" + ");");
+	_self.clearObject = function clearObject() {
+		// Nothing to do
 	};
-	_self.clearObject = function clearObject(){
-		_self.removeEventListener('load', _self.funPlatformInfo);
-		delete _self.funPlatformInfo;
-	};
-	_self.addEventListener('load', _self.funPlatformInfo);
-	mainHTML = null;
 
 	if (_isApple) {
 	    _self.setDisableBounce(true);
@@ -74,6 +68,13 @@ function widgetGeneric(dim, parameters, idWidget, userName) {
 	    _self.setEnableZoomControls(false);
 	}
 	_isApple = null;
+	mainhtmlName = null;
+	mac_path = null;
+	mainHTML = null;
+	instanceHTML = null;
+	payloadFile = null;
+	payload = null;
+
 	_self.setTop(dim.top);
 	_self.setLeft(dim.left);
 	_self.setBorderColor("#E3DEDD");
