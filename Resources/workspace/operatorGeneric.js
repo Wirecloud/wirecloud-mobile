@@ -21,6 +21,12 @@ function operatorGeneric(parameters, idOperator, userName) {
 		id: idOperator,
 		meta: parameters.meta,
 		preferences: parameters.preferences,
+		platform_context_description: build_platform_context_description(),
+		platform_context_values: build_platform_context_values(userName),
+		mashup_context_description: build_mashup_context_description(),
+		mashup_context_values: build_mashup_context(platformData),
+		mac_context_description: build_operator_context_description(parameters.meta),
+		mac_context_values: build_operator_context(parameters),
 		appleOS: _isApple
 	};
 	payloadFile.write("window._payload = " + JSON.stringify(payload), false);
@@ -71,6 +77,63 @@ function operatorGeneric(parameters, idOperator, userName) {
 	payload = null;
 
 	return _self;
+}
+
+
+function build_platform_context_description() {
+
+    return {
+        "language" : {
+           "name": "language",
+            "description" : "",
+            "label" : "Language"
+        },
+        "username" : {
+           "name": "username",
+            "description" : "",
+            "label" : "Username"
+        }
+    };
+}
+
+function build_platform_context_values(userName) {
+    return {
+        "language" : Titanium.Locale.getCurrentLanguage(),
+        "username" : userName
+    };
+}
+
+function build_operator_context_description() {
+    return {
+    };
+}
+
+
+function build_operator_context(widgetData) {
+    return {
+    };
+}
+
+function build_mashup_context_description() {
+    return {
+        "name" : {
+           "name": "name",
+            "description" : "",
+            "label" : "Name"
+        },
+        "owner" : {
+           "name": "owner",
+            "description" : "",
+            "label" : "Owner"
+        }
+    };
+}
+
+function build_mashup_context(platformData) {
+    return {
+        "name" : platformData.name,
+        "owner" : platformData.owner
+    };
 }
 
 module.exports = operatorGeneric;

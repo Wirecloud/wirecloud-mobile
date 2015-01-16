@@ -92,12 +92,12 @@
     Object.defineProperty(window.MashupPlatform, 'mashup', {value: {}});
 
     // Context
-    var ContextManager = function ContextManager(values) {
+    var ContextManager = function ContextManager(description, values) {
 
         var callbacks = [];
 
         this.getAvailableContext = function getAvailableContext() {
-            return [];
+            return description;
         };
 
         this.get = function get(key) {
@@ -108,9 +108,9 @@
             callbacks.push(callback);
         };
     };
-    Object.defineProperty(window.MashupPlatform, 'context', {value: new ContextManager()});
-    Object.defineProperty(component_entry, 'context', {value: new ContextManager(window._payload.mac_context)});
-    Object.defineProperty(window.MashupPlatform.mashup, 'context', {value: new ContextManager()});
+    Object.defineProperty(window.MashupPlatform, 'context', {value: new ContextManager(window._payload.platform_context_description, window._payload.platform_context_values)});
+    Object.defineProperty(component_entry, 'context', {value: new ContextManager(window._payload.mac_context_description, window._payload.mac_context_values)});
+    Object.defineProperty(window.MashupPlatform.mashup, 'context', {value: new ContextManager(window._payload.mashup_context_description, window._payload.mashup_context_values)});
 
     // Wiring Module
     Object.defineProperty(window.MashupPlatform, 'wiring', {value: {}});

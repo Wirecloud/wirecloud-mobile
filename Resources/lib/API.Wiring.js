@@ -36,7 +36,8 @@ function platform(workspaceInfo) {
 	// Wiring info
 	_self.wiring  = _tempInfoWorkspace.wiring.connections;
 	
-	// Name of Workspace
+	// Workspace metadata
+	_self.owner = _tempInfoWorkspace.creator;
 	_self.name =  _tempInfoWorkspace.name;
 	_self.id = _tempInfoWorkspace.id;
 

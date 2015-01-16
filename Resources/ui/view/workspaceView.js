@@ -133,20 +133,20 @@ function workspaceView(parameters, userName, returnCallback) {
 	 *  @parameters: data (Tab Information (Widgets))
 	 *  @usage: create Tab
 	 *  @extras: performance */
-	function createTabView(dataTab){
+	function createTabView(dataTab, dashboardData) {
 		var _tabView = Ti.UI.createView({
 			height: _selfView.height - 20,
 			width: _selfView.width - 20,
 			top: 10,
 			left: 10,
 		});
+		var _widgetClass = require("workspace/widgetGeneric");
 		var componentPos = {};
 		for(var i in dataTab){
 			//var _dimWidgetO = getDimensionWidget({h: _tabView.height, w: _tabView.width}, dataTab[i]);
 			var _dimWidgetO = dataTab[i].dimensions;
 			componentPos[i] = _dimWidgetO;
-			var _widgetClass = require("workspace/widgetGeneric");
-			var _widgetO = _widgetClass(_dimWidgetO, dataTab[i], i, userName);
+			var _widgetO = _widgetClass(_dimWidgetO, dataTab[i], i, userName, _selfView.platform);
 			_widgetsViewById[i] = _widgetO;
 			_tabView.add(_widgetO);
 			_tabView.add(Ti.UI.createLabel({ // Widget Label
@@ -158,10 +158,10 @@ function workspaceView(parameters, userName, returnCallback) {
 				verticalAlign: Ti.UI.TEXT_VERTICAL_ALIGNMENT_CENTER,
 				color: "#E3DEDD"
 			}));
-			_widgetClass = null;
 			_widgetO = null;
 			_dimWidgetO = null;
 		}
+		_widgetClass = null;
 		i = null;
 		// TODO tablistview
 		Yaast.Sandbox.tabView = _tabView;

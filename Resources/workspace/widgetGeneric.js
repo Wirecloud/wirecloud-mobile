@@ -9,7 +9,7 @@
 
 //Widget Generic Component Constructor
 
-function widgetGeneric(dim, parameters, idWidget, userName) {
+function widgetGeneric(dim, parameters, idWidget, userName, platformData) {
 
 	var _isApple = (Ti.Platform.osname == 'ipad');
 	var _self;
@@ -24,10 +24,12 @@ function widgetGeneric(dim, parameters, idWidget, userName) {
 		meta: parameters.meta,
 		preferences: parameters.preferences,
 		properties: parameters.properties,
-		mac_context: {
-			widthInPixels: dim.width,
-			heightInPixels: dim.height
-		},
+		platform_context_description: build_platform_context_description(),
+		platform_context_values: build_platform_context_values(userName),
+		mashup_context_description: build_mashup_context_description(),
+		mashup_context_values: build_mashup_context(platformData),
+		mac_context_description: build_widget_context_description(parameters.meta),
+		mac_context_values: build_widget_context(parameters),
 		appleOS: _isApple
 	};
 	payloadFile.write("window._payload = " + JSON.stringify(payload), false);
@@ -86,6 +88,78 @@ function widgetGeneric(dim, parameters, idWidget, userName) {
 	_self.setBorderColor("#E3DEDD");
 	_self.setBorderWidth(1);
 	return _self;
+}
+
+function build_platform_context_description() {
+    return {
+        "language" : {
+           "name": "language",
+            "description" : "",
+            "label" : "Language"
+        },
+        "username" : {
+           "name": "username",
+            "description" : "",
+            "label" : "Username"
+        }
+    };
+}
+
+function build_platform_context_values(userName) {
+    return {
+        "language" : Titanium.Locale.getCurrentLanguage(),
+        "username" : userName
+    };
+}
+
+function build_widget_context_description() {
+    return {
+        "widthInPixels" : {
+           "name": "widthInPixels",
+            "description" : "",
+            "label" : "Width in Pixels"
+        },
+        "heightInPixels" : {
+           "name": "heightInPixels",
+            "description" : "",
+            "label" : "Height in Pixels"
+        },
+        "title" : {
+           "name": "title",
+            "description" : "",
+            "label" : "Title"
+        }
+    };
+}
+
+function build_widget_context(widgetData) {
+    return {
+        widthInPixels : widgetData.dimensions.width,
+        heightInPixels : widgetData.dimensions.height,
+        title : widgetData.name
+    };
+}
+
+function build_mashup_context_description() {
+    return {
+        "name" : {
+           "name": "name",
+            "description" : "",
+            "label" : "Name"
+        },
+        "owner" : {
+           "name": "owner",
+            "description" : "",
+            "label" : "Owner"
+        }
+    };
+}
+
+function build_mashup_context(platformData) {
+    return {
+        "name" : platformData.name,
+        "owner" : platformData.owner
+    };
 }
 
 function add_script(file, extensionHTML) {
