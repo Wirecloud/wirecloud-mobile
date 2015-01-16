@@ -224,14 +224,14 @@ function downloadView(h, listWidgets, listOperators, workspaceName, userName, re
 		_buildWidgetsIcon = createOkIcon(400, parseInt(_self.width / 6, 10), 650);
 		_self.add(_buildWidgetsIcon);
 		_footer = Ti.UI.createActivityIndicator({
-	  		message: 'Downloading Dashboard',
-	  		width: "100%",
-	  		style:Ti.UI.ActivityIndicatorStyle.BIG_DARK,
-	  		color: "#FFFFFF",
-	        font : {
-	            fontSize : _fontSize * 2,
-	            fontFamily : 'Bangla Sangam MN'
-	        }
+			message: 'Downloading Dashboard',
+			width: "100%",
+			style:Ti.UI.ActivityIndicatorStyle.BIG_DARK,
+			color: "#FFFFFF",
+		font : {
+		    fontSize : _fontSize * 2,
+		    fontFamily : 'Bangla Sangam MN'
+		}
 	    });
 		_footer.setTop(525);
 		_footer.show();
