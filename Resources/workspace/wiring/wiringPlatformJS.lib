@@ -192,7 +192,7 @@
                         value: null
                     };
                 }
-                preferences.value = value;
+                preferences[key].value = value;
                 // TODO persist
             } else {
                 throw new MashupPlatform.prefs.PreferenceError('"' + key + '" is not a valid preference name');
