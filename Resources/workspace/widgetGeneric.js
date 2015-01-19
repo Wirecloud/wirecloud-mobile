@@ -9,7 +9,7 @@
 
 //Widget Generic Component Constructor
 
-function widgetGeneric(dim, parameters, idWidget, userName, platformData) {
+function widgetGeneric(dim, parameters, idWidget, userName, mashupData) {
 
 	var _isApple = (Ti.Platform.osname == 'ipad');
 	var _self;
@@ -27,7 +27,7 @@ function widgetGeneric(dim, parameters, idWidget, userName, platformData) {
 		platform_context_description: build_platform_context_description(),
 		platform_context_values: build_platform_context_values(userName),
 		mashup_context_description: build_mashup_context_description(),
-		mashup_context_values: build_mashup_context(platformData),
+		mashup_context_values: build_mashup_context(mashupData),
 		mac_context_description: build_widget_context_description(parameters.meta),
 		mac_context_values: build_widget_context(parameters),
 		appleOS: _isApple
@@ -155,10 +155,10 @@ function build_mashup_context_description() {
     };
 }
 
-function build_mashup_context(platformData) {
+function build_mashup_context(mashupData) {
     return {
-        "name" : platformData.name,
-        "owner" : platformData.owner
+        "name" : mashupData.name,
+        "owner" : mashupData.owner
     };
 }
 

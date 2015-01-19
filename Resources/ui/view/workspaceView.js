@@ -119,7 +119,7 @@ function workspaceView(parameters, userName, returnCallback) {
 		}
 		for (var i in _selfView.platform.operatorsInUseById){
 			var _operatorClass = require("workspace/operatorGeneric");
-			var _operatorO = _operatorClass(_selfView.platform.operatorsInUseById[i], i, userName);
+			var _operatorO = _operatorClass(_selfView.platform.operatorsInUseById[i], i, userName, _selfView.platform);
 			_operatorsViewById[i] = _operatorO;
 			_selfView.add(_operatorO);
 			_operatorClass = null;
