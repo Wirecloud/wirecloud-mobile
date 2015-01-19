@@ -637,7 +637,7 @@ var Map = ( function() {
         		
         	} else {
         		
-        		var validProperties = ["userLocation", "userLocationButton", "mapType", "region", "animate", "traffic", "enableZoomControls", "rect", "region", "zoom"];
+				var validProperties = ["userLocation", "userLocationButton", "mapType", "region", "animate", "traffic", "enableZoomControls", "rect", "region", "zoom"];
 	            var onlyIdProperties = ["annotations", "polygons", "layers", "routes"];
 	
 	            if (validProperties.indexOf(propertyName) >= 0) {
@@ -668,7 +668,7 @@ var Map = ( function() {
          */
         _self.setMapProperty = function(mapId, propertyName, propertyValue) {
 
-            var validProperties = ["userLocation", "userLocationButton", "mapType", "region", "animate", "traffic", "enableZoomControls", "rect", "region"];
+			var validProperties = ["userLocation", "userLocationButton", "mapType", "region", "animate", "traffic", "enableZoomControls", "rect", "region"];
 
             if (validProperties.indexOf(propertyName) >= 0) {
                 return getSetProperty("map", mapId, propertyName, propertyValue);
@@ -921,7 +921,7 @@ var Map = ( function() {
         		
         	} else {
         	
-        		var validProperties = ["id", "subtitle", "subtitleid", "title", "titleid", "latitude", "longitude", "draggable", "image", "pincolor", "customView", "leftButton", "leftView", "rightButton", "rightView", "showInfoWindow", "visible"];
+				var validProperties = ["id", "html", "htmlHeight", "htmlWidth", "subtitle", "subtitleid", "title", "titleid", "latitude", "longitude", "draggable", "image", "pincolor", "customView", "leftButton", "leftView", "rightButton", "rightView", "showInfoWindow", "visible"];
 
 	            if (validProperties.indexOf(propertyName) >= 0) {
 	                return getSetProperty("annotation", annotationId, propertyName);
@@ -943,7 +943,7 @@ var Map = ( function() {
          */
         _self.setAnnotationProperty = function(annotationId, propertyName, propertyValue) {
 
-            var validProperties = ["subtitle", "subtitleid", "title", "titleid", "latitude", "longitude", "draggable", "image", "pincolor", "customView", "leftButton", "leftView", "rightButton", "rightView", "showInfoWindow", "visible"];
+            var validProperties = ["html", "htmlHeight", "htmlWidth", "subtitle", "subtitleid", "title", "titleid", "latitude", "longitude", "draggable", "image", "pincolor", "customView", "leftButton", "leftView", "rightButton", "rightView", "showInfoWindow", "visible"];
 
             if (validProperties.indexOf(propertyName) >= 0) {
                 return getSetProperty("annotation", annotationId, propertyName, propertyValue);
