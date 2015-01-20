@@ -227,6 +227,44 @@
 						};
 						
 						/*
+						 * Contains elements that have been added to the map, so some methods does not have to send an event to the Titanium side
+						 */
+						var addedElements = {
+							polygons: [],
+							annotations: [],
+							routes: [],
+							layers: []
+						};
+						
+						/**
+						 * Add an element to an array if it is not already in it.
+						 * False if the element was in the array.
+						 */
+						var addToArray = function(array, id) {
+							if(array.indexOf(id) == -1){
+								array.push(id);
+								return true;
+							}
+							
+							return false;
+						};
+						
+						/**
+						 * Removes an element from an array
+						 * @return True if the element was in the array.
+						 */
+						var removeFromArray = function(array, id) {
+							var index = array.indexOf(id);
+							if(index != -1){
+								array.splice(index, 1);
+								return true;
+							}
+							
+							return false;
+						};
+						
+						
+						/*
 						 * CONSTANTS
 						 */
 						
@@ -453,13 +491,22 @@
 						 * Creates an Annotation. 
 						 * @memberof Yaast.API.SW.Map
      					 * @alias createAnnotation
-						 * @param {object} Options {@link See http://docs.appcelerator.com/titanium/3.0/#!/api/Modules.Map.Annotation}
-						 * @param {function} callback Function that receives a Annotation object. 	
+						 * @param {object} Options Can be an array of object or a single object with the following elements:
+						 * 					{@link See http://docs.appcelerator.com/titanium/3.0/#!/api/Modules.Map.Annotation}
+						 * @param {function} callback Function that receives a Annotation object or an array of Annotation objects. 	
 						 */
 						this.createAnnotation = function(options, callback){
-							var handleCreateAnnotation = function(callback, annotationId){
-								if(annotationId != null)
-									callback(new Annotation(annotationId));
+							var handleCreateAnnotation = function(callback, result){
+								if(result != null){
+									if(result instanceof Array) {
+										var res = [];
+										for(var x in result)
+											res.push(new Annotation(result[x]));
+										callback(res);
+									} else {
+										callback(new Annotation(result));
+									}
+								}
 							}.bind(null, callback);
 							_genericMethodHandler.call(this, handleCreateAnnotation, 'API.SW.Map.createAnnotation', [], options);
 						};
@@ -469,13 +516,22 @@
 						 * Creates a Route. 
 						 * @memberof Yaast.API.SW.Map
      					 * @alias createRoute
-						 * @param {object} options See {@link http://docs.appcelerator.com/titanium/3.0/#!/api/Modules.Map.Route}
-						 * @param {function} callback Function that receives a Route object. 	
+						 * @param {object} options Can be an array of object or a single object with the following elements:
+						 * 							See {@link http://docs.appcelerator.com/titanium/3.0/#!/api/Modules.Map.Route}
+						 * @param {function} callback Function that receives a Route object or an array of Route objects. 	
 						 */
 						this.createRoute = function(options, callback){
-							var handleCreateRoute = function(callback, routeId){
-								if(routeId != null)
-									callback(new Route(routeId));
+							var handleCreateRoute = function(callback, result){
+								if(result != null){
+									if(result instanceof Array) {
+										var res = [];
+										for(var x in result)
+											res.push(new Route(result[x]));
+										callback(res);
+									} else {
+										callback(new Route(result));
+									}
+								}
 							}.bind(null, callback);
 							_genericMethodHandler.call(this, handleCreateRoute, 'API.SW.Map.createRoute', [], options);
 						};
@@ -485,21 +541,29 @@
 						 * Creates a Layer.
 						 * @memberof Yaast.API.SW.Map
      					 * @alias createLayer
-						 * @param {options} 
-                         *      - baseUrl: String with the url of the service<br>
-                         *      - type: Type of service ({@link Map.LAYER_TYPE_WMS_1_1_1} | {@link Map.LAYER_TYPE_WMS_1_3_0})<br>
-                         *      - name: String with the name of the layer.<br>
-                         *      - srs: String with the srs of the layer.<br>
-                         *      - visible: Boolean<br>
-                         *      - zIndex: Number ZIndex of the layer.<br>
-                         *      - opacity: Number Percentage of opacity [0 - 100].<br>
-                         *      - format: Type of image of the tiles ({@link Map.FORMAT_PNG} | {@link Map.FORMAT_JPEG})<br>
-                         * @param {function} callback Function that receives a Layer object. 
+						 * @param {object} options Can be an array of object or a single object with the following elements:
+						 *      - baseUrl: String with the url of the service<br>
+					     *      - type: Type of service ({@link Map.LAYER_TYPE_WMS_1_1_1} | {@link Map.LAYER_TYPE_WMS_1_3_0})<br>
+					     *      - name: String with the name of the layer.<br>
+					     *      - srs: String with the srs of the layer.<br>
+					     *      - visible: Boolean<br>
+					     *      - zIndex: Number ZIndex of the layer.<br>
+					     *      - opacity: Number Percentage of opacity [0 - 100].<br>
+					     *      - format: Type of image of the tiles ({@link Map.FORMAT_PNG} | {@link Map.FORMAT_JPEG})<br>
+					     * @param {function} callback Function that receives a Layer object or an array of Layer objects. 
 						 */
 						this.createLayer = function(options, callback){
-							var handleCreateLayer = function(callback, layerId){
-								if(layerId != null)
-									callback(new Layer(layerId));
+							var handleCreateLayer = function(callback, result){
+								if(result != null){
+									if(result instanceof Array) {
+										var res = [];
+										for(var x in result)
+											res.push(new Layer(result[x]));
+										callback(res);
+									} else {
+										callback(new Layer(result));
+									}
+								}
 							}.bind(null, callback);
 							_genericMethodHandler.call(this, handleCreateLayer, 'API.SW.Map.createLayer', [], options);
 						};
@@ -509,7 +573,7 @@
 					     * Creates a Polygon.
 					     * @memberof Yaast.API.SW.Map
 					     * @alias createPolygon
-					     * @param {object} options 
+					     * @param {object} options Can be an array of object or a single object with the following elements:
 					     *      - id: optional. Must be unique.<br>
 					     *      - points: Array of points [{latitude: Number, longitude: Number}, ...]<br>
 					     *      - holePoints: Array with holes. A hole is an array of points.<br>
@@ -518,12 +582,20 @@
 					     *      - strokeWidth: Number<br>
 					     *      - annotation: Annotation object.<br>
 					     *
-					     * @param {function} callback Function that receives a Polygon object. 
+					     * @param {function} callback Function that receives a Polygon object or an array of Polygon objects. 
 					     */
 						this.createPolygon = function(options, callback){
-							var handleCreatePolygon = function(callback, polygonId){
-								if(polygonId != null)
-									callback(new Polygon(polygonId));
+							var handleCreatePolygon = function(callback, result){
+								if(result != null){
+									if(result instanceof Array) {
+										var res = [];
+										for(var x in result)
+											res.push(new Polygon(result[x]));
+										callback(res);
+									} else {
+										callback(new Polygon(result));
+									}
+								}
 							}.bind(null, callback);
 							_genericMethodHandler.call(this, handleCreatePolygon, 'API.SW.Map.createPolygon', [], options);
 						};
@@ -660,7 +732,8 @@
 							}
 							
 						};
-
+						
+						
 						/** 
 						 * This class represents a map instance.
 						 * @class
@@ -722,6 +795,7 @@
 							this.zoom = function(delta){
 								_genericMethodHandler.call(this, voidCallback, 'API.SW.Map.getShapesFromGeoJson', [this.id, delta]);
 							};
+							
 
 							/**
 							 * Set how the map should follow the location of the device.
@@ -744,31 +818,61 @@
 							/**
 						     * Gets the value of a property of the map.
 						     * @memberof Yaast.API.SW.Map.MapView
-     						 * @alias getProperty
+     						 * @alias getProperties
 						     * @instance
      						 * @public
 							 * @param {String} propertyName String with the name of the property or array with a list of properties.
 						     * @param {function} callback Callback function to invoke with the value of the property, or a hashmap of properties and values.
 						     */
-							this.getProperty = function(propertyName, callback){
+							this.getProperties = function(propertyNames, callback){
 								
+								// Check if it can be answered immediately
+								if(propertyNames instanceof Array){
+									
+									var response = {};
+									
+									if(propertyNames.indexOf("annotations") != -1)
+										response.annotations = addedElements.annotations;
+										
+									if(propertyNames.indexOf("polygons") != -1)
+										response.polygons = addedElements.annotations;
+										
+									if(propertyNames.indexOf("layers") != -1)
+										response.layers = addedElements.annotations;
+										
+									if(propertyNames.indexOf("routes") != -1)
+										response.routes = addedElements.annotations;
+									
+									var responseLength = 0;
+									for(var x in response)
+										responseLength++;
+									
+									//I can answer immediately to all the requested properties
+									if(responseLength == propertyNames.length) {
+										callback(response);
+										return;
+									}
+										
+								}
+								
+								// It can not be answered immediately, so send the request to the Titanium side
 								var _callback = function(_res){
 									
 									var _processProperty = function(_propValue){
 										var _newValue = null;
-										if(propertyName === "annotations")
+										if(propertyNames === "annotations")
 											return _convertToElementsArray(_propValue, 'annotation');
-										else if(propertyName === "polygons")
+										else if(propertyNames === "polygons")
 											return _convertToElementsArray(_propValue, 'polygon');
-										else if(propertyName === "routes")
+										else if(propertyNames === "routes")
 											return _convertToElementsArray(_propValue, 'route');
-										else if(propertyName === "layers")
+										else if(propertyNames === "layers")
 											return _convertToElementsArray(_propValue, 'layer');
 										else
 											return _propValue;
 									};
 									
-									if(propertyName instanceof Array){
+									if(propertyNames instanceof Array){
 				        		
 						        		var _newRes = {};
 						        		
@@ -781,13 +885,11 @@
 						        		
 						        		callback(_newRes);
 						        		
-						        	} else {
-										callback(_processProperty(_res));
-									}
+						        	}
 										
 								};
 								
-								_genericMethodHandler.call(this, _callback, 'API.SW.Map.getMapProperty', [this.id, propertyName]);
+								_genericMethodHandler.call(this, _callback, 'API.SW.Map.getMapProperty', [this.id, propertyNames]);
 							};
 							
 							/**
@@ -799,7 +901,7 @@
 							 * @param {function} callback Callback function to invoke with the hashmap of properties and values.
 						     */
 							this.getAllProperties = function(callback){
-								this.getProperty(["userLocation", "userLocationButton", "mapType", "region", "animate", "traffic", "enableZoomControls", 
+								this.getProperties(["userLocation", "userLocationButton", "mapType", "region", "animate", "traffic", "enableZoomControls", 
 													"rect", "region", "zoom", "annotations", "polygons", "layers", "routes"], callback);
 							};
 							
@@ -807,14 +909,13 @@
 							/**
 						     * Sets the value of a property of the map.
 						     * @memberof Yaast.API.SW.Map.MapView
-     						 * @alias setProperty
+     						 * @alias setProperties
 						     * @instance
      						 * @public
-							 * @param {String} propertyName String with the name of the property.
-						     * @param {*} propertyValue The value to be set for the property.
+							 * @param {Object} Hashmap with name-value of the properties that have to be changed
 						     */
-							this.setProperty = function(propertyName, propertyValue){
-								_genericMethodHandler.call(this, voidCallback, 'API.SW.Map.setMapProperty', [this.id, propertyName, propertyValue]);
+							this.setProperties = function(properties){
+								_genericMethodHandler.call(this, voidCallback, 'API.SW.Map.setMapProperties', [this.id, properties]);
 							};
 							
 							
@@ -827,7 +928,13 @@
 							 * @param {Object} annotation The Annotation object.
 							 */
 							this.addAnnotation = function(annotation){
-								_genericMethodHandler.call(this, voidCallback, 'API.SW.Map.addAnnotation', [this.id, annotation.id]);
+								
+								if(addToArray(addedElements.annotations, annotation.id)){
+									_genericMethodHandler.call(this, voidCallback, 'API.SW.Map.addAnnotation', [this.id, annotation.id]);
+								} else {
+									Ti.API.warn("Annotation " + annotation.id + " was in the map. You can not add it again.");
+								}
+								
 							};
 							
 							
@@ -866,7 +973,13 @@
 							 * @param {Object} annotation The Annotation object.
 							 */
 							this.removeAnnotation = function(annotation){
-								_genericMethodHandler.call(this, voidCallback, 'API.SW.Map.removeAnnotation', [this.id, annotation.id]);
+								
+								if(removeFromArray(addedElements.annotations, annotation.id)){
+									_genericMethodHandler.call(this, voidCallback, 'API.SW.Map.removeAnnotation', [this.id, annotation.id]);
+								} else {
+									Ti.API.warn("Annotation " + annotation.id + " was not in the map.");
+								}
+								
 							};
 							
 							
@@ -881,8 +994,10 @@
 							this.removeAnnotations = function(annotations){
 								var ids = [];
 								for(var i in annotations){
-									if(annotations[i].id != null)
+									if(annotations[i].id != null){
 										ids.push(annotations[i].id);
+										addToArray(addedElements.annotations, annotations[i].id);
+									}
 								}
 								_genericMethodHandler.call(this, voidCallback, 'API.SW.Map.removeAnnotations', [this.id, ids]);
 							};
@@ -896,6 +1011,7 @@
      						 * @public
 							 */
 							this.removeAllAnnotations = function(){
+								addedElements.annotations = [];
 								_genericMethodHandler.call(this, voidCallback, 'API.SW.Map.removeAllAnnotations', [this.id]);
 							};
 							
@@ -909,7 +1025,14 @@
 							 * @param {Object} route The Route object to add.
 							 */
 							this.addRoute = function(route){
-								_genericMethodHandler.call(this, voidCallback, 'API.SW.Map.addRoute', [this.id, route.id]);
+								
+								if(addToArray(addedElements.routes, route.id)){
+									_genericMethodHandler.call(this, voidCallback, 'API.SW.Map.addRoute', [this.id, route.id]);
+								} else {
+									Ti.API.warn("Route " + route.id + " was in the map. You can not add it again.");
+								}
+								
+								
 							};
 							
 							
@@ -922,7 +1045,14 @@
 							 * @param {Object} route The Route object to add.
 							 */
 							this.removeRoute = function(route){
-								_genericMethodHandler.call(this, voidCallback, 'API.SW.Map.removeRoute', [this.id, route.id]);
+								
+								if(removeFromArray(addedElements.routes, route.id)){
+									_genericMethodHandler.call(this, voidCallback, 'API.SW.Map.removeRoute', [this.id, route.id]);
+								} else {
+									Ti.API.warn("Route " + route.id + " was not in the map.");
+								}
+								
+								
 							};
 							
 							
@@ -934,6 +1064,7 @@
      						 * @public
 							 */
 							this.removeAllRoutes = function(){
+								addedElements.routes = [];
 								_genericMethodHandler.call(this, voidCallback, 'API.SW.Map.removeAllRoutes', [this.id]);
 							};
 							
@@ -947,7 +1078,14 @@
 							 * @param {Object} polygon The Polygon object.
 							 */
 							this.addPolygon = function(polygon){
-								_genericMethodHandler.call(this, voidCallback, 'API.SW.Map.addPolygon', [this.id, polygon.id]);
+								
+								if(addToArray(addedElements.polygon, polygon.id)){
+									_genericMethodHandler.call(this, voidCallback, 'API.SW.Map.addPolygon', [this.id, polygon.id]);
+								} else {
+									Ti.API.warn("Polygon " + polygon.id + " was in the map. You can not add it again.");
+								}
+								
+								
 							};
 							
 							
@@ -960,7 +1098,14 @@
 							 * @param {Object} polygon The Polygon object.
 							 */
 							this.removePolygon = function(polygon){
-								_genericMethodHandler.call(this, voidCallback, 'API.SW.Map.removePolygon', [this.id, polygon.id]);
+								
+								if(removeFromArray(addedElements.polygon, polygon.id)){
+									_genericMethodHandler.call(this, voidCallback, 'API.SW.Map.removePolygon', [this.id, polygon.id]);
+								} else {
+									Ti.API.warn("Annotation " + polygon.id + " was not in the map.");
+								}
+								
+								
 							};
 							
 							
@@ -972,6 +1117,7 @@
      						 * @public
 							 */
 							this.removeAllPolygons = function(){
+								addedElements.polygons = [];
 								_genericMethodHandler.call(this, voidCallback, 'API.SW.Map.removeAllPolygons', [this.id]);
 							};
 							
@@ -985,7 +1131,14 @@
 							 * @param {Object} layer The Layer object.
 							 */
 							this.addLayer = function(layer){
-								_genericMethodHandler.call(this, voidCallback, 'API.SW.Map.addLayer', [this.id, layer.id]);
+								
+								if(addToArray(addedElements.layers, layer.id)){
+									_genericMethodHandler.call(this, voidCallback, 'API.SW.Map.addLayer', [this.id, layer.id]);
+								} else {
+									Ti.API.warn("Layer " + layer.id + " was in the map. You can not add it again.");
+								}
+								
+								
 							};
 							
 							
@@ -998,7 +1151,14 @@
 							 * @param {Object} layer The Layer object.
 							 */
 							this.removeLayer = function(layer){
-								_genericMethodHandler.call(this, voidCallback, 'API.SW.Map.removeLayer', [this.id, layer.id]);
+								
+								if(removeFromArray(addedElements.annotations, layer.id)){
+									_genericMethodHandler.call(this, voidCallback, 'API.SW.Map.removeLayer', [this.id, layer.id]);
+								} else {
+									Ti.API.warn("Layer " + layer.id + " was not in the map.");
+								}
+								
+								
 							};
 							
 							
@@ -1010,6 +1170,7 @@
      						 * @public
 							 */
 							this.removeAllLayers = function(){
+								addedElements.layers = [];
 								_genericMethodHandler.call(this, voidCallback, 'API.SW.Map.removeAllLayers', [this.id]);
 							};
 							
@@ -1115,14 +1276,13 @@
 							/**
 						     * Sets the value of a property of the annotation.
 						     * @memberof Yaast.API.SW.Map.Annotation
-     						 * @alias setProperty
+     						 * @alias setProperties
 						     * @instance
      						 * @public
-							 * @param {String} propertyName String with the name of the property.
-						     * @param {*} propertyValue The value to be set for the property.
+							 * @param {Object} properties Hashmap with name-value of the properties that have to be changed
 						     */
-							this.setProperty = function(propertyName, propertyValue){
-								_genericMethodHandler.call(this, voidCallback, 'API.SW.Map.setAnnotationProperty', [this.id, propertyName, propertyValue]);
+							this.setProperties = function(properties){
+								_genericMethodHandler.call(this, voidCallback, 'API.SW.Map.setAnnotationProperties', [this.id, properties]);
 							};
 							
 							/**
@@ -1196,14 +1356,13 @@
 							/**
 						     * Sets the value of a property of the polygon.
 						     * @memberof Yaast.API.SW.Map.Polygon
-     						 * @alias setProperty
+     						 * @alias setProperties
 						     * @instance
      						 * @public
-							 * @param {String} propertyName String with the name of the property.
-						     * @param {*} propertyValue The value to be set for the property.
+							 * @param {Object} properties Hashmap with name-value of the properties that have to be changed
 						     */
-							this.setProperty = function(propertyName, propertyValue){
-								_genericMethodHandler.call(this, voidCallback, 'API.SW.Map.setPolygonProperty', [this.id, propertyName, propertyValue]);
+							this.setProperties = function(properties){
+								_genericMethodHandler.call(this, voidCallback, 'API.SW.Map.setPolygonProperties', [this.id, properties]);
 							};
 							
 							
@@ -1278,14 +1437,13 @@
 							/**
 						     * Sets the value of a property of the route.
 						     * @memberof Yaast.API.SW.Map.Route
-     						 * @alias setProperty
+     						 * @alias setProperties
 						     * @instance
      						 * @public
-							 * @param {String} propertyName String with the name of the property.
-						     * @param {*} propertyValue The value to be set for the property.
+							 * @param {Object} properties Hashmap with name-value of the properties that have to be changed
 						     */
-							this.setProperty = function(propertyName, propertyValue){
-								_genericMethodHandler.call(this, voidCallback, 'API.SW.Map.setRouteProperty', [this.id, propertyName, propertyValue]);
+							this.setProperties = function(properties){
+								_genericMethodHandler.call(this, voidCallback, 'API.SW.Map.setRouteProperties', [this.id, properties]);
 							};
 							
 						};
@@ -1304,7 +1462,7 @@
 							/**
 						     * Gets the value of a property of the layer.
 						     * @memberof Yaast.API.SW.Map.Layer
-     						 * @alias setProperty
+     						 * @alias getProperty
 						     * @instance
      						 * @public
 							 * @param {String} propertyName String with the name of the property.
@@ -1318,7 +1476,7 @@
 							/**
 						     * Gets all the properties of the layer.
 						     * @memberof Yaast.API.SW.Map.Layer
-     						 * @alias setProperty
+     						 * @alias getAllProperties
 						     * @instance
      						 * @public
 							 * @param {function} callback Callback function to invoke with the hashmap of properties and values.
@@ -1331,14 +1489,13 @@
 							/**
 						     * Sets the value of a property of the layer.
 						     * @memberof Yaast.API.SW.Map.Layer
-     						 * @alias setProperty
+     						 * @alias setProperties
 						     * @instance
      						 * @public
-							 * @param {String} propertyName String with the name of the property.
-						     * @param {*} propertyValue The value to be set for the property.
+							 * @param {Object} properties Hashmap with name-value of the properties that have to be changed
 						     */
-							this.setProperty = function(propertyName, propertyValue){
-								_genericMethodHandler.call(this, voidCallback, 'API.SW.Map.setLayerProperty', [this.id, propertyName, propertyValue]);
+							this.setProperties = function(properties){
+								_genericMethodHandler.call(this, voidCallback, 'API.SW.Map.setLayerProperties', [this.id, properties]);
 							};
 							
 						};
@@ -1637,7 +1794,7 @@
 
             Ti.API.info('[APIBridge] Invoking HTML callbacks for event: ' + publicEvent + ' with data:' + JSON.stringify(data));
 
-            if (eventHandlers[publicEvent] != null) {
+            if (eventHandlers[publicEvent] != null) { 
                 if (eventHandlers[publicEvent].length > 0) {
                     for (i = 0; i < eventHandlers[publicEvent].length; i ++) {
                         Ti.API.info('[APIBridge] invocando event callback html ' + publicEvent);

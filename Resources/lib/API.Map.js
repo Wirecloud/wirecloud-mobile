@@ -337,54 +337,88 @@ var Map = ( function() {
 
         /**
          * Creates an Annotation.
-         * @param {options} See http://docs.appcelerator.com/titanium/3.0/#!/api/Modules.Map.Annotation
-         * @return {String} Id of the annotation to be used in the methods of this API.
+         * @param {options} Can be an array of object or a single object with the following elements:
+         * 					See http://docs.appcelerator.com/titanium/3.0/#!/api/Modules.Map.Annotation
+         * @return {*} Id or array of ids of the annotation(s) to be used in the methods of this API.
          */
         _self.createAnnotation = function createAnnotation(options) {
 
-            //If the ID is set, check that it does not exist
-            if (options.id != null) {
-                if (getElement("annotation", options.id) != null) {
-                    Ti.API.info('[API.Map.createAnnotation] Annotation ID already in use(' + options.id + ')');
-                    return;
-                }
-            } else
-                delete options.id;
-
-            var anon = _self.Map.createAnnotation(options);
-            var id = anon.getId();
-            freeElements["annotations"][id] = anon;
-            return id;
+			if(options instanceof Array) {
+            	
+            	var response = [];
+            	
+            	for(var x = 0; x < options.length; x++){
+            		var newId = _self.createAnnotation(options[x]);
+            		if(newId != null) 
+            			response.push(newId);
+            	}
+            	
+            	return response;
+            	
+            } else if(options instanceof Object) {
+				
+	            //If the ID is set, check that it does not exist
+	            if (options.id != null) {
+	                if (getElement("annotation", options.id) != null) {
+	                    Ti.API.info('[API.Map.createAnnotation] Annotation ID already in use(' + options.id + ')');
+	                    return;
+	                }
+	            } else
+	                delete options.id;
+	
+	            var anon = _self.Map.createAnnotation(options);
+	            var id = anon.getId();
+	            freeElements["annotations"][id] = anon;
+	            return id;
+	            
+            } 
 
         };
 
         /**
          * Creates a Route.
-         * @param {options} See http://docs.appcelerator.com/titanium/3.0/#!/api/Modules.Map.Route
-         * @return {String} Id of the route to be used in the methods of this API.
+         * @param {options} Can be an array of object or a single object with the following elements: 
+         * 					See http://docs.appcelerator.com/titanium/3.0/#!/api/Modules.Map.Route
+         * @return {*} Id or array of ids of the route(s) to be used in the methods of this API.
          */
         _self.createRoute = function createRoute(options) {
 
-            //If the ID is set, check that it does not exist
-            if (options.id != null) {
-                if (getElement("route", options.id) != null) {
-                    Ti.API.info('[API.Map.createRoute] Route ID already in use(' + options.id + ')');
-                    return;
-                }
-            } else
-                delete options.id;
-
-            var route = _self.Map.createRoute(options);
-            var id = route.getId();
-            freeElements["routes"][id] = route;
-
-            return id;
+			if(options instanceof Array) {
+            	
+            	var response = [];
+            	
+            	for(var x = 0; x < options.length; x++){
+            		var newId = _self.createRoute(options[x]);
+            		if(newId != null) 
+            			response.push(newId);
+            	}
+            	
+            	return response;
+            	
+            } else if(options instanceof Object) {
+				
+	            //If the ID is set, check that it does not exist
+	            if (options.id != null) {
+	                if (getElement("route", options.id) != null) {
+	                    Ti.API.info('[API.Map.createRoute] Route ID already in use(' + options.id + ')');
+	                    return;
+	                }
+	            } else
+	                delete options.id;
+	
+	            var route = _self.Map.createRoute(options);
+	            var id = route.getId();
+	            freeElements["routes"][id] = route;
+	
+	            return id;
+            
+			}
 
         };
 
         /**
          * Creates a Polygon.
-         * @param {options}
+         * @param {options} Can be an array of object or a single object with the following elements:
          *      - id: optional. Must be unique.
          *      - points: Array of points ({latitude: Number, longitude: Number})
          *      - holePoints: Array with holes. A hole is an array of points.
@@ -393,30 +427,46 @@ var Map = ( function() {
          *      - strokeWidth: Number
          *      - annotation: Object (same properties of the createAnnotation method)
          *
-         * @return {String} Id of the polygon to be used in the methods of this API.
+         * @return {*} Id or array of ids of the polygon(s) to be used in the methods of this API.
          */
         _self.createPolygon = function createPolygon(options) {
 
-            //If the ID is set, check that it does not exist
-            if (options.id != null) {
-                if (getElement("polygon", options.id) != null) {
-                    Ti.API.info('[API.Map.createPolygon] Polygon ID already in use(' + options.id + ')');
-                    return;
-                }
-            } else
-                delete options.id;
-
-            var polygon = _self.Map.createPolygon(options);
-            var id = polygon.getId();
-            freeElements["polygons"][id] = polygon;
-
-            return id;
+			if(options instanceof Array) {
+            	
+            	var response = [];
+            	
+            	for(var x = 0; x < options.length; x++){
+            		var newId = _self.createPolygon(options[x]);
+            		if(newId != null) 
+            			response.push(newId);
+            	}
+            	
+            	return response;
+            	
+           } else if(options instanceof Object) {
+				
+	            //If the ID is set, check that it does not exist
+	            if (options.id != null) {
+	                if (getElement("polygon", options.id) != null) {
+	                    Ti.API.info('[API.Map.createPolygon] Polygon ID already in use(' + options.id + ')');
+	                    return;
+	                }
+	            } else
+	                delete options.id;
+	
+	            var polygon = _self.Map.createPolygon(options);
+	            var id = polygon.getId();
+	            freeElements["polygons"][id] = polygon;
+	
+	            return id;
+            
+            }
 
         };
 
         /**
          * Creates a Layer.
-         * @param {options}
+         * @param {options} Can be an array of object or a single object with the following elements:
          *      - id: optional. Must be unique.
          *      - baseUrl: String with the url of the service
          *      - type: Type of service (Map.LAYER_TYPE_WMS_1_1_1 | Map.LAYER_TYPE_WMS_1_3_0)
@@ -427,24 +477,40 @@ var Map = ( function() {
          *      - opacity: Number Percentage of opacity [0 - 100].
          *      - format: Tipe of image of the tiles (Map.FORMAT_PNG | Map.FORMAT_JPEG)
          *
-         * @return {String} Id of the layer to be used in the methods of this API.
+         * @return {*} Id or array of ids of the layer(s) to be used in the methods of this API.
          */
         _self.createLayer = function createLayer(options) {
 
-            //If the ID is set, check that it does not exist
-            if (options.id != null) {
-                if (getElement("layer", options.id) != null) {
-                    Ti.API.info('[API.Map.createLayer] Layer ID already in use(' + options.id + ')');
-                    return;
-                }
-            } else
-                delete options.id;
-
-            var layer = _self.Map.createLayer(options);
-            var id = layer.getId();
-            freeElements["layers"][id] = layer;
-
-            return id;
+			if(options instanceof Array) {
+            	
+            	var response = [];
+            	
+            	for(var x = 0; x < options.length; x++){
+            		var newId = _self.createLayer(options[x]);
+            		if(newId != null) 
+            			response.push(newId);
+            	}
+            	
+            	return response;
+            	
+            } else if(options instanceof Object) {
+			
+	            //If the ID is set, check that it does not exist
+	            if (options.id != null) {
+	                if (getElement("layer", options.id) != null) {
+	                    Ti.API.info('[API.Map.createLayer] Layer ID already in use(' + options.id + ')');
+	                    return;
+	                }
+	            } else
+	                delete options.id;
+	
+	            var layer = _self.Map.createLayer(options);
+	            var id = layer.getId();
+	            freeElements["layers"][id] = layer;
+	
+	            return id;
+            
+            }
 
         };
 
@@ -637,7 +703,7 @@ var Map = ( function() {
         		
         	} else {
         		
-				var validProperties = ["userLocation", "userLocationButton", "mapType", "region", "animate", "traffic", "enableZoomControls", "rect", "region", "zoom"];
+        		var validProperties = ["userLocation", "userLocationButton", "mapType", "region", "animate", "traffic", "enableZoomControls", "rect", "region", "zoom"];
 	            var onlyIdProperties = ["annotations", "polygons", "layers", "routes"];
 	
 	            if (validProperties.indexOf(propertyName) >= 0) {
@@ -660,22 +726,22 @@ var Map = ( function() {
 
         };
 
+        
         /**
          * Sets the value of a property of the map.
          * @param {mapId} The map id.
-         * @param {propertyName} String with the name of the property.
-         * @param {propertyValue} The value to be set for the property.
+         * @param {Object} properties Hashmap with name-value of the properties that have to be changed.
          */
-        _self.setMapProperty = function(mapId, propertyName, propertyValue) {
-
-			var validProperties = ["userLocation", "userLocationButton", "mapType", "region", "animate", "traffic", "enableZoomControls", "rect", "region"];
-
-            if (validProperties.indexOf(propertyName) >= 0) {
-                return getSetProperty("map", mapId, propertyName, propertyValue);
-            } else {
-                //TODO: Error Setter method not found
-                return;
-            }
+        _self.setMapProperties = function(mapId, properties) {
+        	
+        	var validProperties = ["userLocation", "userLocationButton", "mapType", "region", "animate", "traffic", "enableZoomControls", "rect", "region"];
+        	
+        	for(var propertyName in properties){
+	            if (validProperties.indexOf(propertyName) >= 0) {
+	                getSetProperty("map", mapId, propertyName, properties[propertyName]);
+	            }
+           	}
+			
         };
 
         /**
@@ -921,7 +987,7 @@ var Map = ( function() {
         		
         	} else {
         	
-				var validProperties = ["id", "html", "htmlHeight", "htmlWidth", "subtitle", "subtitleid", "title", "titleid", "latitude", "longitude", "draggable", "image", "pincolor", "customView", "leftButton", "leftView", "rightButton", "rightView", "showInfoWindow", "visible"];
+        		var validProperties = ["id", "html", "htmlHeight", "htmlWidth", "subtitle", "subtitleid", "title", "titleid", "latitude", "longitude", "draggable", "image", "pincolor", "customView", "leftButton", "leftView", "rightButton", "rightView", "showInfoWindow", "visible"];
 
 	            if (validProperties.indexOf(propertyName) >= 0) {
 	                return getSetProperty("annotation", annotationId, propertyName);
@@ -938,19 +1004,18 @@ var Map = ( function() {
         /**
          * Sets the value of a property of an annotation.
          * @param {annotationId} The annotation id.
-         * @param {propertyName} String with the name of the property.
-         * @param {propertyValue} The value to be set for the property.
+         * @param {Object} properties Hashmap with name-value of the properties that have to be changed
          */
-        _self.setAnnotationProperty = function(annotationId, propertyName, propertyValue) {
+        _self.setAnnotationProperties = function(annotationId, properties) {
 
             var validProperties = ["html", "htmlHeight", "htmlWidth", "subtitle", "subtitleid", "title", "titleid", "latitude", "longitude", "draggable", "image", "pincolor", "customView", "leftButton", "leftView", "rightButton", "rightView", "showInfoWindow", "visible"];
 
-            if (validProperties.indexOf(propertyName) >= 0) {
-                return getSetProperty("annotation", annotationId, propertyName, propertyValue);
-            } else {
-                //TODO: Error Setter method not found
-                return;
-            }
+			for(var propertyName in properties){
+	            if (validProperties.indexOf(propertyName) >= 0) {
+	                getSetProperty("annotation", annotationId, propertyName, properties[propertyName]);
+	            }
+           	}
+
         };
 
         /**
@@ -1089,19 +1154,18 @@ var Map = ( function() {
         /**
          * Sets the value of a property of a route.
          * @param {routeId} The route id.
-         * @param {propertyName} String with the name of the property.
-         * @param {propertyValue} The value to be set for the property.
+         * @param {Object} properties Hashmap with name-value of the properties that have to be changed
          */
-        _self.setRouteProperty = function(routeId, propertyName, propertyValue) {
+        _self.setRouteProperties = function(routeId, properties) {
 
             var validProperties = ["points", "width", "color"];
+            
+            for(var propertyName in properties){
+	            if (validProperties.indexOf(propertyName) >= 0) {
+	                getSetProperty("route", routeId, propertyName, properties[propertyName]);
+	            }
+           	}
 
-            if (validProperties.indexOf(propertyName) >= 0) {
-                getSetProperty("route", routeId, propertyName, propertyValue);
-            } else {
-                //TODO: Error Setter method not found
-                return;
-            }
         };
 
         /*
@@ -1213,19 +1277,18 @@ var Map = ( function() {
         /**
          * Sets the value of a property of a polygon.
          * @param {polygonId} The polygon id.
-         * @param {propertyName} String with the name of the property.
-         * @param {propertyValue} The value to be set for the property.
+         * @param {Object} properties Hashmap with name-value of the properties that have to be changed
          */
-        _self.setPolygonProperty = function(polygonId, propertyName, propertyValue) {
+        _self.setPolygonProperties = function(polygonId, properties) {
 
             var validProperties = ["points", "holePoints", "strokeWidth", "strokeColor", "fillColor", "annotation", "zIndex"];
+            
+            for(var propertyName in properties){
+	            if (validProperties.indexOf(propertyName) >= 0) {
+	                getSetProperty("polygon", polygonId, propertyName, properties[propertyName]);
+	            }
+           	}
 
-            if (validProperties.indexOf(propertyName) >= 0) {
-                getSetProperty("polygon", polygonId, propertyName, propertyValue);
-            } else {
-                //TODO: Error Setter method not found
-                return;
-            }
         };
 
         /**
@@ -1408,19 +1471,17 @@ var Map = ( function() {
         /**
          * Sets the value of a property of a layer.
          * @param {layerId} The layer id.
-         * @param {propertyName} String with the name of the property.
-         * @param {propertyValue} The value to be set for the property.
+         * @param {Object} properties Hashmap with name-value of the properties that have to be changed
          */
-        _self.setLayerProperty = function(layerId, propertyName, propertyValue) {
+        _self.setLayerProperties = function(layerId, properties) {
 
             var validProperties = ["baseUrl", "type", "name", "srs", "visible", "zIndex", "opacity", "format", "style", "tyleMatrixSet"];
 
-            if (validProperties.indexOf(propertyName) >= 0) {
-                getSetProperty("layer", layerId, propertyName, propertyValue);
-            } else {
-                //TODO: Error Setter method not found
-                return;
-            }
+			for(var propertyName in properties){
+	            if (validProperties.indexOf(propertyName) >= 0) {
+	                getSetProperty("layer", layerId, propertyName, properties[propertyName]);
+	            }
+           	}
         };
 
         return _self;

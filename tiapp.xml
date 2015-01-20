@@ -74,7 +74,7 @@
         <theme>default</theme>
     </mobileweb>
     <modules>
-        <module platform="android" version="3.0.11">ti.map</module>
+        <module platform="android" version="3.0.12">ti.map</module>
     </modules>
     <deployment-targets>
         <target device="iphone">false</target>
