@@ -831,17 +831,30 @@
 									
 									var response = {};
 									
-									if(propertyNames.indexOf("annotations") != -1)
-										response.annotations = addedElements.annotations;
+									if(propertyNames.indexOf("annotations") != -1) {
+										response.annotations = [];
+										for(var i in addedElements.annotations)
+											response.annotations.push(new Annotation(addedElements.annotations[i]));
+									}
+									
+									if(propertyNames.indexOf("polygons") != -1) {
+										response.polygons = [];
+										for(var i in addedElements.polygons)
+											response.polygons.push(new Polygon(addedElements.polygons[i]));
+									}
+									
+									if(propertyNames.indexOf("layers") != -1) {
+										response.layers = [];
+										for(var i in addedElements.layers)
+											response.layers.push(new Layer(addedElements.layers[i]));
+									}
+									
+									if(propertyNames.indexOf("routes") != -1) {
+										response.routes = [];
+										for(var i in addedElements.routes)
+											response.routes.push(new Route(addedElements.routes[i]));
+									}
 										
-									if(propertyNames.indexOf("polygons") != -1)
-										response.polygons = addedElements.annotations;
-										
-									if(propertyNames.indexOf("layers") != -1)
-										response.layers = addedElements.annotations;
-										
-									if(propertyNames.indexOf("routes") != -1)
-										response.routes = addedElements.annotations;
 									
 									var responseLength = 0;
 									for(var x in response)
@@ -1247,13 +1260,13 @@
 							/**
 						     * Gets the value of a property of the annotation.
 						     * @memberof Yaast.API.SW.Map.Annotation
-     						 * @alias getProperty
+     						 * @alias getProperties
 						     * @instance
      						 * @public
 							 * @param {String} propertyName String with the name of the property.
 						     * @param {function} callback Callback function to invoke with the value of the property, or a hashmap of properties and values.
 						     */
-							this.getProperty = function(propertyName, callback){
+							this.getProperties = function(propertyName, callback){
 								_genericMethodHandler.call(this, callback, 'API.SW.Map.getAnnotationProperty', [this.id, propertyName]);
 							};
 							
@@ -1329,13 +1342,13 @@
 							/**
 						     * Gets the value of a property of the polygon.
 						     * @memberof Yaast.API.SW.Map.Polygon
-     						 * @alias getProperty
+     						 * @alias getProperties
 						     * @instance
      						 * @public
 							 * @param {String} propertyName String with the name of the property.
 						     * @param {function} callback Callback function to invoke with the value of the property, or a hashmap of properties and values.
 						     */
-							this.getProperty = function(propertyName, callback){
+							this.getProperties = function(propertyName, callback){
 								_genericMethodHandler.call(this, callback, 'API.SW.Map.getPolygonProperty', [this.id, propertyName]);
 							};
 							
@@ -1410,13 +1423,13 @@
 							/**
 						     * Gets the value of a property of the route.
 						     * @memberof Yaast.API.SW.Map.Route
-     						 * @alias getProperty
+     						 * @alias getProperties
 						     * @instance
      						 * @public
 							 * @param {String} propertyName String with the name of the property.
 						     * @param {function} callback Callback function to invoke with the value of the property, or a hashmap of properties and values.
 						     */		
-							this.getProperty = function(propertyName, callback){
+							this.getProperties = function(propertyName, callback){
 								_genericMethodHandler.call(this, callback, 'API.SW.Map.getRouteProperty', [this.id, propertyName]);
 							};
 							
@@ -1462,13 +1475,13 @@
 							/**
 						     * Gets the value of a property of the layer.
 						     * @memberof Yaast.API.SW.Map.Layer
-     						 * @alias getProperty
+     						 * @alias getProperties
 						     * @instance
      						 * @public
 							 * @param {String} propertyName String with the name of the property.
 						     * @param {function} callback Callback function to invoke with the value of the property, or a hashmap of properties and values.
 						     */
-							this.getProperty = function(propertyName, callback){
+							this.getProperties = function(propertyName, callback){
 								_genericMethodHandler.call(this, callback, 'API.SW.Map.getLayerProperty', [this.id, propertyName]);
 							};
 							
