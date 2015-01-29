@@ -1,4 +1,25 @@
-/*global gettext, interpolate, Form, SelectInputInterface, StyledElements, Wirecloud */
+/*
+ *     Copyright (c) 2011-2015 CoNWeT Lab., Universidad Politécnica de Madrid
+ *
+ *     This file is part of Wirecloud Platform.
+ *
+ *     Wirecloud Platform is free software: you can redistribute it and/or
+ *     modify it under the terms of the GNU Affero General Public License as
+ *     published by the Free Software Foundation, either version 3 of the
+ *     License, or (at your option) any later version.
+ *
+ *     Wirecloud is distributed in the hope that it will be useful, but WITHOUT
+ *     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ *     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public
+ *     License for more details.
+ *
+ *     You should have received a copy of the GNU Affero General Public License
+ *     along with Wirecloud Platform.  If not, see
+ *     <http://www.gnu.org/licenses/>.
+ *
+ */
+
+/*global interpolate, Form, SelectInputInterface, StyledElements, Wirecloud */
 "use strict";
 
 var ValidationErrorManager, InputValidationError = {};
@@ -92,11 +113,11 @@ function TextInputInterface(fieldId, options) {
         return;
     }
 
-    InputInterface.call(this, fieldId, options);
+    StyledElements.InputInterface.call(this, fieldId, options);
 
     this.inputElement = new StyledElements.StyledTextField(options);
 }
-TextInputInterface.prototype = new InputInterface();
+TextInputInterface.prototype = new StyledElements.InputInterface();
 
 TextInputInterface.parse = function parse(value) {
     return value;
@@ -120,11 +141,11 @@ function PasswordInputInterface(fieldId, options) {
         return;
     }
 
-    InputInterface.call(this, fieldId, options);
+    StyledElements.InputInterface.call(this, fieldId, options);
 
     this.inputElement = new StyledElements.StyledPasswordField(options);
 }
-PasswordInputInterface.prototype = new InputInterface();
+PasswordInputInterface.prototype = new StyledElements.InputInterface();
 
 PasswordInputInterface.parse = TextInputInterface.parse;
 PasswordInputInterface.stringify = TextInputInterface.stringify;
@@ -137,11 +158,11 @@ function ListInputInterface(fieldId, options) {
         return;
     }
 
-    InputInterface.call(this, fieldId, options);
+    StyledElements.InputInterface.call(this, fieldId, options);
 
     this.inputElement = new StyledElements.StyledList(options);
 }
-ListInputInterface.prototype = new InputInterface();
+ListInputInterface.prototype = new StyledElements.InputInterface();
 
 ListInputInterface.prototype.parse = function parse(value) {
     return JSON.parse(value);
@@ -151,11 +172,13 @@ ListInputInterface.prototype.stringify = function stringify(value) {
     return JSON.stringify(value);
 };
 
-ListInputInterface.prototype._setValue = function _setValue(newValue) {
-    if (newValue === null || newValue === undefined) {
-        newValue = [];
+ListInputInterface.prototype._normalize = function _normalize(value) {
+    if (!Array.isArray(value)) {
+        value = [];
     }
+};
 
+ListInputInterface.prototype._setValue = function _setValue(newValue) {
     this.inputElement.cleanSelection();
     this.inputElement.addSelection(newValue);
 };
@@ -176,11 +199,11 @@ function NumberInputInterface(fieldId, options) {
         return;
     }
 
-    InputInterface.call(this, fieldId, options);
+    StyledElements.InputInterface.call(this, fieldId, options);
 
     this.inputElement = new StyledElements.StyledNumericField(options);
 }
-NumberInputInterface.prototype = new InputInterface();
+NumberInputInterface.prototype = new StyledElements.InputInterface();
 
 NumberInputInterface.parse = function parse(value) {
     return Number(value);
@@ -202,11 +225,11 @@ NumberInputInterface.prototype._checkValue = function _checkValue(newValue) {
  *
  */
 function LongTextInputInterface(fieldId, options) {
-    InputInterface.call(this, fieldId, options);
+    StyledElements.InputInterface.call(this, fieldId, options);
 
     this.inputElement = new StyledElements.StyledTextArea(options);
 }
-LongTextInputInterface.prototype = new InputInterface();
+LongTextInputInterface.prototype = new StyledElements.InputInterface();
 
 LongTextInputInterface.parse = TextInputInterface.parse;
 LongTextInputInterface.stringify = TextInputInterface.stringify;
@@ -214,7 +237,7 @@ LongTextInputInterface.stringify = TextInputInterface.stringify;
 /**
  *
  */
-function URLInputInterface(fieldId, options) {
+var URLInputInterface = function URLInputInterface(fieldId, options) {
     if (arguments.length === 0) {
         return;
     }
@@ -250,7 +273,7 @@ EMailInputInterface.prototype._checkValue = function _checkValue(newValue) {
  *
  */
 function BooleanInputInterface(fieldId, options) {
-    InputInterface.call(this, fieldId, options);
+    StyledElements.InputInterface.call(this, fieldId, options);
 
     if (typeof options.initialValue === 'string') {
         options.initiallyChecked = options.initialValue.toLowerCase() === 'true';
@@ -259,7 +282,7 @@ function BooleanInputInterface(fieldId, options) {
     }
     this.inputElement = new StyledElements.StyledCheckBox(options);
 }
-BooleanInputInterface.prototype = new InputInterface();
+BooleanInputInterface.prototype = new StyledElements.InputInterface();
 
 BooleanInputInterface.parse = function parse(value) {
     return ("" + value).trim().toLowerCase() === 'true';
@@ -290,7 +313,7 @@ function SelectInputInterface(fieldId, desc) {
         desc.required = true;
     }
 
-    InputInterface.call(this, fieldId, desc);
+    StyledElements.InputInterface.call(this, fieldId, desc);
 
     if (typeof desc.entries === 'function') {
         this._update = desc.entries;
@@ -310,7 +333,7 @@ function SelectInputInterface(fieldId, desc) {
     }
     this.inputElement = new StyledElements.StyledSelect(desc);
 }
-SelectInputInterface.prototype = new InputInterface();
+SelectInputInterface.prototype = new StyledElements.InputInterface();
 
 SelectInputInterface.parse = function parse(value) {
     return value;
@@ -335,7 +358,7 @@ SelectInputInterface.prototype._setValue = function _setValue(newValue) {
 };
 
 SelectInputInterface.prototype._checkValue = function _checkValue(newValue) {
-    var value, newValueId;
+    var newValueId;
 
     if (typeof newValue !== 'string') {
         try {
@@ -358,11 +381,11 @@ SelectInputInterface.prototype._checkValue = function _checkValue(newValue) {
  *
  */
 function HiddenInputInterface(fieldId, options) {
-    InputInterface.call(this, fieldId, options);
+    StyledElements.InputInterface.call(this, fieldId, options);
 
     this.inputElement = new StyledElements.StyledHiddenField(options);
 }
-HiddenInputInterface.prototype = new InputInterface();
+HiddenInputInterface.prototype = new StyledElements.InputInterface();
 
 
 /**
@@ -375,7 +398,7 @@ function ButtonGroupInputInterface(fieldId, fieldDesc) {
         return;
     }
 
-    InputInterface.call(this, fieldId, fieldDesc);
+    StyledElements.InputInterface.call(this, fieldId, fieldDesc);
 
     this.inputElement = new StyledElements.ButtonsGroup(fieldId);
     this.wrapperElement = document.createElement('div');
@@ -410,7 +433,7 @@ function ButtonGroupInputInterface(fieldId, fieldDesc) {
         this.inputElement.setValue(fieldDesc.initialValue);
     }
 }
-ButtonGroupInputInterface.prototype = new InputInterface();
+ButtonGroupInputInterface.prototype = new StyledElements.InputInterface();
 ButtonGroupInputInterface.prototype.insertInto = function insertInto(element) {
     element.appendChild(this.wrapperElement);
 };
@@ -428,11 +451,11 @@ ButtonGroupInputInterface.prototype._setError = function _setError(error) {
  */
 function FileInputInterface(fieldId, fieldDesc) {
 
-    InputInterface.call(this, fieldId, fieldDesc);
+    StyledElements.InputInterface.call(this, fieldId, fieldDesc);
 
     this.inputElement = new StyledElements.StyledFileField(fieldDesc);
 }
-FileInputInterface.prototype = new InputInterface();
+FileInputInterface.prototype = new StyledElements.InputInterface();
 
 FileInputInterface.prototype.getValue = function getValue() {
     return this.inputElement.getValue();
@@ -459,7 +482,7 @@ function MultivaluedInputInterface(fieldId, fieldDesc) {
     this.wrapperElement = new StyledElements.Container();
     this._addEntry();
 }
-MultivaluedInputInterface.prototype = new InputInterface();
+MultivaluedInputInterface.prototype = new StyledElements.InputInterface();
 
 MultivaluedInputInterface.prototype._addEntry = function _addEntry() {
     var entry, fields;
@@ -537,7 +560,7 @@ MultivaluedInputInterface.prototype.getValue = function getValue() {
 };
 
 MultivaluedInputInterface.prototype._setValue = function _setValue(newValue) {
-    var i, form, entry;
+    var i, entry;
 
     this._removeAllEntries();
 
@@ -571,7 +594,7 @@ var FieldSetInterface = function FieldSetInterface(fieldId, fieldDesc, factory) 
         legend: false
     });
 };
-FieldSetInterface.prototype = new InputInterface();
+FieldSetInterface.prototype = new StyledElements.InputInterface();
 
 FieldSetInterface.prototype.repaint = function repaint() {
     return this.form.repaint();
@@ -597,9 +620,9 @@ FieldSetInterface.prototype._setError = function _setError(error) {
  *
  */
 function ParametrizedTextInputInterface(fieldId, options) {
-    var i, param, contextFields, option;
+    var i, param, option;
 
-    InputInterface.call(this, fieldId, options);
+    StyledElements.InputInterface.call(this, fieldId, options);
 
     this.variable = options.variable;
     this.parameters = this.getAvailableParameters();
@@ -609,7 +632,7 @@ function ParametrizedTextInputInterface(fieldId, options) {
     });
 
     this.resetButton = new StyledElements.StyledButton({
-        'text': gettext('Use current value')
+        'text': StyledElements.Utils.gettext('Use current value')
     });
     this.resetButton.addEventListener('click', function () {
         this.inputElement.setValue(this.escapeValue(this.variable.value));
@@ -639,7 +662,7 @@ function ParametrizedTextInputInterface(fieldId, options) {
     this.secondSelect.addEventListener('change', this._updateDescription.bind(this), true);
 
     this.addButton = new StyledElements.StyledButton({
-        'text': gettext('Add')
+        'text': StyledElements.Utils.gettext('Add')
     });
     this.addButton.addEventListener('click', function () {
         var prefix, suffix, parameter, start, input;
@@ -666,7 +689,7 @@ function ParametrizedTextInputInterface(fieldId, options) {
     // Initialize
     this._updateSecondSelect();
 }
-ParametrizedTextInputInterface.prototype = new InputInterface();
+ParametrizedTextInputInterface.prototype = new StyledElements.InputInterface();
 
 ParametrizedTextInputInterface.prototype._ESCAPE_RE = new RegExp("(%+)(\\([a-zA-Z]\\w*(?:\\.[a-zA-Z]\\w*)*\\))");
 ParametrizedTextInputInterface.prototype._ESCAPE_FUNC = function () {
@@ -710,28 +733,28 @@ ParametrizedTextInputInterface.prototype.getAvailableParameters = function getAv
 
         parameters = [
             {
-                label: gettext('User'),
+                label: StyledElements.Utils.gettext('User'),
                 value: 'user',
                 fields: [
                     {
-                        label: gettext('User Name'),
+                        label: StyledElements.Utils.gettext('User Name'),
                         description: '',
                         value: 'username'
                     },
                     {
-                        label: gettext('First Name'),
+                        label: StyledElements.Utils.gettext('First Name'),
                         description: '',
                         value: 'first_name'
                     },
                     {
-                        label: gettext('Last Name'),
+                        label: StyledElements.Utils.gettext('Last Name'),
                         description: '',
                         value: 'last_name'
                     }
                 ]
             },
             {
-                label: gettext('Context'),
+                label: StyledElements.Utils.gettext('Context'),
                 value: 'context',
                 fields: contextFields['']
             }

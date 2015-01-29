@@ -1,5 +1,5 @@
 /*
- *     Copyright (c) 2014 CoNWeT Lab., Universidad Politécnica de Madrid
+ *     Copyright (c) 2014-2015 CoNWeT Lab., Universidad Politécnica de Madrid
  *
  *     This file is part of Wirecloud Platform.
  *
@@ -122,7 +122,7 @@
     };
 
     var Tooltip = function Tooltip(options) {
-        var button, defaultOptions = {
+        var defaultOptions = {
             'content': '',
             'class': '',
             'placement': ['right', 'bottom', 'left', 'top']

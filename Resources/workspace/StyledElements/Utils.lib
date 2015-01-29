@@ -19,13 +19,25 @@
  *
  */
 
-/*global ActiveXObject, alert, Attr, CSSPrimitiveValue*/
+/*global ActiveXObject, alert, Attr, CSSPrimitiveValue, StyledElements*/
+
+// TODO
+if (window.StyledElements == null) {
+    window.StyledElements = {};
+}
 
 (function () {
 
     "use strict";
 
     var Utils = {};
+
+    /**
+     * Overwrite this method for supporting translations
+     */
+    Utils.gettext = function gettext(text) {
+        return text;
+    };
 
     /**
      * Rellena los parámetros usados en un patrón. Los campos a rellenar en el
@@ -55,7 +67,7 @@
     };
 
     Utils.Template.prototype.evaluate = function evaluate(context) {
-        return interpolate(this.template, context, true);
+        return Utils.interpolate(this.template, context);
     };
 
     /**
@@ -119,6 +131,14 @@
       An ECMA-compliant, uniform cross-browser split method
     */
 
+    var fix_nonparticipanting_capturing_groups = function fix_nonparticipanting_capturing_groups() {
+        for (var i = 1; i < arguments.length - 2; i++) {
+            if (arguments[i] === undefined) {
+                this[i] = undefined;
+            }
+        }
+    };
+
     Utils.split = function split(str, separator, limit) {
         // if `separator` is not a regex, use the native `split`
         if (!separator instanceof RegExp) {
@@ -153,7 +173,7 @@
             }
         }
 
-        while (match = separator.exec(str)) {
+        while ((match = separator.exec(str))) {
             lastIndex = match.index + match[0].length; // `separator.lastIndex` is not reliable cross-browser
 
             if (lastIndex > lastLastIndex) {
@@ -161,13 +181,7 @@
 
                 // fix browsers whose `exec` methods don't consistently return `undefined` for nonparticipating capturing groups
                 if (!Utils.split._compliantExecNpcg && match.length > 1) {
-                    match[0].replace(separator2, function () {
-                        for (var i = 1; i < arguments.length - 2; i++) {
-                            if (arguments[i] === undefined) {
-                                match[i] = undefined;
-                            }
-                        }
-                    });
+                    match[0].replace(separator2, fix_nonparticipanting_capturing_groups.bind(match));
                 }
 
                 if (match.length > 1 && match.index < str.length) {
@@ -581,28 +595,6 @@
         };
     }
 
-    /**
-     * Constante para que el diálogo que muestre el método <code>alert</code>
-     * sea una alerta informativa.
-     * @type Number
-     */
-    Utils.ALERT_INFO = 0;
-
-    /**
-     * Constante para que el diálogo que muestre el método <code>alert</code>
-     * sea una  alerta de advertencia.
-     * @type Number
-     */
-    Utils.ALERT_WARNING = 1;
-
-    /**
-     * Constante para que el diálogo que muestre el método <code>alert</code>
-     * sea una  alerta de error.
-     * @type Number
-     */
-    Utils.ALERT_ERROR = 2;
-
-
     Utils.values = function values(object) {
         var result = [];
 
@@ -678,8 +670,6 @@
         return obj1;
     };
 
-    window.StyledElements = {
-        "Utils": Utils
-    };
+    StyledElements.Utils = Utils;
 
 })();

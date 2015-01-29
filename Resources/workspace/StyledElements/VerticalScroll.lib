@@ -1,4 +1,8 @@
+/*global StyledElements*/
+
 (function () {
+
+    "use strict";
 
     var VerticalScroll = function VerticalScroll(element) {
         element.style.overflowY = 'hidden';

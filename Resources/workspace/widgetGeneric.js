@@ -184,6 +184,9 @@ var STYLED_ELEMENTS_FILES = [
     'HorizontalLayout.lib',
     'BorderLayout.lib',
     'ModelTable.lib',
+    'Select.lib',
+    'ToggleButton.lib',
+    'Pills.lib',
     'Tab.lib',
     'StyledNotebook.lib',
 ];

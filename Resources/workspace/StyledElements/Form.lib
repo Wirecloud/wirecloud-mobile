@@ -1,4 +1,25 @@
-/*global gettext, StyledElements, ValidationErrorManager, Wirecloud*/
+/*
+ *     Copyright (c) 2011-2015 CoNWeT Lab., Universidad Politécnica de Madrid
+ *
+ *     This file is part of Wirecloud Platform.
+ *
+ *     Wirecloud Platform is free software: you can redistribute it and/or
+ *     modify it under the terms of the GNU Affero General Public License as
+ *     published by the Free Software Foundation, either version 3 of the
+ *     License, or (at your option) any later version.
+ *
+ *     Wirecloud is distributed in the hope that it will be useful, but WITHOUT
+ *     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ *     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public
+ *     License for more details.
+ *
+ *     You should have received a copy of the GNU Affero General Public License
+ *     along with Wirecloud Platform.  If not, see
+ *     <http://www.gnu.org/licenses/>.
+ *
+ */
+
+/*global StyledElements, ValidationErrorManager*/
 
 (function () {
 
@@ -8,7 +29,7 @@
      * Form
      */
     var Form = function Form(fields, options) {
-        var div, legend, requiredMark, buttonArea, defaultOptions;
+        var div, buttonArea, defaultOptions;
 
         defaultOptions = {
             'readOnly': false,
@@ -35,7 +56,7 @@
         } else if (options.setdefaultsButton === true) {
             this.setdefaultsButton = new StyledElements.StyledButton({
                 usedInForm: options.useHtmlForm,
-                text: gettext('Set Defaults')
+                text: StyledElements.Utils.gettext('Set Defaults')
             });
         }
 
@@ -46,7 +67,7 @@
         } else if (options.resetButton === true) {
             this.resetButton = new StyledElements.StyledButton({
                 usedInForm: options.useHtmlForm,
-                text: gettext('Reset')
+                text: StyledElements.Utils.gettext('Reset')
             });
         }
 
@@ -58,7 +79,7 @@
             this.acceptButton = new StyledElements.StyledButton({
                 'usedInForm': options.useHtmlForm,
                 'class': 'btn-primary',
-                'text': gettext('Accept')
+                'text': StyledElements.Utils.gettext('Accept')
             });
         }
 
@@ -69,7 +90,7 @@
         } else if (options.cancelButton === true) {
             this.cancelButton = new StyledElements.StyledButton({
                 usedInForm: options.useHtmlForm,
-                text: gettext('Cancel')
+                text: StyledElements.Utils.gettext('Cancel')
             });
         }
 
@@ -512,7 +533,7 @@
     Form.prototype.setDisabled = function setDisabled(disabled) {
         var fieldId, inputInterface;
 
-        if (!this.enabled == disabled) {
+        if (this.enabled != disabled) {
           // Nothing to do
           return;
         }

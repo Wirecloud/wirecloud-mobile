@@ -1,4 +1,25 @@
-/*global StyledElements, Wirecloud*/
+/*
+ *     Copyright (c) 2011-2015 CoNWeT Lab., Universidad Politécnica de Madrid
+ *
+ *     This file is part of Wirecloud Platform.
+ *
+ *     Wirecloud Platform is free software: you can redistribute it and/or
+ *     modify it under the terms of the GNU Affero General Public License as
+ *     published by the Free Software Foundation, either version 3 of the
+ *     License, or (at your option) any later version.
+ *
+ *     Wirecloud is distributed in the hope that it will be useful, but WITHOUT
+ *     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ *     FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public
+ *     License for more details.
+ *
+ *     You should have received a copy of the GNU Affero General Public License
+ *     along with Wirecloud Platform.  If not, see
+ *     <http://www.gnu.org/licenses/>.
+ *
+ */
+
+/*global StyledElements*/
 
 (function () {
 
@@ -105,7 +126,7 @@
     };
 
     StyledList.prototype.removeEntryByValue = function removeEntryByValue(value) {
-        var i, entry, index;
+        var entry, index;
 
         entry = this.entriesByValue[value];
         delete this.entriesByValue[value];
@@ -140,8 +161,9 @@
      * Borra la seleccion actual.
      */
     StyledList.prototype.cleanSelection = function cleanSelection() {
-        if (this.currentSelection.length === 0)
+        if (this.currentSelection.length === 0) {
             return;  // Nothing to do
+        }
 
         var oldSelection = this.currentSelection;
 
@@ -167,19 +189,22 @@
     StyledList.prototype.addSelection = function addSelection(selection) {
         var i, entry, addedValues = [], removedValues = [];
 
-        if (selection.length === 0)
+        if (selection.length === 0) {
             return;  // Nothing to do
+        }
 
         if (!this.multivalued) {
-            if (selection[0] === this.currentSelection[0])
+            if (selection[0] === this.currentSelection[0]) {
                 return; // Nothing to do
+            }
 
             removedValues = this.currentSelection;
 
             _cleanSelection.call(this);
 
-            if (selection.length > 1)
+            if (selection.length > 1) {
                 selection = selection.splice(0, 1);
+            }
         }
 
         for (i = 0; i < selection.length; i++) {
@@ -200,8 +225,9 @@
     StyledList.prototype.removeSelection = function removeSelection(selection) {
         var i, entry, index, removedValues = [];
 
-        if (selection.length === 0)
+        if (selection.length === 0) {
             return;  // Nothing to do
+        }
 
         for (i = 0; i < selection.length; i++) {
             entry = selection[i];
