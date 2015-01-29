@@ -88,6 +88,28 @@
         });
     }
 
+    // Log Module
+    Object.defineProperty(component_entry, 'log', {
+        value: function log(msg, level) {
+            switch (level) {
+            case MashupPlatform.log.INFO:
+                console.info(msg);
+            case MashupPlatform.log.WARN:
+                console.warn(msg);
+                break;
+            case MashupPlatform.log.ERROR:
+            default:
+                console.error(msg);
+            }
+        }
+    });
+    Object.defineProperty(window.MashupPlatform, 'log', {value: {
+        ERROR: 1,
+        WARN: 2,
+        INFO: 3
+    }});
+    Object.freeze(window.MashupPlatform.log);
+
     // Mashup
     Object.defineProperty(window.MashupPlatform, 'mashup', {value: {}});
 
