@@ -360,7 +360,7 @@ var loginView = function(parentWindow) {
 
 	/** Destroy LoginView and Objects inside */
 	_self.destroy = function destroy() {
-		if (activitySession !== null) {
+		if (activitySession != null) {
 			activitySession.hide();
 			_self.view.remove(activitySession);
 			activitySession = null;
