@@ -55,7 +55,7 @@ var mainViewDetailStyle = (function() {
 
 	_self.descriptionLabel = {
 		color: '#FFFFFF',
-		height: _self.view.height * 0.6,
+		height: _self.view.height * 0.5,
 		width : parseInt(_self.view.width) * 0.84,
         font: {
             fontFamily: Yaast.FontAwesome.getFontFamily(),

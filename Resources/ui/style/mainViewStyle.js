@@ -183,7 +183,7 @@ var mainViewStyle = ( function() {
 						fontSize : rowFontSize
 					},
 					top : 0,
-					left : 0,
+					left : rowFontSize*2,
 					height : rowHeight*0.875,
 					textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER
 				}
@@ -200,7 +200,7 @@ var mainViewStyle = ( function() {
 						fontSize : rowFontSize * 0.8
 					},
 					top : rowHeight*0.875,
-					right : 0,
+					left : rowFontSize*2,
 					height : rowHeight*0.875, 
 					textAlign : Ti.UI.TEXT_ALIGNMENT_CENTER
 				}
