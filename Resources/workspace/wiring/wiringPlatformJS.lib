@@ -127,6 +127,9 @@
         };
 
         this.registerCallback = function registerCallback(callback) {
+            if (typeof callback !== "function") {
+                throw new TypeError('callback must be a function');
+            }
             callbacks.push(callback);
         };
     };
@@ -138,6 +141,9 @@
     Object.defineProperty(window.MashupPlatform, 'wiring', {value: {}});
     Object.defineProperty(window.MashupPlatform.wiring, 'registerCallback', {
         value: function registerCallback(inputName, callback) {
+            if (typeof callback !== "function") {
+                throw new TypeError('callback must be a function');
+            }
             inputs[inputName] = callback;
         }
     });
@@ -223,6 +229,9 @@
     });
     Object.defineProperty(window.MashupPlatform.prefs, 'registerCallback', {
         value: function registerCallback(callback) {
+            if (typeof callback !== "function") {
+                throw new TypeError('callback must be a function');
+            }
             prefs_callback = callback;
         }
     });
