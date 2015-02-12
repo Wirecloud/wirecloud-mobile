@@ -70,7 +70,7 @@ Ti.API.info('Screen Density: ' + Yaast.API.UI.getScreenDensity());
 	Ti.API.info('Ti.Platform.displayCaps.dpi: ' + Ti.Platform.displayCaps.dpi);
 	Ti.API.info('Ti.Platform.displayCaps.platformHeight: ' + Ti.Platform.displayCaps.platformHeight);
 	Ti.API.info('Ti.Platform.displayCaps.platformWidth: ' + Ti.Platform.displayCaps.platformWidth);
-	if(Ti.Platform.osname === 'android'){
+	if (Ti.Platform.osname === 'android') {
 		Ti.API.info('Ti.Platform.displayCaps.xdpi: ' + Ti.Platform.displayCaps.xdpi);
 		Ti.API.info('Ti.Platform.displayCaps.ydpi: ' + Ti.Platform.displayCaps.ydpi);
 		Ti.API.info('Ti.Platform.displayCaps.logicalDensityFactor: ' + Ti.Platform.displayCaps.logicalDensityFactor);
@@ -102,10 +102,9 @@ Ti.API.info('Screen Density: ' + Yaast.API.UI.getScreenDensity());
 	    	Ti.API.info('*e:  = ' + e);
 	    };
         var Window = require('ui/window/appWindow');
-        Window.window.open();
         Window.window.addEventListener('postlayout', windowLoaded);
         Window.window.addEventListener('open', setWindowHeight);
-        //Window.window.addEventListener('postlayout', windowLoaded);
+        Window.window.open();
     }
     else  alert("Wirecloud4Tablet has not compatibility with Smartphone's'");
 
